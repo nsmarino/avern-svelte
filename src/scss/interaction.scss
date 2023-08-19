@@ -1,0 +1,54 @@
+/* Interactions (could still use a refactor maybe): */
+.prompt {
+width: 300px;
+background-color: black;
+color: white;
+position: fixed;
+bottom: 2rem;
+padding: 0.25rem;
+text-align: center;
+left: 50%;
+transform: translateX(-50%);
+}
+.prompt span {
+margin-left: 1rem;
+color: aquamarine;
+}
+#narrative-controller {
+width: 100%;
+height: 300px;
+background: linear-gradient(transparent, black);;
+position: fixed;
+left: 0rem;
+right: 0rem;
+bottom: 0rem;
+display: flex;
+justify-content: center;
+align-items: center;
+
+}
+#narrative-controller .text-container {
+    width: 400px;
+    padding: 0 30px;
+}
+#narrative-controller #narrative-illustration {
+    width: 200px;
+    height: 150px;
+    background-color: var(--avern-blue);
+    color: var(--avern-off-black);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#narrative-controller p {
+    color: white;
+    text-align: left;
+    font-family: var(--sans);
+}
+#narrative-controller .next-indicator {
+    color: var(--avern-green);
+    font-size: 80%;
+    display: inline-block;
+    transform: translateX(10px);
+}

@@ -1,6 +1,5 @@
 import * as THREE from 'three';
 import gsap from "gsap"
-import { PointerLockControls } from 'three/addons/controls/PointerLockControls.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 import GameplayComponent from '../../_Component';
@@ -37,7 +36,7 @@ class FollowCamera extends GameplayComponent {
         this.orbitCam.position.copy(this.camera.position)
         this.orbitCam.lookAt(this.cameraTarget.position)
         
-        this.orbitCamControls = new OrbitControls( this.orbitCam, document.body )
+        this.orbitCamControls = new OrbitControls( this.orbitCam, document.querySelector(".canvas") )
         this.orbitCamControls.maxDistance = 15.1
         this.orbitCamControls.minDistance = 3
         this.orbitCamControls.target = this.cameraTarget.position
@@ -50,7 +49,6 @@ class FollowCamera extends GameplayComponent {
         this.arrow = null
     }
 
-    // Check function to determine if the camera's view is blocked
     isCameraViewBlocked(targetPosition, cameraPosition, collider) {
 
         const towardsCamera = cameraPosition.clone().sub(targetPosition);
@@ -138,66 +136,3 @@ class FollowCamera extends GameplayComponent {
 }
 
 export default FollowCamera
-
-// chatGPT fn:
-// Define variables for camera lerping
-// const originalCameraPosition = camera.position.clone();
-// const lerpingSpeed = 0.05; // Adjust this value for the lerping speed
-
-// // Check function to determine if the camera's view is blocked
-// function isCameraViewBlocked(target, camera, obstacles, renderer) {
-//     const targetPosition = new THREE.Vector3();
-//     target.getWorldPosition(targetPosition);
-
-//     const cameraDirection = targetPosition.clone().sub(camera.position);
-//     const raycaster = new THREE.Raycaster(camera.position, cameraDirection.normalize());
-
-//     const intersects = raycaster.intersectObjects(obstacles, true);
-
-//     if (intersects.length === 0) {
-//         return false; // No obstacles, camera view is not blocked
-//     }
-
-//     // Check if any obstacle intersects the entire viewport
-//     const viewport = renderer.getSize(new THREE.Vector2());
-//     const fullViewportArea = viewport.width * viewport.height;
-
-//     for (const intersect of intersects) {
-//         const obstacleSize = intersect.object.geometry.boundingBox.getSize(new THREE.Vector3());
-//         const obstacleArea = obstacleSize.x * obstacleSize.y;
-
-//         if (obstacleArea >= fullViewportArea) {
-//             return true; // Camera view is blocked by a large enough obstacle
-//         }
-//     }
-
-//     return false; // Camera view is partially blocked
-// }
-
-// // Translation function to lerping the camera
-// function lerpCamera(target, camera, obstacles, renderer) {
-//     const isBlocked = isCameraViewBlocked(target, camera, obstacles, renderer);
-
-//     if (isBlocked) {
-//         const targetPosition = new THREE.Vector3();
-//         target.getWorldPosition(targetPosition);
-
-//         const newPosition = targetPosition.clone().add(camera.position.clone().sub(targetPosition).normalize());
-//         camera.position.lerp(newPosition, lerpingSpeed);
-//     } else {
-//         camera.position.lerp(originalCameraPosition, lerpingSpeed);
-//     }
-// }
-
-// // Inside your render loop
-// function animate() {
-//     // Call the lerpCamera function with appropriate arguments
-//     lerpCamera(targetObject, camera, arrayOfObstacles, renderer);
-
-//     // Other rendering and animation code
-//     renderer.render(scene, camera);
-//     requestAnimationFrame(animate);
-// }
-
-// // Start the animation
-// animate();

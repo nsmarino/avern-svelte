@@ -106,9 +106,7 @@ class Loader {
         const res = await new GLTFLoader().loadAsync(Avern.Content.baseFile)
         const gltfScene = res.scene;
         gltfScene.updateMatrixWorld( true );
-  
         this.initNavmeshFromBaseFile(gltfScene,scene)
-
         const collider = Avern.GameObjects.createGameObject(scene, "collider")
         collider.addComponent(Collider, gltfScene)
   

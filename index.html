@@ -1,13 +1,588 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + Svelte</title>
-  </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.js"></script>
-  </body>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>staging</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta property="og:title" content="avern engine - staging link">
+    <meta name="twitter:title" content="avern engine - staging link">
+    
+    <meta name="description" content="WIP on caldera ward detective">
+    <meta property="og:description" content="WIP on caldera ward detective">
+    <meta name="twitter:description" content="WIP on caldera ward detective">
+    
+    <meta property="og:image" content="https://raw.githubusercontent.com/nsmarino/avern-frontend/main/public/claw.jpeg">
+    <meta name="twitter:image" content="https://raw.githubusercontent.com/nsmarino/avern-frontend/main/public/claw.jpeg">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+
+    <!-- body and start-menu styles are handled here to prevent flicker on initial page load. -->
+    <style type="text/css">
+        @font-face {
+          font-family: SourceSans;
+          src: url("assets/fonts/SourceSans3-Regular.ttf");
+          font-weight: 400;
+          font-style: normal;
+        }
+        @font-face {
+          font-family: Inria;
+          src: url("assets/fonts/InriaSerif-Regular.ttf");
+          font-weight: 400;
+          font-style: normal;
+        }
+        @font-face {
+          font-family: Inria-Italic;
+          src: url("assets/fonts/InriaSerif-Italic.ttf");
+          font-weight: 400;
+          font-style: italic;
+        }
+
+        @font-face {
+          font-family: SourceSans;
+          src: url("assets/fonts/SourceSans3-Regular.ttf");
+        }
+        html, body, button {
+          cursor: url("/assets/ui/cursor.svg"), auto;
+        }
+
+        a {
+          cursor: url("/assets/ui/cursor-link.svg"), auto;
+        }
+        /* Root */
+        :root {
+
+        --camera-cursor: url("/assets/ui/cursor-camera.svg"), auto;
+        --pointer-cursor: url("/assets/ui/cursor.svg"), auto;
+
+
+        --target-vitality-width: 100%;
+        --player-vitality-width: 100%;
+        --player-mana-width: 100%;
+        --player-casting-width: 0%;
+
+        --avern-red: #EC6F6F;
+        --avern-green: #56FBA1;
+        --avern-blue: #C1C8FF;
+        --avern-yellow: #faf2a6;
+        --avern-dark-red: #D20000;
+        --avern-off-black: #323232;
+
+        --avern-dark-grey: #5E5E5E;
+        --avern-grey: #939393;
+        --avern-light-grey: #D4D4D4;
+        --avern-brown: #301E03;
+        --avern-input-gradient: linear-gradient( rgba(48, 30, 3, 0.4), rgba(50, 50, 50, 0.8));
+        --avern-input-border-gradient: linear-gradient( rgba(212, 212, 212, 0.8), rgba(94, 94, 94, 0.4));
+
+        --start-menu-gradient-outer: black;
+        --start-menu-gradient-inner: var(--avern-blue);
+
+        --serif: Inria, Times, serif;
+        --serif-italic: Inria-Italic, Times, serif;
+        --sans: SourceSans, Arial, Helvetica, sans-serif;
+        }
+
+        html, body {
+            font-family: SourceSans, Arial, Helvetica, sans-serif;
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+            background-color: rgb(26, 32, 15);
+            color: white;
+        }
+        canvas {
+            width: 100%;
+            height: 100%;
+            background: black;
+        }
+        .start-menu {
+          z-index: 1;
+          position: fixed;
+          height: 100vh;
+          width: 100%;
+          display: grid;
+          grid-template-columns: 1fr;
+          grid-template-rows: 1fr;
+          grid-template-areas: "main";
+          justify-content: center;
+          align-items: center;
+          gap: 1rem;
+          background: radial-gradient(var(--start-menu-gradient-outer), var(--start-menu-gradient-inner));
+        }
+
+        .start-menu section {
+          grid-area: main;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 14px;
+          margin-bottom: 150px;
+          height: 100%;
+        }
+        
+        .start-menu button {
+          background: var(--avern-input-gradient);
+          border: 1px solid var(--avern-grey);
+          border-radius: 2px;
+          display: flex;
+          padding: 2px;
+          width: 100px;
+          font-family: SourceSans;
+        }
+        h1 {
+          font-family: Inria-Italic;
+          font-style: italic;
+          letter-spacing: 0.1em;
+          color: white;
+          font-weight: normal;
+          filter: drop-shadow(0px 5px 2px var(--avern-dark-red));
+        }
+
+        .start-menu button span {
+          letter-spacing: 0.08em;
+          font-size: 10px;
+          color: white;
+          font-weight: normal;
+          display: block;
+          width: 100%;
+          padding: 3px 12px;
+        }
+
+        .start-menu button:disabled {
+          opacity: 0.4;
+        }
+        .start-menu button:hover:not(:disabled) {
+          filter: brightness(1.25)
+
+        }
+        .start-menu footer {
+          justify-self: end;
+          text-align: center;
+          margin-top: 20px;
+        }
+        .start-menu footer a {
+          font-size: 12px;
+          text-transform: uppercase;
+          color: var(--avern-blue);
+          text-decoration: none;
+          display: flex;
+          gap: 4px;
+
+        }
+        .start-menu footer svg{
+          width: 15px;
+        }
+
+        .mask {
+          position: fixed;
+          z-index: 1;
+          top: 0;
+          left: 0;
+          bottom: 0;
+          right: 0;
+          background: black;
+          display: flex;
+          justify-content: flex-end;
+          align-items: flex-end;
+          padding: 50px 50px;
+          gap: 20px;
+        }
+
+        .mask svg {
+          width: 100px;
+          opacity: 0;
+
+        }
+        .mask p {
+          opacity: 0;
+          font-family: var(--serif-italic);
+          font-style: italic;
+          letter-spacing: 0.1em;
+          color: white;
+          font-weight: normal;
+          filter: drop-shadow(0px 5px 2px var(--avern-dark-red));
+          margin: 5px;
+
+        }
+        /* @keyframes gentleBobbing {
+          0%, 100% {
+            transform: translateY(3px);
+          }
+          50% {
+            transform: translateY(-3px);
+          }
+        } */
+
+
+
+
+
+      .enemy-bar {
+        width: 80px;
+        height: 6px;
+        background-color: var(--avern-brown);
+        border: 1px solid var(--avern-off-black);
+        border-radius: 2px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        backface-visibility: hidden;
+      }
+      .inner-enemy-bar {
+        width: 100%;
+        height: 100%;
+        border-radius: 2px;
+        background-color: #EC6F6F;
+        transition: width 0.2s;
+      }
+
+    </style>
+</head>
+<body>
+<div id="app"></div>
+  <div class="start-menu">
+    <section class="start-menu-root">
+      <svg viewBox="0 0 993 806" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 200px;">
+        <path d="M176.673 472.5L1 805H992L951.654 730L825.152 596L780.183 429.5L717.143 354.5L609.133 102.5L519.195 1L424.213 247.5H338.898L244.337 429.5L176.673 472.5Z" fill="var(--avern-off-black)" stroke="var(--avern-dark-red)"/>
+        </svg>
+        
+      <h1>mountain shepherd eunuch</h1>
+      <button class="start-btn"><span>Play</span></button>
+      <!-- <button class="fake-start-btn" disabled><span>New Game</span></button>
+      <button class="load-btn" disabled><span>Load Game</span></button>
+      <button class="options-btn" disabled><span>Options</span></button>  -->
+      <!-- Show/change controls layout etc-->
+      <footer><a href="https://www.avern.systems/"> <svg viewBox="0 0 35 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M15 28.9999C16.5087 25.1339 16.4712 24.5732 15 21.2631C14.3815 19.8713 13.5264 18.7749 13.5264 17.2105C13.5264 15.2281 14.0739 9.93673 15.7369 9.10522" stroke="var(--avern-blue)" stroke-linecap="round"/>
+        <path d="M15 23.1054C17.6666 20.3554 19.204 17.0219 20.731 13.6902C22.1036 10.6954 27.6457 10.5791 30.4737 10.5791" stroke="var(--avern-blue)" stroke-linecap="round"/>
+        <path d="M15 23.1052C19.4696 19.6134 21.8972 17.2925 27.1988 15.7778C28.236 15.4814 31.3767 15.1167 31.7836 14.0994C32.5451 12.1955 32.1349 9.04275 34.1579 8.36841" stroke="var(--avern-blue)" stroke-linecap="round"/>
+        <path d="M12.0526 12.7894C6.15117 9.41718 3.1066 8.05661 1 1.73682" stroke="var(--avern-blue)" stroke-linecap="round"/>
+        <path d="M10.5789 11.3158C9.62606 10.058 4.68421 5.97011 4.68421 4.31579C4.68421 2.76929 1.64622 2.29243 1 1" stroke="var(--avern-blue)" stroke-linecap="round"/>
+        </svg>
+        avern.systems</a></footer>
+    </section>
+
+    <section class="load-menu" style="opacity: 0; pointer-events: none;">
+      <h1><span>Load</span></h1>
+      <div class="stored-file">Village  | 24 | 3:26</div>
+      <div class="stored-file">Downstairs  | 14 | 0:37</div>
+      <div class="stored-file">Beside the battlefield (morning) | 33 | 5:51</div>
+      <div class="stored-file">Snowplain  | 40 | 7:09</div>
+      <div class="stored-file">Crevice  | 11 | 1:20</div>
+      <div class="stored-file">Village  | 22 | 3:12</div>
+      <button class="back-btn">back</button>
+    </section>
+
+    <section class="options-menu" style="opacity: 0; pointer-events: none;">
+      <h1><span>Options</span></h1>
+      <div class="option-field">Left-handed</div>
+      <div class="option-field">Audio</div>
+      <div class="option-field">Etc</div>
+      <button class="back-btn">back</button>
+    </section>
+  </div>
+
+  <div id="hud">
+    <div class="player-state">
+      <!-- Top Left -->
+      <div class="energy">
+        <div class="health"><div class="inner-health"></div></div>
+      </div>
+      <!-- Top Right -->
+      <div class="xp">
+        <div class="xp-inner"><span>240</span></div>
+      </div>
+    </div>
+
+    <!-- Top Center -->
+    <!-- TO BE REMOVED !-->
+    <div class="target-bar" style="opacity: 0; pointer-events: none;">
+      <div class="target-vitality"></div>
+    </div>
+
+    <div id="notices-container"></div>
+
+    <div class="player-input">
+      <!-- Bottom Left -->
+
+
+      <div class="equipped">
+
+        <div class="action-inventory">
+          <div class="flask-count">
+            <div class="flask-count-inner">
+              <svg viewBox="0 0 16 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M6.44558 4.81608C5.9742 4.33744 5.45537 3.93532 5.01409 3.43745C4.82758 3.22703 4.78439 2.8353 4.91816 2.5908C5.11604 2.22912 4.78842 1.96983 4.85913 1.64673C5.05154 0.767542 7.52508 1.03984 8.17223 1.03984C8.68945 1.03984 9.28878 0.899866 9.66275 1.2796C10.0172 1.63947 9.76605 3.09507 9.76605 3.66972C9.76605 4.01507 9.47612 4.06281 9.23478 4.17173C8.72805 4.40041 8.94265 4.33187 8.96914 4.81608C8.99611 5.30899 9.09699 5.91105 9.2274 6.37454C9.40402 7.00224 12.7667 6.81462 13.485 7.13878C13.7702 7.26751 14.0572 7.38204 14.3483 7.5134C14.6754 7.66104 14.6652 7.87868 14.8796 8.05287C15.1039 8.23512 14.946 9.28037 14.946 9.56636C14.946 10.2307 14.946 10.895 14.946 11.5594C14.946 13.8746 14.946 16.1898 14.946 18.505C14.946 19.0244 15.1274 19.8407 14.4147 19.9211C13.7543 19.9956 13.0266 20.0759 12.3634 20.1983C9.76077 20.6788 7.09532 21 4.39426 21C3.74485 21 3.17657 20.8163 2.59383 20.5205C2.28198 20.3622 1.97713 20.1849 1.6641 20.026C1.23206 19.8066 1.26564 19.7759 1.26564 19.2467C1.26564 18.011 1.13282 16.8922 1.13282 15.6353C1.13282 14.2986 1 12.9797 1 11.6268C1 11.2918 1.4542 8.43402 1.26555 8.18773C0.990584 7.82876 2.32146 7.38235 2.48738 7.34491C2.9567 7.23901 2.3331 7.3911 4.18449 7.13878C5.72732 6.92851 5.34528 6.89774 5.72732 6.87492C7.09977 6.79295 6.17994 6.42707 6.17994 5.35555" stroke="white" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+              <span data-flask>5</span>
+            </div>
+          </div>
+          <div class="ammo-count">
+            <div class="ammo-count-inner">
+              <svg viewBox="0 0 23 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M2.27592 22C2.27592 18.3175 2.0541 14.7339 2.0541 11.0583C2.0541 10.4208 1.90422 8.28492 2.10339 7.8268C2.33185 7.30132 2.73643 7.23456 2.9414 6.40948C3.17374 5.47428 3.38506 4.96993 3.38506 3.88665C3.38506 3.12638 3.23609 0.947202 3.55759 2.61107C3.75011 3.60741 3.49164 4.87227 3.61921 5.89925C3.77553 7.15773 4.40562 6.20577 4.66672 6.80633C4.71419 6.91553 4.16005 8.93246 4.09983 9.24412C3.92955 10.1254 4.05054 11.6054 4.05054 12.5607C4.05054 14.8813 4.04756 16.9944 4.26004 19.1937C4.31665 19.7796 4.66154 21.4898 4.49419 21.4898C3.98344 21.4898 3.68447 21.2856 3.26182 21.0079C2.8308 20.7246 2.72634 22.2112 3.21253 21.0929C3.48155 20.4741 3.75267 19.9678 3.93962 19.1937C4.26591 17.8428 3.82871 14.9838 3.82871 13.326C3.82871 12.2302 3.72318 11.0733 3.59456 10.0378C3.49945 9.27217 3.16038 11.5549 3.11394 11.7953C2.83199 13.2544 2.68063 17.6548 3.05232 19.1937C3.25797 20.0452 3.38506 21.3764 3.38506 19.8457C3.38506 17.6725 3.38506 15.4992 3.38506 13.326C3.38506 12.2205 3.38506 11.115 3.38506 10.0095C3.38506 7.63906 3.17616 10.6454 2.71958 10.1512C2.14489 9.52915 4.36383 8.68624 4.71602 8.73389C5.3459 8.81911 4.73397 13.603 4.71602 14.3465C4.65941 16.6902 3.96564 18.0378 4.49419 20.4693" stroke="#D20000" stroke-width="3" stroke-linecap="round"/>
+                <path d="M10.2759 22C10.2759 18.3175 10.0541 14.7339 10.0541 11.0583C10.0541 10.4208 9.90422 8.28492 10.1034 7.8268C10.3318 7.30132 10.7364 7.23456 10.9414 6.40948C11.1737 5.47428 11.3851 4.96993 11.3851 3.88665C11.3851 3.12638 11.2361 0.947202 11.5576 2.61107C11.7501 3.60741 11.4916 4.87227 11.6192 5.89925C11.7755 7.15773 12.4056 6.20577 12.6667 6.80633C12.7142 6.91553 12.1601 8.93246 12.0998 9.24412C11.9295 10.1254 12.0505 11.6054 12.0505 12.5607C12.0505 14.8813 12.0476 16.9944 12.26 19.1937C12.3166 19.7796 12.6615 21.4898 12.4942 21.4898C11.9834 21.4898 11.6845 21.2856 11.2618 21.0079C10.8308 20.7246 10.7263 22.2112 11.2125 21.0929C11.4816 20.4741 11.7527 19.9678 11.9396 19.1937C12.2659 17.8428 11.8287 14.9838 11.8287 13.326C11.8287 12.2302 11.7232 11.0733 11.5946 10.0378C11.4995 9.27217 11.1604 11.5549 11.1139 11.7953C10.832 13.2544 10.6806 17.6548 11.0523 19.1937C11.258 20.0452 11.3851 21.3764 11.3851 19.8457C11.3851 17.6725 11.3851 15.4992 11.3851 13.326C11.3851 12.2205 11.3851 11.115 11.3851 10.0095C11.3851 7.63906 11.1762 10.6454 10.7196 10.1512C10.1449 9.52915 12.3638 8.68624 12.716 8.73389C13.3459 8.81911 12.734 13.603 12.716 14.3465C12.6594 16.6902 11.9656 18.0378 12.4942 20.4693" stroke="#D20000" stroke-width="3" stroke-linecap="round"/>
+                <path d="M18.2759 22C18.2759 18.3175 18.0541 14.7339 18.0541 11.0583C18.0541 10.4208 17.9042 8.28492 18.1034 7.8268C18.3318 7.30132 18.7364 7.23456 18.9414 6.40948C19.1737 5.47428 19.3851 4.96993 19.3851 3.88665C19.3851 3.12638 19.2361 0.947202 19.5576 2.61107C19.7501 3.60741 19.4916 4.87227 19.6192 5.89925C19.7755 7.15773 20.4056 6.20577 20.6667 6.80633C20.7142 6.91553 20.1601 8.93246 20.0998 9.24412C19.9295 10.1254 20.0505 11.6054 20.0505 12.5607C20.0505 14.8813 20.0476 16.9944 20.26 19.1937C20.3166 19.7796 20.6615 21.4898 20.4942 21.4898C19.9834 21.4898 19.6845 21.2856 19.2618 21.0079C18.8308 20.7246 18.7263 22.2112 19.2125 21.0929C19.4816 20.4741 19.7527 19.9678 19.9396 19.1937C20.2659 17.8428 19.8287 14.9838 19.8287 13.326C19.8287 12.2302 19.7232 11.0733 19.5946 10.0378C19.4995 9.27217 19.1604 11.5549 19.1139 11.7953C18.832 13.2544 18.6806 17.6548 19.0523 19.1937C19.258 20.0452 19.3851 21.3764 19.3851 19.8457C19.3851 17.6725 19.3851 15.4992 19.3851 13.326C19.3851 12.2205 19.3851 11.115 19.3851 10.0095C19.3851 7.63906 19.1762 10.6454 18.7196 10.1512C18.1449 9.52915 20.3638 8.68624 20.716 8.73389C21.3459 8.81911 20.734 13.603 20.716 14.3465C20.6594 16.6902 19.9656 18.0378 20.4942 20.4693" stroke="#D20000" stroke-width="3" stroke-linecap="round"/>
+              </svg>
+                
+              <div class="ammo-instruction">[SHIFT]</div>
+              <span data-ammo>0</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="top-row">
+          <div id="KeyE" class="flask input-key">
+            <div class="key-inner">
+              <span>E</span>
+              <img class="svg" src="/assets/ui/flask.svg" alt="">
+            </div>
+            <div class="action-active-indicator"></div>
+            <div class="action-tooltip">
+              <h3>Drink healing flask</h3>
+              <p>The mountain water is fresh and clear. How else could the fortress endure?</p>
+            </div>
+          </div>
+
+          <div id="KeyR" class="equipment input-key">
+            <div class="key-inner">
+            <span>R</span>
+            <img class="svg" src="/assets/ui/equipment.svg" alt="">
+            </div>
+            <div class="action-active-indicator"></div>
+            <div class="action-tooltip">
+              <h3>Character Menu</h3>
+              <p>Select actions, change ammo type, view stats and examine items.</p>
+            </div>
+          </div>
+          
+        </div>
+        <div class="main-row">
+          <div id="KeyA" data-linked-action="3" class="equipment-action input-key action4 locked">
+            <div class="key-inner">
+              <span>A</span>
+
+            </div>
+            <div class="action-active-indicator"></div>
+            <div class="action-tooltip">
+              <h3>Locked</h3>
+            </div>
+          </div>
+
+          <div id="KeyS"  data-linked-action="2" class="equipment-action input-key action3">
+            <div class="key-inner">
+
+            <span>S</span>
+            <img class="svg" src="/assets/ui/land-mine.svg" alt="">
+
+          </div>
+          <div class="action-active-indicator"></div>
+          <div class="action-tooltip">
+            <h3>Set Landmine</h3>
+            <p>You produce an oily iron capsule from the pouch at your waist. Once planted in the earth, it can be detonated from a distance. Be careful, as the blast can harm you as well.</p>
+            <p  style="font-family: var(--serif-italic);">[Guile]</p>
+          </div>
+          </div>
+
+          <div id="KeyD" data-linked-action="1"  class="equipment-action input-key action2">
+            <div class="key-inner">
+
+            <span>D</span>
+            <img class="svg" src="/assets/ui/aimed-shot.svg" alt="">
+          </div>
+          <div class="action-active-indicator"></div>
+          <div class="action-tooltip">
+            <h3>Blast at close range</h3>
+            <p>You stuff the barrel of the rifle with dozens of razor sharp projectiles. The closer an enemy, the more savagely will their flesh be torn.</p>
+            <p style="font-family: var(--serif-italic);">[Bravado]</p>
+          </div>
+          </div>
+
+          <div id="KeyF" data-linked-action="0" class="equipment-action input-key action1">
+            <div class="key-inner">
+
+            <span>F</span>
+            <img class="svg" src="/assets/ui/muzzle-blast.svg" alt="">
+          </div>
+          <div class="action-active-indicator is-prepared"></div>
+          <div class="action-tooltip">
+            <h3>Shoot from a distance</h3>
+            <p>You ready the rifle and take careful aim. Your eyes narrow and time seems to stop.</p>
+            <p style="font-family: var(--serif-italic);">[Cruelty]</p>
+          </div>
+          </div>
+
+          <div id="KeyG" class="target-key input-key">   
+            <div class="key-inner">
+        
+            <span>G</span>
+            <img class="svg" src="/assets/ui/target.svg" alt="">
+          </div>
+          <div class="action-active-indicator"></div>
+          <div class="action-tooltip">
+            <h3>Target</h3>
+            <p>Tap to target enemies. The targeting indicator is green when you can attack, and red when the target is out of range.</p>
+          </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Bottom Right -->
+      <div class="offhand">
+        <div class="top-row">
+          <div id="KeyU" class="open-menu input-key">
+            <div class="key-inner">
+
+            <span>U</span>
+            <img class="svg" src="/assets/ui/openMenu.svg" alt="">
+          </div>
+          <div class="action-active-indicator"></div>
+          <div class="action-tooltip">
+            <h3>Game Menu</h3>
+            <p>Save your game, change settings, or review recent dialogue.</p>
+          </div>
+          </div>
+
+          <div id="KeyI" class="forward input-key">
+            <div class="key-inner">
+
+            <span>I</span>
+            <img class="svg" src="/assets/ui/forward.svg" alt="">
+          </div>
+          <div class="action-active-indicator"></div>
+          <div class="action-tooltip">
+            <h3>Move forward</h3>
+          </div>
+          </div>
+        </div>
+
+        <div class="main-row">
+
+          <div id="KeyH" class="interact input-key">    
+            <div class="key-inner">
+        
+            <span>H</span>
+            <img class="svg" src="/assets/ui/interact.svg" alt="">
+          </div>
+          <div class="action-active-indicator"></div>
+          <div class="action-tooltip">
+            <h3>Interact</h3>
+            <p>Talk to people, open doors and treasure chests, make the world your oyster.</p>
+          </div>
+          </div>
+
+          <div id="KeyJ" class="left input-key">
+            <div class="key-inner">           
+              <span>J</span>
+              <img class="svg" src="/assets/ui/left.svg" alt="">
+            </div>
+            <div class="action-active-indicator"></div>
+            <div class="action-tooltip">
+              <h3>Turn left</h3>
+            </div>
+
+          </div>
+
+          <div id="KeyK" class="back input-key">
+            <div class="key-inner">
+
+            <span>K</span>
+            <img class="svg" src="/assets/ui/back.svg" alt="">
+          </div>
+          <div class="action-active-indicator"></div>
+          <div class="action-tooltip">
+            <h3>Move backward</h3>
+          </div>
+          </div>
+
+          <div id="KeyL" class="right input-key">
+            <div class="key-inner">
+
+            <span>L</span>
+            <img class="svg" src="/assets/ui/right.svg" alt="">
+          </div>
+          <div class="action-active-indicator"></div>
+          <div class="action-tooltip">
+            <h3>Turn right</h3>
+          </div>
+          </div>
+
+          <div id="Semicolon" class="free-cam input-key">
+            <div class="key-inner">
+
+            <span>;</span>
+            <img class="svg" src="/assets/ui/camera.svg" alt="">
+          </div>
+          <div class="action-active-indicator"></div>
+          <div class="action-tooltip">
+            <h3>Look around</h3>
+            <p>When held down, you can click and drag the mouse to look around your environment.</p>
+          </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div id="casting-bar" style="opacity: 0; pointer-events: none;">
+      <div class="outer-casting-bar">
+        <div class="inner-casting-bar"></div>
+      </div>
+    </div>
+
+
+
+    <!-- Bottom half of screen basically -->
+    <div class="interaction-prompt" style="display:none;"></div>
+  </div>
+
+  <div id="game-menu" style="opacity: 0; pointer-events: none;">
+    <div class="status">Game Paused</div>
+  </div>
+
+  <div id="character-menu" style="opacity: 0; pointer-events: none;">
+    <div class="actions">
+      <div class="currently-equipped">currently equipped</div>
+      <div class="description">description</div>
+      <div class="all-actions">all actions</div>
+    </div>
+
+    <div class="portrait">portrait</div>
+
+    <div class="offhand">
+      <div class="ammo-list">ammo list</div>
+      <div class="stats">stats</div>
+      <div class="item-container">
+        <div class="description">item description</div>
+        <div class="items">all items</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="narrative-controller" style="opacity: 0; pointer-events: none;">
+    <div id="narrative-illustration">
+      [IMAGE FROM SANITY]
+    </div>
+    <div class="text-container"></div>
+  </div>
+
+  <div class="prompt" style="opacity: 0; pointer-events: none;"></div>
+  
+  <div class="mask" style="opacity: 0; pointer-events: none;">
+      <svg viewBox="0 0 993 806" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M176.673 472.5L1 805H992L951.654 730L825.152 596L780.183 429.5L717.143 354.5L609.133 102.5L519.195 1L424.213 247.5H338.898L244.337 429.5L176.673 472.5Z" fill="var(--avern-off-black)" stroke="var(--avern-dark-red)"/>
+      </svg>
+      <div>
+        <p>mountain</p>
+        <p>shepherd</p>
+        <p>eunuch</p>
+      </div>
+  </div><!-- Cover loading via gsap -->
+
+  <div id="modal"></div>
+
+  <canvas class="canvas"></canvas>
+
+  <script type="module" src="./src/main.js"></script>
+</body>
 </html>

@@ -1,0 +1,43 @@
+/* GAME MENU: */
+#game-menu {
+    display: grid;
+    position: fixed;
+    z-index: 10;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    grid-template-columns: 3fr 2fr 2fr 2fr;
+    padding: 80px 80px;
+    gap: 20px;
+    background: linear-gradient(180deg, rgba(48, 30, 3, 0.4) 0%, rgba(50, 50, 50, 0.8) 100%);;
+  }
+  #game-menu .status {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-100%);
+    font-style: italic;
+  }
+  #game-menu section {
+    border: 1px solid white;
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    padding: 40px 20px;
+  }
+
+  #game-menu .pause {
+    display: flex;
+    flex-direction: column;
+  }
+  .pause button {
+    background: none;
+    border: none;
+    text-align: left;
+    color: white;
+    margin-bottom: 40px;
+    font-size: 120%;
+  }
+  
