@@ -5,7 +5,7 @@
 
 <div class="ui">
 
-  <h1>wts ?</h1>
+  <h1>svelte app</h1>
 
   <div class="card">
     <Counter />
