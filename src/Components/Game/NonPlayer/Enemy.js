@@ -8,6 +8,7 @@ import Body from '../Player/Body';
 import zombieBow from "../../../../assets/monsters/zombie-bow.gltf"
 import zombieSword from "../../../../assets/monsters/zombie-sword.gltf"
 import Vitals from '../Player/Vitals';
+import Actions from '../Player/Actions';
 import Targeting from '../Player/Targeting';
 import Notices from '../../Interface/Notices';
 
@@ -265,6 +266,7 @@ class Enemy extends GameplayComponent {
 
     return this.targetingTriangle.containsPoint(targetPosition)
   }
+
   updateRotationToFacePoint(object, targetPoint, lerpFactor) {
     // Calculate the direction from the object's position to the target point
     var direction = targetPoint.clone().sub(object.position);
@@ -335,10 +337,9 @@ class Enemy extends GameplayComponent {
       case "attack":
         this.updateRotationToFacePoint(this.gameObject.transform, Avern.Player.transform.position, this.lerpFactor)
 
-        const currentFrame = Math.floor(this.action.time * 30);
-        if (currentFrame === this.crucialFrame && !this.crucialFrameSent) {
+        if (Math.floor(this.action.time * 30) === this.crucialFrame && !this.crucialFrameSent) {
           this.crucialFrameSent = true;
-          if(!Avern.State.playerDead && this.checkTarget()) this.emitSignal("monster_attack")
+          if(!Avern.State.playerDead && this.checkTarget()) this.emitSignal("monster_attack", {damage: 20, percentage: 0.5})
         }
         break;
     }
@@ -411,33 +412,6 @@ class Enemy extends GameplayComponent {
       randomNode = this.getWanderTarget(origin, zone, group)
     }
     return randomNode
-  }
-
-  updateRotationToFacePoint(object, targetPoint, lerpFactor) {
-    // Calculate the direction from the object's position to the target point
-    var direction = targetPoint.clone().sub(object.position);
-
-    
-    // Calculate the angle between the direction vector and the positive Z-axis
-    var targetAngle = Math.atan2(direction.x, direction.z);
-
-    const lerp = (targetAngle - this.prevAngle) > 1 ? -lerpFactor : lerpFactor
-    // Wrap both angles to the range [-π, π] for proper interpolation
-    var currentAngle = object.rotation.y;
-    if (currentAngle > Math.PI) {
-      currentAngle -= 2 * Math.PI;
-    } else if (currentAngle < -Math.PI) {
-      currentAngle += 2 * Math.PI;
-    }
-    // Find out which direction is better to turn?...
-
-
-    // Apply lerp to interpolate between the current angle and the target angle
-    var newAngle = THREE.MathUtils.lerp(currentAngle, targetAngle, lerp);
-    
-    // Update the rotation of the object
-    object.rotation.y = newAngle;
-    this.prevAngle = targetAngle
   }
 
   followPursuePath(deltaTime) {
@@ -546,7 +520,6 @@ class Enemy extends GameplayComponent {
             this.reactLarge.fadeIn(0.2);
             this.reactLarge.play();
           }
-        } else {
         }
         break;
       case "reset_stage":
@@ -601,6 +574,7 @@ class Enemy extends GameplayComponent {
     }
     this.addObserver(Avern.Player.getComponent(Body))
     this.addObserver(Avern.Player.getComponent(Vitals))
+    this.addObserver(Avern.Player.getComponent(Actions))
 
     this.addObserver(Avern.Interface.getComponent(Notices))
   }

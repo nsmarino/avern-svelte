@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import playerGltf from "../../../../assets/pc/heraclius.gltf"
+import playerGltf from "../../../../assets/pc/hera-textured.gltf"
 import GameplayComponent from '../../_Component';
 import Actions from "./Actions"
 import InteractionOverlay from '../../Interface/InteractionOverlay';
@@ -8,6 +8,9 @@ import Enemy from '../NonPlayer/Enemy';
 import Vitals from './Vitals';
 import Inventory from './Inventory';
 import gsap from "gsap"
+
+const RESET = "RESET"
+const REPLACE = "REPLACE"
 
 class Body extends GameplayComponent {
     constructor(gameObject) {
@@ -20,8 +23,13 @@ class Body extends GameplayComponent {
         this.velocity = new THREE.Vector3();
         this.transform = gameObject.transform
 
+        this.action = {
+            id: null,
+            anim: null,
+            crucialFrame: null,
+        }
+
         this.movementLocked = false
-        this.crucialFrame= 45
         this.crucialFrameSent = false
 
         this.transform.position.set( 0, 3, 0 )
@@ -45,7 +53,6 @@ class Body extends GameplayComponent {
         this.capsuleCollisionDelta = new THREE.Vector3()
 
         const initFromGLTF = async () => {
-            // BODY:
             this.gltf = await new GLTFLoader().loadAsync(playerGltf)
             this.gltf.scene.name = gameObject.name
 
@@ -81,49 +88,81 @@ class Body extends GameplayComponent {
             const clips = this.gltf.animations
 
             // Player actions
-            this.idle = this.mixer.clipAction(
-                THREE.AnimationClip.findByName(clips, "IDLE")
-            )
-            this.run = this.mixer.clipAction(
-                THREE.AnimationClip.findByName(clips, "FORWARD")
-            )
-            this.runBack = this.mixer.clipAction(
-                THREE.AnimationClip.findByName(clips, "BACK")
-            )
-            this.load = this.mixer.clipAction(
-                THREE.AnimationClip.findByName(clips, "LOAD")
-            )
-            this.death = this.mixer.clipAction(
-                THREE.AnimationClip.findByName(clips, "DEATH")
-            )
-            this.death.setLoop(THREE.LoopOnce)
-            this.death.clampWhenFinished = true
+            this.idle = {
+                id: "idle",
+                anim: this.setUpAnim(clips, "IDLE", true, false),
+                crucialFrame: null,
+                canInterrupt: false,
+            }
+            this.run = {
+                id: "forward",
+                anim: this.setUpAnim(clips, "FORWARD", true, false),
+                crucialFrame: null,
+                canInterrupt: false,
+            }
+            this.runBack = {
+                id: "back",
+                anim: this.setUpAnim(clips, "BACK", true, false),
+                crucialFrame: null,
+                canInterrupt: false,
+            }
+            this.death = {
+                id: "death",
+                anim: this.setUpAnim(clips, "DEATH", false, true),
+                crucialFrame: null,
+                canInterrupt: false,
+            }
+            this.load = {
+                id: "load",
+                anim: this.setUpAnim(clips, "LOAD", false, false, 1.1),
+                crucialFrame: null,
+                canInterrupt: false,
+            }
+            this.loadShotgun = {
+                id: "load_shotgun",
+                anim: this.setUpAnim(clips, "LOAD", false, false, 2.6),
+                crucialFrame: null,
+                canInterrupt: false,
+            }
+            this.plant = {
+                id: "plant",
+                anim: this.setUpAnim(clips, "PLANT", false, false, 5),
+                crucialFrame: null,
+                canInterrupt: false,
+            }
+            this.react = {
+                id: "react",
+                anim: this.setUpAnim(clips, "REACT_LARGE", false, false),
+                crucialFrame: null,
+                canInterrupt: false,
+            }
+            this.shoot = {
+                id: "shoot",
+                anim: this.setUpAnim(clips, "FIRE", false, true, 2),
+                crucialFrame: 25,
+                canInterrupt: true,
+            }
+            this.detonate = {
+                id: "detonate",
+                anim: this.setUpAnim(clips, "DETONATE", false, true, 0.8),
+                crucialFrame: 35,
+                canInterrupt: true,
+            }
+            this.shotgun = {
+                id: "shotgun",
+                anim: this.setUpAnim(clips, "SHOTGUN", false, true, 3),
+                crucialFrame: 45,
+                canInterrupt: true,
+            }
+            this.drink = {
+                id: "drink",
+                anim: this.setUpAnim(clips, "DRINK", false, true, 1.5),
+                crucialFrame: null,
+                canInterrupt: true,
+            }
 
-            this.reactLarge = this.mixer.clipAction(
-                THREE.AnimationClip.findByName(clips, "REACT_LARGE")
-            )
-            this.reactLarge.setLoop(THREE.LoopOnce)
-
-            this.shoot = this.mixer.clipAction(
-                THREE.AnimationClip.findByName(clips, "SHOTGUN")
-            )
-            this.shoot.setLoop(THREE.LoopOnce)
-            this.shoot.clampWhenFinished=true
-            this.shoot.setDuration(3)
-
-            this.drink = this.mixer.clipAction(
-                THREE.AnimationClip.findByName(clips, "DRINK")
-            )
-            this.drink.setDuration(1.5)
-
-            this.drink.setLoop(THREE.LoopOnce)
-            this.drink.clampWhenFinished=true
-
-            // this.load.setLoop(0,0)
-            this.load.setDuration(2.2)
-            
             this.action = this.idle
-            this.fadeIntoAction(this.idle,0)
+            this.fadeIntoAction(this.action, 0, false)
 
             this.mixer.addEventListener('finished', this.onMixerFinish.bind(this))
 
@@ -131,65 +170,87 @@ class Body extends GameplayComponent {
         initFromGLTF()
     }
 
+    setUpAnim(fileClips, clipName, loop, clamp, duration) {
+        const anim = this.mixer.clipAction(THREE.AnimationClip.findByName(fileClips, clipName))
+        if (clamp) anim.clampWhenFinished = true
+        if (duration) anim.setDuration(duration)
+        if (!loop) anim.setLoop(THREE.LoopOnce)
+        return anim
+    }
+
     onMixerFinish(e) {
-        if (e.action == this.death) {
-        }
-        if (e.action == this.shoot) {
-          this.movementLocked = false
-          this.crucialFrameSent = false;
-          this.fadeIntoAction(this.idle,0.1)
-        }
-        if (e.action == this.drink) {
-          this.movementLocked = false
-          this.crucialFrameSent = false;
-          this.emitSignal("player_heal")
-          this.fadeIntoAction(this.idle,0.1)
-        }
+        const inputs = Avern.Inputs.getInputs()
 
-      }
-
-    fadeIntoAction(newAction=this.idle, duration=0.2) {
-        if (this.current_action) {
-            this.current_action.fadeOut(duration);
+        /* eslint-disable no-fallthrough */
+        switch(e.action) {
+            case this.drink.anim:
+                this.emitSignal("player_heal")
+            case this.shoot.anim:
+                console.log("SHOOT ANIM FINISHED")
+            case this.shotgun.anim:
+            case this.detonate.anim:
+                if (inputs.forward) {
+                    this.fadeIntoAction(this.run, 0.1, REPLACE)
+                } else if (inputs.back) {
+                    this.fadeIntoAction(this.runBack, 0.1, REPLACE)
+                } else {
+                    this.fadeIntoAction(this.idle, 0.1, REPLACE)
+                }
+                this.movementLocked = false
+                this.crucialFrameSent = false;        
+                break;
         }
-        this.action = newAction
-        this.action.reset();
-        this.action.fadeIn(duration);
-        this.action.play();
-        this.current_action = this.action;
+        /* eslint-enable no-fallthrough */
+    }
+
+    fadeIntoAction(newAction, duration, handleCurrent="CONTINUE") {
+        if (handleCurrent===REPLACE) {
+            this.action.anim.fadeOut(duration);
+            this.action = newAction
+        } else if (handleCurrent===RESET && !this.crucialFrameSent) {
+            this.action.anim.reset()
+            this.action.anim.play()
+        }
+        newAction.anim.reset();
+        newAction.anim.fadeIn(duration);
+        newAction.anim.play();
     }
 
     update(delta) {
-        if (this.action != null && this.action == this.shoot) {
-            const currentFrame = Math.floor(this.action.time * 30);
-            if (currentFrame === this.crucialFrame && !this.crucialFrameSent) {
+        if (this.action.anim != null && this.action.crucialFrame != null) {
+            const currentFrame = Math.floor(this.action.anim.time * 30);
+            if (currentFrame === this.action.crucialFrame && !this.crucialFrameSent) {
               this.crucialFrameSent = true;
-              this.emitSignal("action_crucial_frame", {id: this.actionId})
-              Avern.Sound.gunshotHandler.currentTime = 0.2
-              Avern.Sound.gunshotHandler.play()
+              this.emitSignal("action_crucial_frame", {id: this.action.id})
             }
         }
+
         const inputs = Avern.Inputs.getInputs()
-        if (inputs.flask) {
-            this.movementLocked = true
-            this.fadeIntoAction(this.drink,0.2)
-        }
-        if ( inputs.forwardWasPressed && !Avern.State.playerDead && !this.movementLocked) {
-            this.rifleOnBackMesh.visible = true
-            this.rifleMesh.visible = false
-            this.fadeIntoAction(this.run, 0.2)
-            Avern.Sound.fxHandler.currentTime = 0
-            Avern.Sound.fxHandler.play()
-            this.emitSignal("walk_start")
-        }
-        if ( inputs.backWasPressed && !Avern.State.playerDead && !this.movementLocked) {
-            Avern.Sound.fxHandler.play()
-            this.emitSignal("walk_start")
-            this.fadeIntoAction(this.runBack, 0.2)
-        }
-        if ( (inputs.forwardWasLifted || inputs.backWasLifted) && !Avern.State.playerDead && !this.movementLocked ) {
-            this.fadeIntoAction(this.idle, 0.1)
-            Avern.Sound.fxHandler.pause()
+        if (!Avern.State.playerDead && !this.movementLocked) {
+            if (inputs.flask) {
+                this.movementLocked = true
+                this.fadeIntoAction(this.drink,0.2, REPLACE)
+            }
+            if ( inputs.forwardWasPressed) {
+                if (this.rifleMesh && this.rifleOnBackMesh) {
+                    this.rifleOnBackMesh.visible = true
+                    this.rifleMesh.visible = false
+                }
+                this.fadeIntoAction(this.run, 0.2, REPLACE)
+                Avern.Sound.fxHandler.currentTime = 0
+                Avern.Sound.fxHandler.play()
+                this.emitSignal("walk_start")
+            }
+            if ( inputs.backWasPressed) {
+                Avern.Sound.fxHandler.currentTime = 0
+                Avern.Sound.fxHandler.play()
+                this.emitSignal("walk_start")
+                this.fadeIntoAction(this.runBack, 0.2, REPLACE)
+            }
+            if ( (inputs.forwardWasLifted || inputs.backWasLifted) ) {
+                this.fadeIntoAction(this.idle, 0.1, REPLACE)
+                Avern.Sound.fxHandler.pause()
+            }        
         }
 
         if (this.mixer && Avern.State.worldUpdateLocked == false) this.mixer.update(delta);
@@ -200,52 +261,55 @@ class Body extends GameplayComponent {
             case "casting_start":
                 this.rifleMesh.visible = true
                 this.rifleOnBackMesh.visible = false
-                this.fadeIntoAction(this.load)
+                this.fadeIntoAction(this[data.animation], 0.1, REPLACE)
                 break;
             case "casting_finish":
-                this.fadeIntoAction(this.idle)
+                this.fadeIntoAction(this.idle, 0.1, REPLACE)
                 break;
             case "casting_reduce":
                 this.mixer.setTime(data.progress)
                 break;
             case "action_availed":
                 this.movementLocked = true
-                this.fadeIntoAction(this[data.action.animation],0.2)
-                this.actionId = data.action.id
-                this.rifleMesh.visible = true
-                this.rifleOnBackMesh.visible = false
+
+                this.fadeIntoAction(this[data.action.animation],0.1, REPLACE)
+                if (this.rifleMesh && this.rifleOnBackMesh && data.action.id !== "set_land_mine") {
+                    this.rifleMesh.visible = true
+                    this.rifleOnBackMesh.visible = false
+                }
 
                 break;
-            case "player_receive_light_damage":
-                
-                break;
+
             case "player_receive_heavy_damage":
-                this.reactLarge.reset();
-                this.reactLarge.fadeIn(0.2)
-                this.reactLarge.play();
-                if (this.action==this.shoot && !this.crucialFrameSent) {
-                    this.action.reset()
-                    this.action.play()
+                if (this.action.canInterrupt) {
+                    this.fadeIntoAction(this.react, 0.2, RESET)
+                } else {
+                    this.fadeIntoAction(this.react)
                 }
 
                 break;
             case "player_death":
-                this.fadeIntoAction(this.death, 0.1)
+                this.fadeIntoAction(this.death, 0, REPLACE)
                 gsap.to(".mask", { opacity: 1, duration: 4, delay: 2})
                 gsap.to(".mask svg", { opacity: 1, duration: 0.2, delay: 3})
                 gsap.to(".mask p", { opacity: 1, duration: 0.2, delay: 3})
         
                 setTimeout(()=> {
                     // Handle resets internal to this component
-                    gsap.to(".mask", { opacity: 0, duration: 1, delay: 1})
-                    gsap.to(".mask svg", { opacity: 1, duration: 0.2})
-                    gsap.to(".mask p", { opacity: 1, duration: 0.2})
     
                     this.gameObject.transform.position.set( 0, 3, 0 );
-                    this.fadeIntoAction(this.idle, 0.1)
+                    this.fadeIntoAction(this.idle, 0.1, REPLACE)
+
+                    this.movementLocked = false
+                    this.crucialFrameSent = false
 
                     // Send signal to other components
                     this.emitSignal("reset_stage")
+
+                    // by that token this should probably be somewhere else
+                    gsap.to(".mask", { opacity: 0, duration: 1, delay: 1})
+                    gsap.to(".mask svg", { opacity: 1, duration: 0.2})
+                    gsap.to(".mask p", { opacity: 1, duration: 0.2})
 
                 },6000)
                 break;

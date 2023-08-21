@@ -1,21 +1,17 @@
 import * as THREE from 'three';
-import gsap from "gsap"
 import GameplayComponent from '../../_Component';
 import Enemy from '../NonPlayer/Enemy';
+import Actions from './Actions';
 import Body from './Body';
 
 class Vitals extends GameplayComponent {
-    constructor(gameObject, entity) {
+    constructor(gameObject) {
         super(gameObject)
         this.gameObject = gameObject
         this.hp = 100
+        this.landmineVector = new THREE.Vector3()
     }
-    
-    update(delta) {
-      if (!Avern.State.worldUpdateLocked) {
-        const inputs = Avern.Inputs.getInputs()
-      }
-    }
+
     onSignal(signalName, data) {
       switch(signalName) {
         case "casting_start":
@@ -42,7 +38,7 @@ class Vitals extends GameplayComponent {
 
         case "monster_attack":
           console.log("Receive monster attack")
-          this.hp -= 20
+          this.hp -= data.damage
           document.documentElement.style.setProperty("--player-vitality-width", `${this.hp}%`);
           if (this.hp <= 0) {
               this.emitSignal("player_death")
@@ -54,10 +50,9 @@ class Vitals extends GameplayComponent {
           }
           break;
         case "landmine_detonated":
-          const workerVector = new THREE.Vector3()
-          workerVector.copy(this.gameObject.transform.position)
-          workerVector.y -=3
-          if (workerVector.distanceTo(data.position) < data.radius) {
+          this.landmineVector.copy(this.gameObject.transform.position)
+          this.landmineVector.y -=3
+          if (this.landmineVector.distanceTo(data.position) < data.radius) {
             this.hp -= data.damage
             document.documentElement.style.setProperty("--player-vitality-width", `${this.hp}%`);
             if (this.hp <= 0) {
@@ -81,6 +76,7 @@ class Vitals extends GameplayComponent {
 
     attachObservers(parent) {
       this.addObserver(parent.getComponent(Body))
+      this.addObserver(parent.getComponent(Actions))
       for (const enemy of Avern.State.Enemies) {
           this.addObserver(enemy.getComponent(Enemy))
       }

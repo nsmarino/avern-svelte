@@ -16,8 +16,9 @@
 <style>
 .ui {
   position: absolute;
-  top: 0;
-  left: 0;
+  top:40%;
+  left: 50px;
+  background-color: brown;
   z-index: 10000;
 }
 </style>

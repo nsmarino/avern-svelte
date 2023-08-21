@@ -1,4 +1,4 @@
-import styles from "./scss/main.scss"
+import "./scss/main.scss"
 import gsap from "gsap"
 import Engine from "./Engine"
 
@@ -61,4 +61,4 @@ function render() {
 
 startMenu()
 
-export default app
+// export default app

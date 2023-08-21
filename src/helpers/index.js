@@ -177,14 +177,23 @@ function checkCapsuleCollision(capsule1, capsule2) {
     return {isColliding: false};
 }
 
-// Triangle on x z plane with height in y dimension. Used for vision.
-function checkVisionTriangle() {}
+function calculateDamageByDistance(baseDamage, distance, maxDistance, exponent=2) {
+    
+    // Calculate the scaled distance
+    const scaledDistance = Math.min(distance / maxDistance, 1);
+    
+    // Calculate the damage based on the scaled distance and exponent
+    const calculatedDamage = Math.min(baseDamage / Math.pow(scaledDistance, exponent),45);
+    
+    return calculatedDamage;
+  }
 
 export { 
     generateCapsuleCollider, 
     checkCapsuleCollision, 
     removeArrayElement, 
     getSine, 
-    randomIntFromInterval, 
+    randomIntFromInterval,
+    calculateDamageByDistance,
     SafeArray 
 }

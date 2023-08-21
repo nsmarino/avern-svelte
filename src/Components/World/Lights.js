@@ -7,7 +7,7 @@ class Lights extends GameplayComponent {
     constructor(gameObject) {
         super(gameObject)
         // White directional light at half intensity shining from the top.
-        this.directionalLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
+        this.directionalLight = new THREE.DirectionalLight( 0xEEE5DD, 1 );
         this.directionalLight.position.set(2,2,-1);
         gameObject.transform.parent.add( this.directionalLight );
         this.directionalLight.castShadow = true

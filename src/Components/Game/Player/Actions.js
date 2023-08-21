@@ -5,6 +5,8 @@ import ActionBar from "../../Interface/ActionBar"
 import Notices from "../../Interface/Notices"
 import Landmine from './Landmine';
 
+import { calculateDamageByDistance } from '../../../helpers';
+
 class Actions extends GameplayComponent {
     constructor(gameObject) {
         super(gameObject)
@@ -14,13 +16,13 @@ class Actions extends GameplayComponent {
                 label: "Shoot from a distance",
                 description: ".",
                 primeLength: 1,
-                baseDamage: 10,
+                baseDamage: 20,
                 range: 10,
                 primed: false,
                 input: "KeyF",
                 requiresTarget: true,
+                primeAnimation: "load",
                 animation: "shoot",
-                crucialFrame: 45,
             },
             {
                 id: "blast_at_close_range",
@@ -32,8 +34,8 @@ class Actions extends GameplayComponent {
                 primed: false,
                 input: "KeyD",
                 requiresTarget: true,
-                animation: "shoot",
-                crucialFrame: 45,
+                primeAnimation: "loadShotgun",
+                animation: "shotgun",
             },
             {
                 id: "set_land_mine",
@@ -46,9 +48,8 @@ class Actions extends GameplayComponent {
                 primed: false,
                 input: "KeyS",
                 requiresTarget: false,
-                animation: "shoot",
-                crucialFrame: 45,
-
+                primeAnimation: "plant",
+                animation: "detonate",
             },
             {
                 id: "null",
@@ -114,18 +115,27 @@ class Actions extends GameplayComponent {
         this.emitSignal("action_availed", { action })
     }
     
-    handleActionResult(actionId){
-        const action = Avern.State.actionData.find(act => act.id===actionId)
-        switch (actionId) {
+    handleActionResult(animation){
+        console.log("Handle action result by animation:", animation)
+        const action = Avern.State.actionData.find(act => act.animation===animation)
+        Avern.Sound.gunshotHandler.currentTime = 0.2
+        Avern.Sound.gunshotHandler.play()
+
+        switch (action.id) {
             case "shoot_from_distance":
                 if (!Avern.State.target) return
                 this.emitSignal("receive_player_attack", {damage: action.baseDamage })
                 break;
             case "blast_at_close_range":
                 if (!Avern.State.target) return
-                const distanceToTarget = Avern.Player.transform.position.distanceTo(Avern.State.target.transform.position)
-                const calculatedDamage = calculateDamageByDistance(action.baseDamage, distanceToTarget, action.range, 2)
-                this.emitSignal("receive_player_attack", {damage: calculatedDamage })
+                this.emitSignal("receive_player_attack", {damage: 
+                    calculateDamageByDistance(
+                        action.baseDamage, 
+                        Avern.Player.transform.position.distanceTo(Avern.State.target.transform.position), 
+                        action.range, 
+                        2
+                    ) 
+                })
                 break;
             case "set_land_mine":
                 this.emitSignal("detonate_landmine")
@@ -136,19 +146,22 @@ class Actions extends GameplayComponent {
     startCast(action) {
         this.casting = true
         this.activeCast = action
-        this.emitSignal("casting_start")
+        console.log(action)
+        this.emitSignal("casting_start", {animation: action.primeAnimation})
         switch(action.id) {
             case "shoot_from_distance":
                 Avern.Sound.reloadHandler.currentTime = 0
                 Avern.Sound.reloadHandler.play()
               break;
             case "blast_at_close_range":
-              break;
-            case "propel_self_into_air":
+                Avern.Sound.reloadHandler.currentTime = 0
+                Avern.Sound.reloadHandler.play()
               break;
             case "set_land_mine":
+                Avern.Sound.reloadHandler.currentTime = 0
+                Avern.Sound.reloadHandler.play()
               break;
-          }
+        }
     }
 
     interruptCast() {
@@ -160,8 +173,9 @@ class Actions extends GameplayComponent {
         this.emitSignal("casting_interrupt")
     }
 
-    reduceCast(percentage) {
-        this.castingProgress = this.castingProgress * percentage
+    reduceCast() {
+        this.castingProgress = (this.castingProgress - 0.5 <= 0) ? 0 : this.castingProgress - 0.5
+        console.log("Resulting casting progress", this.castingProgress)
         this.emitSignal("casting_reduce", { 
             progress: this.castingProgress, 
             threshold: this.activeCast.primeLength 
@@ -188,10 +202,10 @@ class Actions extends GameplayComponent {
                 Avern.Sound.reloadHandler.pause()
               break;
             case "blast_at_close_range":
-              break;
-            case "propel_self_into_air":
+                Avern.Sound.reloadHandler.pause()
               break;
             case "set_land_mine":
+                Avern.Sound.reloadHandler.pause()
                 this.emitSignal("set_landmine", {position: Avern.Player.transform.position})
               break;
           }
@@ -219,8 +233,11 @@ class Actions extends GameplayComponent {
           case "action_crucial_frame":
             this.handleActionResult(data.id)
             break;
-          case "monster_casting_finish":
-            if (this.activeCast) this.reduceCast(data.percentage)
+          case "monster_attack":
+            if (this.activeCast) this.reduceCast()
+            break;
+          case "player_death":
+            if (this.activeCast) this.interruptCast()
             break;
         }
     }
@@ -236,14 +253,3 @@ class Actions extends GameplayComponent {
 }
 
 export default Actions
-
-function calculateDamageByDistance(baseDamage, distance, maxDistance, exponent=2) {
-    
-    // Calculate the scaled distance
-    const scaledDistance = Math.min(distance / maxDistance, 1);
-    
-    // Calculate the damage based on the scaled distance and exponent
-    const calculatedDamage = Math.min(baseDamage / Math.pow(scaledDistance, exponent),45);
-    
-    return calculatedDamage;
-  }
