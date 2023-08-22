@@ -4,13 +4,9 @@ import Engine from "./Engine"
 
 window.Avern = Engine
 
-import stagingBase from "../assets/wts-base.gltf"
+import stagingBase from "../assets/fse--mountainPath.gltf"
 
 import App from './App.svelte'
-
-const app = new App({
-  target: document.getElementById('app'),
-})
 
 function startMenu() {
 	const rootStart = document.querySelector(".start-menu-root")
@@ -40,8 +36,10 @@ function startMenu() {
 async function init() {
 	await Avern.Loader.loadFromCMS() // get content asynchronously.
 	Avern.Content.baseFile = stagingBase
-	await Avern.Loader.initScene() // load layers (1) World (2) Interface (3) Game
-	console.log("After initscene")
+	await Avern.Loader.initScene()
+	new App({
+		target: document.getElementById('app'),
+	})
 	Avern.GameObjects.attachObservers() // Listen for signals from other gameObjects' components.
 	render()
 }

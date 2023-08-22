@@ -1,12 +1,12 @@
 import * as THREE from 'three';
 import GameplayComponent from '../_Component';
 import {RGBELoader} from "three/addons/loaders/RGBELoader.js"
-import hdrUrl from "../../../assets/environment/industrial_sunset.hdr"
+import hdrUrl from "../../../assets/environment/Quarry.hdr"
 
 class Lights extends GameplayComponent {
     constructor(gameObject) {
         super(gameObject)
-        // White directional light at half intensity shining from the top.
+
         this.directionalLight = new THREE.DirectionalLight( 0xEEE5DD, 1 );
         this.directionalLight.position.set(2,2,-1);
         gameObject.transform.parent.add( this.directionalLight );
@@ -21,11 +21,6 @@ class Lights extends GameplayComponent {
         Avern.State.scene.add(this.targetObject);
 
         this.directionalLight.target = this.targetObject;
-        //Create a helper for the shadow camera (optional)
-        // const shadowhelper = new THREE.CameraHelper( this.directionalLight.shadow.camera );
-        // Avern.State.scene.add( shadowhelper );
-        // const helper = new THREE.DirectionalLightHelper(this.directionalLight);
-        // gameObject.transform.parent.add( helper );
 
         this.loader = new RGBELoader()
         this.loader.load(hdrUrl, function(texture) {

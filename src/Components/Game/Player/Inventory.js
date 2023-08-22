@@ -1,16 +1,14 @@
-import * as THREE from 'three';
-import gsap from "gsap"
-
 import GameplayComponent from '../../_Component';
+import { stateStore } from "../../../Engine/State"
 
 class Inventory extends GameplayComponent {
     constructor(gameObject, ) {
         super(gameObject)
     }
 
-    update() {
-        const inputs = Avern.Inputs.getInputs()
-    }
+    // update() {
+    //     const inputs = Avern.Inputs.getInputs()
+    // }
 
     onSignal(signalName, data={}) {
         switch(signalName) {
@@ -18,15 +16,23 @@ class Inventory extends GameplayComponent {
             Avern.State.inventory.push(data.item)
             break;
           case "player_heal":
-            if (Avern.State.flaskCount > 0) Avern.State.flaskCount -= 1
+            // if (Avern.State.flaskCount > 0) Avern.State.flaskCount -= 1
             document.querySelectorAll('[data-flask]').forEach(el => el.innerHTML = Avern.State.flaskCount)
+            console.log(stateStore)
+            stateStore.update(st => {
+                const updatedSt = {
+                    ...st,
+                    flaskCount: st.flaskCount - 1
+                }
+                return updatedSt
+            })
             break;
         }
     }
     
-    attachObservers(parent) {
+    // attachObservers(parent) {
 
-    }
+    // }
 }
 
 export default Inventory

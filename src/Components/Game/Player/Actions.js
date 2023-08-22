@@ -16,7 +16,7 @@ class Actions extends GameplayComponent {
                 label: "Shoot from a distance",
                 description: ".",
                 primeLength: 1,
-                baseDamage: 20,
+                baseDamage: 15,
                 range: 10,
                 primed: false,
                 input: "KeyF",

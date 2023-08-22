@@ -1,7 +1,11 @@
 import * as THREE from 'three';
+import { writable } from 'svelte/store';
 
 // Globally available State tracking stuff like HP, target, worldUpdateLocked...
-
+const stateStore = writable({
+    flaskCount: 5
+})
+export { stateStore }
 class State {
     constructor(){
         this.playerDead = false
