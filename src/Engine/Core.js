@@ -10,7 +10,7 @@ class Core {
         this.renderer.setSize( window.innerWidth, window.innerHeight );
         this.renderer.outputColorSpace = THREE.SRGBColorSpace;
         this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
-        this.renderer.toneMappingExposure = 0.5;
+        this.renderer.toneMappingExposure = 0.4;
         this.renderer.shadowMap.enabled = true;
         this.renderer.shadowMap.type = THREE.PCFSoftShadowMap; // default THREE.PCFShadowMap
 

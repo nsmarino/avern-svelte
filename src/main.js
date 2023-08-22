@@ -4,7 +4,7 @@ import Engine from "./Engine"
 
 window.Avern = Engine
 
-import stagingBase from "../assets/fse--mountainPath.gltf"
+import stagingBase from "../assets/fse--dan.gltf"
 
 import App from './App.svelte'
 
