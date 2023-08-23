@@ -124,7 +124,7 @@ class Actions extends GameplayComponent {
         switch (action.id) {
             case "shoot_from_distance":
                 if (!Avern.State.target) return
-                this.emitSignal("receive_player_attack", {damage: scaleValue(action.baseDamage) })
+                this.emitSignal("receive_player_attack", {damage: action.baseDamage })
                 // eslint-disable-next-line no-case-declarations
                 flashPosition = Avern.Player.getComponent(Body).rifleMesh.getWorldPosition(new THREE.Vector3())
                 flashPosition.y += 1
@@ -272,18 +272,3 @@ class Actions extends GameplayComponent {
 }
 
 export default Actions
-
-function scaleValue(value) {
-    // Ensure the value is within the desired range
-    if (value < 0) {
-      value = 0;
-    } else if (value > 0) {
-      value = 1.2;
-    }
-    
-    // Calculate the scaled value
-    const scaledValue = value * (1.2 - 0.8) + 0.8;
-    const result = scaledValue * value
-    
-    return result;
-  }
