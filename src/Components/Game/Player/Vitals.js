@@ -42,11 +42,16 @@ class Vitals extends GameplayComponent {
           document.documentElement.style.setProperty("--player-vitality-width", `${this.hp}%`);
           if (this.hp <= 0) {
               this.emitSignal("player_death")
+              Avern.Sound.thudHandler.currentTime = 0.02
+              Avern.Sound.thudHandler.play()
+  
               Avern.State.playerDead = true
               this.hp = 0
               document.documentElement.style.setProperty("--player-vitality-width", `${this.hp}%`);
           } else {
             this.emitSignal("player_receive_heavy_damage")
+            Avern.Sound.thudHandler.currentTime = 0.02
+            Avern.Sound.thudHandler.play()
           }
           break;
         case "landmine_detonated":

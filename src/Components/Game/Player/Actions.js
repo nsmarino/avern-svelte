@@ -4,6 +4,8 @@ import Body from "./Body"
 import ActionBar from "../../Interface/ActionBar"
 import Notices from "../../Interface/Notices"
 import Landmine from './Landmine';
+import ParticleFX from './ParticleFX';
+import * as THREE from 'three';
 
 import { calculateDamageByDistance } from '../../../helpers';
 
@@ -41,7 +43,7 @@ class Actions extends GameplayComponent {
                 id: "set_land_mine",
                 label: "Set Landmine",
                 description: "From the pouch at his waist, Heraclius takes an oily iron capsule trailing wires. Once placed in the earth, it can be detonated from a distance.",
-                primeLength: 3.5,
+                primeLength: 3,
                 cooldown: 0,
                 baseDamage: 40,
                 range: 3,
@@ -116,16 +118,21 @@ class Actions extends GameplayComponent {
     }
     
     handleActionResult(animation){
-        console.log("Handle action result by animation:", animation)
+        console.log("handle action result", animation)
         const action = Avern.State.actionData.find(act => act.animation===animation)
-        Avern.Sound.gunshotHandler.currentTime = 0.2
-        Avern.Sound.gunshotHandler.play()
-
+        let flashPosition
         switch (action.id) {
             case "shoot_from_distance":
                 if (!Avern.State.target) return
-                this.emitSignal("receive_player_attack", {damage: action.baseDamage })
+                this.emitSignal("receive_player_attack", {damage: scaleValue(action.baseDamage) })
+                // eslint-disable-next-line no-case-declarations
+                flashPosition = Avern.Player.getComponent(Body).rifleMesh.getWorldPosition(new THREE.Vector3())
+                flashPosition.y += 1
+                this.emitSignal("particle_fx", { position: flashPosition, duration: 20 })
+                Avern.Sound.gunshotHandler.currentTime = 0.2
+                Avern.Sound.gunshotHandler.play()        
                 break;
+
             case "blast_at_close_range":
                 if (!Avern.State.target) return
                 this.emitSignal("receive_player_attack", {damage: 
@@ -136,9 +143,18 @@ class Actions extends GameplayComponent {
                         2
                     ) 
                 })
+                flashPosition = Avern.Player.getComponent(Body).rifleMesh.getWorldPosition(new THREE.Vector3())
+                flashPosition.y += 1
+                this.emitSignal("particle_fx", { position: flashPosition, duration: 80 })
+                Avern.Sound.shotgunHandler.currentTime = 0
+                Avern.Sound.shotgunHandler.play()
                 break;
+
             case "set_land_mine":
+                console.log("detonate landmine?")
                 this.emitSignal("detonate_landmine")
+                Avern.Sound.landmineHandler.currentTime = 0
+                Avern.Sound.landmineHandler.play()
                 break;
         }
     }
@@ -197,6 +213,7 @@ class Actions extends GameplayComponent {
         Avern.State.actionData.forEach(act=>act.primed=false)
         action.primed = true
         this.emitSignal("casting_finish", { action })
+        if (action.id != "set_land_mine") this.emitSignal("clear_landmine")
         switch(action.id) {
             case "shoot_from_distance":
                 Avern.Sound.reloadHandler.pause()
@@ -231,6 +248,7 @@ class Actions extends GameplayComponent {
             this.interruptCast()
             break;
           case "action_crucial_frame":
+            console.log("Crucial frame reached?")
             this.handleActionResult(data.id)
             break;
           case "monster_attack":
@@ -246,6 +264,7 @@ class Actions extends GameplayComponent {
         this.addObserver(Avern.Interface.getComponent(Notices))
         this.addObserver(parent.getComponent(Body))
         this.addObserver(parent.getComponent(Landmine))
+        this.addObserver(parent.getComponent(ParticleFX))
         for (const enemy of Avern.State.Enemies) {
             this.addObserver(enemy.getComponent(Enemy))
         }
@@ -253,3 +272,18 @@ class Actions extends GameplayComponent {
 }
 
 export default Actions
+
+function scaleValue(value) {
+    // Ensure the value is within the desired range
+    if (value < 0) {
+      value = 0;
+    } else if (value > 0) {
+      value = 1.2;
+    }
+    
+    // Calculate the scaled value
+    const scaledValue = value * (1.2 - 0.8) + 0.8;
+    const result = scaledValue * value
+    
+    return result;
+  }

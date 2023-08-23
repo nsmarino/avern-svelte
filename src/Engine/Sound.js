@@ -1,7 +1,9 @@
 import exploration from '../../assets/audio/bg.mp3'
 import testRun from '../../assets/audio/Dirt_Jogging.mp3'
 import gunshot from '../../assets/audio/pistol.mp3'
-import thud from '../../assets/audio/thud.wav'
+import shotgun from '../../assets/audio/pistol.mp3'
+import landmine from '../../assets/audio/pistol.mp3'
+import thud from '../../assets/audio/thud.mp3'
 import loadingsound from '../../assets/audio/reload-sound.mp3'
 
 class Sound {
@@ -28,10 +30,20 @@ class Sound {
         this.gunshotHandler.src = gunshot
         this.gunshotHandler.volume = 0.1
 
+        this.shotgunHandler = document.createElement("audio") // button fx for main menu
+        this.shotgunHandler.id = "shotgun-fx"
+        this.shotgunHandler.src = shotgun
+        this.shotgunHandler.volume = 0.1
+
+        this.landmineHandler = document.createElement("audio") // button fx for main menu
+        this.landmineHandler.id = "landmine-fx"
+        this.landmineHandler.src = landmine
+        this.landmineHandler.volume = 0.1
+
         this.thudHandler = document.createElement("audio") // button fx for main menu
         this.thudHandler.id = "thud-fx"
         this.thudHandler.src = thud
-        // this.thudHandler.volume = 0.1
+        this.thudHandler.volume = 0.1
 
         document.addEventListener("click", () => {
             this.musicHandler.play()

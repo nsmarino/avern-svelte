@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import playerGltf from "../../../../assets/pc/hera-textured.gltf"
+import playerGltf from "../../../../assets/pc/fse--player1.gltf"
 import GameplayComponent from '../../_Component';
 import Actions from "./Actions"
 import InteractionOverlay from '../../Interface/InteractionOverlay';
@@ -138,19 +138,19 @@ class Body extends GameplayComponent {
             }
             this.shoot = {
                 id: "shoot",
-                anim: this.setUpAnim(clips, "FIRE", false, true, 2),
-                crucialFrame: 25,
+                anim: this.setUpAnim(clips, "KNEEL_AND_FIRE_RIFLE", false, true, 3.5),
+                crucialFrame: 50,
                 canInterrupt: true,
             }
             this.detonate = {
                 id: "detonate",
                 anim: this.setUpAnim(clips, "DETONATE", false, true, 0.8),
-                crucialFrame: 35,
+                crucialFrame: 30,
                 canInterrupt: true,
             }
             this.shotgun = {
                 id: "shotgun",
-                anim: this.setUpAnim(clips, "SHOTGUN", false, true, 3),
+                anim: this.setUpAnim(clips, "SHOTGUN", false, true, 2.5),
                 crucialFrame: 45,
                 canInterrupt: true,
             }
@@ -219,7 +219,8 @@ class Body extends GameplayComponent {
     update(delta) {
         if (this.action.anim != null && this.action.crucialFrame != null) {
             const currentFrame = Math.floor(this.action.anim.time * 30);
-            if (currentFrame === this.action.crucialFrame && !this.crucialFrameSent) {
+            console.log(currentFrame)
+            if (currentFrame >= this.action.crucialFrame && !this.crucialFrameSent) {
               this.crucialFrameSent = true;
               this.emitSignal("action_crucial_frame", {id: this.action.id})
             }

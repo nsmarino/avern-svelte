@@ -11,6 +11,7 @@ import GameMenu from "../Components/Interface/GameMenu"
 import InteractionOverlay from "../Components/Interface/InteractionOverlay"
  import Notices from "../Components/Interface/Notices"
 import Landmine from "../Components/Game/Player/Landmine"
+import ParticleFX from "../Components/Game/Player/ParticleFX"
 
 const Config = {
     world: {
@@ -19,7 +20,7 @@ const Config = {
     },
     player: {
         include: true,
-        jumpHeight: 16,
+        jumpHeight: 14,
         components: [
             Actions,
             Interaction,
@@ -28,7 +29,8 @@ const Config = {
             Targeting,
             Vitals,
             Inventory,
-            Landmine
+            Landmine,
+            ParticleFX
         ]
     },
     interface: {
