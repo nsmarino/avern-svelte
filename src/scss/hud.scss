@@ -321,6 +321,25 @@
   animation: showDamageNumber 1.5s linear forwards;
   display: inline-block;
 }
+.action-indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  backface-visibility: hidden;
+}
+.action-indicator {
+  border: 1px solid var(--avern-blue);
+  border-radius: 4px;
+  background: var(--avern-off-black);
+  color: var(--avern-blue);
+  font-family: var(--sans);
+  font-size: 12px;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
 @keyframes showDamageNumber {
   0% {

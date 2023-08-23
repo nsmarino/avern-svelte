@@ -6,6 +6,7 @@ import Notices from "../../Interface/Notices"
 import Landmine from './Landmine';
 import ParticleFX from './ParticleFX';
 import * as THREE from 'three';
+import gsap from "gsap"
 
 import { calculateDamageByDistance } from '../../../helpers';
 
@@ -22,6 +23,7 @@ class Actions extends GameplayComponent {
                 range: 10,
                 primed: false,
                 input: "KeyF",
+                indicator: "F",
                 requiresTarget: true,
                 primeAnimation: "load",
                 animation: "shoot",
@@ -35,6 +37,7 @@ class Actions extends GameplayComponent {
                 range: 20,
                 primed: false,
                 input: "KeyD",
+                indicator: "D",
                 requiresTarget: true,
                 primeAnimation: "loadShotgun",
                 animation: "shotgun",
@@ -49,6 +52,7 @@ class Actions extends GameplayComponent {
                 range: 3,
                 primed: false,
                 input: "KeyS",
+                indicator: "S",
                 requiresTarget: false,
                 primeAnimation: "plant",
                 animation: "detonate",
@@ -63,6 +67,7 @@ class Actions extends GameplayComponent {
                 range: 30,
                 primed: false,
                 input: "KeyA",
+                indicator: "A",
                 locked: true,
                 requiresTarget: false,
             },
@@ -71,6 +76,13 @@ class Actions extends GameplayComponent {
         this.casting = false
         this.castingProgress = 0
         this.castingThreshold = 2
+
+        this.actionIndicator = document.createElement("div")
+        this.actionIndicator.classList.add("action-indicator")
+        gsap.set(this.actionIndicator, { opacity: 0 })
+
+        document.body.appendChild(this.actionIndicator)
+    
     }
 
     handleInputs() {
@@ -78,6 +90,7 @@ class Actions extends GameplayComponent {
         
         if ( inputs.action1 ) {
             this.handleAction(Avern.State.actionData[0],inputs)
+            console.log()
         }
         if ( inputs.action2 ) {
             this.handleAction(Avern.State.actionData[1],inputs)
@@ -118,7 +131,7 @@ class Actions extends GameplayComponent {
     }
     
     handleActionResult(animation){
-        console.log("handle action result", animation)
+        gsap.to(this.actionIndicator, { opacity: 0, duration: 0.1 })
         const action = Avern.State.actionData.find(act => act.animation===animation)
         let flashPosition
         switch (action.id) {
@@ -213,6 +226,12 @@ class Actions extends GameplayComponent {
         Avern.State.actionData.forEach(act=>act.primed=false)
         action.primed = true
         this.emitSignal("casting_finish", { action })
+
+        this.actionIndicator.innerHTML = `<span>${action.indicator}</span>`
+
+        gsap.to(this.actionIndicator, { opacity: 1, duration: 0.1 })
+        Avern.Sound.readyHandler.currentTime = 0
+        Avern.Sound.readyHandler.play()
         if (action.id != "set_land_mine") this.emitSignal("clear_landmine")
         switch(action.id) {
             case "shoot_from_distance":
@@ -240,7 +259,39 @@ class Actions extends GameplayComponent {
                 this.finishCast(this.activeCast)
             }
         }
+        const { x, y, distanceToCamera } = this.getScreenCoordinatesAndDistance();
+        
+        const minDistance = 10; // Minimum distance for scaling
+        const maxDistance = 100; // Maximum distance for scaling
+        const scaleFactor = THREE.MathUtils.clamp(
+        1 - (distanceToCamera - minDistance) / (maxDistance - minDistance),
+        0.1, // Minimum scale factor
+        1  // Maximum scale factor
+        );
+    
+        const translateX = x;
+        const translateY = y;
+        this.actionIndicator.style.display="flex"
+        this.actionIndicator.style.transform = `translate(200%, 900%) translate(${translateX}px, ${translateY}px) scale(${scaleFactor})`;
     }
+
+    getScreenCoordinatesAndDistance() {
+        const position = new THREE.Vector3();
+        const cameraPosition = new THREE.Vector3();
+        position.copy(this.gameObject.transform.position);
+        position.y+=2
+        position.project(Avern.State.camera);
+      
+        const halfWidth = window.innerWidth / 2;
+        const halfHeight = window.innerHeight / 2;
+      
+        const x = (position.x * halfWidth) + halfWidth;
+        const y = -(position.y * halfHeight) + halfHeight;
+    
+        const distanceToCamera = this.gameObject.transform.position.distanceTo(Avern.State.camera.getWorldPosition(cameraPosition));
+    
+        return { x, y, distanceToCamera };
+      }
 
     onSignal(signalName, data) {
         switch(signalName) {

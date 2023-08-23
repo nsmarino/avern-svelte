@@ -4,6 +4,7 @@ import gunshot from '../../assets/audio/pistol.mp3'
 import shotgun from '../../assets/audio/pistol.mp3'
 import landmine from '../../assets/audio/pistol.mp3'
 import thud from '../../assets/audio/thud.mp3'
+import ready from '../../assets/audio/ready.mp3'
 import loadingsound from '../../assets/audio/reload-sound.mp3'
 
 class Sound {
@@ -44,6 +45,11 @@ class Sound {
         this.thudHandler.id = "thud-fx"
         this.thudHandler.src = thud
         this.thudHandler.volume = 0.1
+
+        this.readyHandler = document.createElement("audio") // button fx for main menu
+        this.readyHandler.id = "ready-fx"
+        this.readyHandler.src = ready
+        this.readyHandler.volume = 0.1
 
         document.addEventListener("click", () => {
             this.musicHandler.play()
