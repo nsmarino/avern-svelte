@@ -132,7 +132,7 @@ class Body extends GameplayComponent {
             }
             this.react = {
                 id: "react",
-                anim: this.setUpAnim(clips, "REACT_LARGE", false, false),
+                anim: this.setUpAnim(clips, "REACT_SMALL", false, false),
                 crucialFrame: null,
                 canInterrupt: false,
             }

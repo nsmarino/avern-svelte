@@ -60,6 +60,7 @@ class Enemy extends GameplayComponent {
       switch(enemyType) {
         case "zombie-bow":
           this.body = zombieBow
+          this.speed = 5
           break;
         case "zombie-sword":
           this.body = zombieSword
@@ -153,7 +154,7 @@ class Enemy extends GameplayComponent {
           this.attack.setDuration(2.5)
 
           this.actionRange = 3
-          this.crucialFrame = 15
+          this.crucialFrame = 18
           break;
       }
       this.attack.setLoop(THREE.LoopOnce)
@@ -337,7 +338,7 @@ class Enemy extends GameplayComponent {
       case "attack":
         this.updateRotationToFacePoint(this.gameObject.transform, Avern.Player.transform.position, this.lerpFactor)
 
-        if (Math.floor(this.action.time * 30) === this.crucialFrame && !this.crucialFrameSent) {
+        if (Math.floor(this.action.time * 30) >= this.crucialFrame && !this.crucialFrameSent) {
           this.crucialFrameSent = true;
           if(!Avern.State.playerDead && this.checkTarget()) this.emitSignal("monster_attack", {damage: 20, percentage: 0.5})
         }
