@@ -142,6 +142,12 @@ class Body extends GameplayComponent {
                 crucialFrame: 50,
                 canInterrupt: true,
             }
+            this.slash = {
+                id: "slash",
+                anim: this.setUpAnim(clips, "SLASH", false, true, 1),
+                crucialFrame: 30,
+                canInterrupt: true,
+            }
             this.detonate = {
                 id: "detonate",
                 anim: this.setUpAnim(clips, "DETONATE", false, true, 0.8),
@@ -186,9 +192,9 @@ class Body extends GameplayComponent {
             case this.drink.anim:
                 this.emitSignal("player_heal")
             case this.shoot.anim:
-                console.log("SHOOT ANIM FINISHED")
             case this.shotgun.anim:
             case this.detonate.anim:
+            case this.slash.anim:
                 if (inputs.forward) {
                     this.fadeIntoAction(this.run, 0.1, REPLACE)
                 } else if (inputs.back) {

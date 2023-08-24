@@ -45,7 +45,6 @@ class Actions extends GameplayComponent {
             {
                 id: "set_land_mine",
                 label: "Set Landmine",
-                description: "From the pouch at his waist, Heraclius takes an oily iron capsule trailing wires. Once placed in the earth, it can be detonated from a distance.",
                 primeLength: 3,
                 cooldown: 0,
                 baseDamage: 40,
@@ -58,24 +57,24 @@ class Actions extends GameplayComponent {
                 animation: "detonate",
             },
             {
-                id: "null",
-                label: "null",
+                id: "bayonet_slash",
+                label: "Slash with bayonet",
                 description: "",
-                primeLength: 2,
+                primeLength: 0.4,
                 cooldown: 0,
-                baseDamage: 0,
-                range: 30,
+                baseDamage: 3,
+                range: 5,
                 primed: false,
                 input: "KeyA",
                 indicator: "A",
-                locked: true,
                 requiresTarget: false,
+                primeAnimation: "load",
+                animation: "slash"
             },
         ]
 
         this.casting = false
         this.castingProgress = 0
-        this.castingThreshold = 2
 
         this.actionIndicator = document.createElement("div")
         this.actionIndicator.classList.add("action-indicator")
@@ -144,6 +143,19 @@ class Actions extends GameplayComponent {
                 this.emitSignal("particle_fx", { position: flashPosition, duration: 20 })
                 Avern.Sound.gunshotHandler.currentTime = 0.2
                 Avern.Sound.gunshotHandler.play()        
+                break;
+            case "bayonet_slash":
+                if (!Avern.State.target) return
+                if (Avern.Player.transform.position.distanceTo(Avern.State.target.transform.position) <= action.range) {
+                    this.emitSignal("receive_player_attack", {damage: action.baseDamage })
+                    Avern.Sound.thudHandler.currentTime = 0.1
+                    Avern.Sound.thudHandler.play()   
+                    // eslint-disable-next-line no-case-declarations
+                    flashPosition = Avern.Player.getComponent(Body).rifleMesh.getWorldPosition(new THREE.Vector3())
+                    flashPosition.y += 1
+                    this.emitSignal("particle_fx", { position: flashPosition, duration: 20 })
+                }
+     
                 break;
 
             case "blast_at_close_range":
@@ -299,7 +311,7 @@ class Actions extends GameplayComponent {
             this.interruptCast()
             break;
           case "action_crucial_frame":
-            console.log("Crucial frame reached?")
+            console.log("Crucial frame reached", data.id)
             this.handleActionResult(data.id)
             break;
           case "monster_attack":
