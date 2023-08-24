@@ -32,8 +32,8 @@ class Enemy extends GameplayComponent {
     this.numbersContainer.classList.add("numbers-container")
     document.body.appendChild(this.numbersContainer)
 
-    this.initialHealth = 50
-    this.health = 50
+    this.initialHealth = 55
+    this.health = 55
 
     this.prevAngle = null
     this.gameObject = gameObject

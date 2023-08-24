@@ -183,7 +183,7 @@ function calculateDamageByDistance(baseDamage, distance, maxDistance, exponent=2
     const scaledDistance = Math.min(distance / maxDistance, 1);
     
     // Calculate the damage based on the scaled distance and exponent
-    const calculatedDamage = Math.min(baseDamage / Math.pow(scaledDistance, exponent),45);
+    const calculatedDamage = Math.min(baseDamage / Math.pow(scaledDistance, exponent),35);
     
     return calculatedDamage;
   }
