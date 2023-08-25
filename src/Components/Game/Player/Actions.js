@@ -185,11 +185,16 @@ class Actions extends GameplayComponent {
     }
 
     startCast(action) {
+        if (this.gameObject.getComponent(Body).movementLocked) return
         this.casting = true
         this.activeCast = action
         console.log(action)
         this.emitSignal("casting_start", {animation: action.primeAnimation})
         switch(action.id) {
+            case "bayonet_slash":
+                Avern.Sound.bayonetHandler.currentTime = 0
+                Avern.Sound.bayonetHandler.play()
+              break;
             case "shoot_from_distance":
                 Avern.Sound.reloadHandler.currentTime = 0
                 Avern.Sound.reloadHandler.play()

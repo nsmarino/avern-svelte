@@ -236,6 +236,8 @@ class Body extends GameplayComponent {
         if (!Avern.State.playerDead && !this.movementLocked) {
             if (inputs.flask) {
                 this.movementLocked = true
+                Avern.Sound.drinkHandler.currentTime = 0
+                Avern.Sound.drinkHandler.play()
                 this.fadeIntoAction(this.drink,0.2, REPLACE)
             }
             if ( inputs.forwardWasPressed) {

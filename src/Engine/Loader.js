@@ -123,14 +123,14 @@ class Loader {
       Avern.pathfindingZone = baseFile.name
       Avern.PATHFINDING.setZoneData(Avern.pathfindingZone, Pathfinding.createZone(navmesh.geometry));
       // visualize:
-      for (const vert of Avern.PATHFINDING.zones[baseFile.name].vertices) {
-          const indicatorSize = 0.1
-          const geometry = new THREE.BoxGeometry( indicatorSize,indicatorSize,indicatorSize); 
-          const material = new THREE.MeshBasicMaterial( {color: 0x000000} ); 
-          const cube = new THREE.Mesh( geometry, material ); 
-          cube.position.copy(vert)
-          scene.add( cube );
-      }
+      // for (const vert of Avern.PATHFINDING.zones[baseFile.name].vertices) {
+      //     const indicatorSize = 0.1
+      //     const geometry = new THREE.BoxGeometry( indicatorSize,indicatorSize,indicatorSize); 
+      //     const material = new THREE.MeshBasicMaterial( {color: 0x000000} ); 
+      //     const cube = new THREE.Mesh( geometry, material ); 
+      //     cube.position.copy(vert)
+      //     scene.add( cube );
+      // }
       navmesh.visible = false
       scene.add(navmesh)
     }

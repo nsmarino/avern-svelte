@@ -1,11 +1,14 @@
-import exploration from '../../assets/audio/bg.mp3'
+import exploration from '../../assets/audio/fse--paths.mp3'
 import testRun from '../../assets/audio/Dirt_Jogging.mp3'
 import gunshot from '../../assets/audio/pistol.mp3'
 import shotgun from '../../assets/audio/pistol.mp3'
 import landmine from '../../assets/audio/pistol.mp3'
 import thud from '../../assets/audio/thud.mp3'
-import ready from '../../assets/audio/ready.mp3'
+import ready from '../../assets/audio/fse--prepared.mp3'
 import loadingsound from '../../assets/audio/reload-sound.mp3'
+import targeting from '../../assets/audio/fse--targeting.mp3'
+import drink from '../../assets/audio/drink.mp3'
+import bayonet from '../../assets/audio/bayonet.wav'
 
 class Sound {
     constructor() {
@@ -50,6 +53,21 @@ class Sound {
         this.readyHandler.id = "ready-fx"
         this.readyHandler.src = ready
         this.readyHandler.volume = 0.1
+
+        this.targetHandler = document.createElement("audio") // button fx for main menu
+        this.targetHandler.id = "target-fx"
+        this.targetHandler.src = targeting
+        this.targetHandler.volume = 0.1
+
+        this.drinkHandler = document.createElement("audio") // button fx for main menu
+        this.drinkHandler.id = "drink-fx"
+        this.drinkHandler.src = drink
+        this.drinkHandler.volume = 0.1
+
+        this.bayonetHandler = document.createElement("audio") // button fx for main menu
+        this.bayonetHandler.id = "bayonet-fx"
+        this.bayonetHandler.src = bayonet
+        this.bayonetHandler.volume = 0.1
 
         document.addEventListener("click", () => {
             this.musicHandler.play()

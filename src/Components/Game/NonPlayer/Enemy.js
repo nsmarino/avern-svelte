@@ -463,6 +463,8 @@ class Enemy extends GameplayComponent {
   onSignal(signalName, data={}) {
     switch(signalName){
       case "set_target":
+        Avern.Sound.targetHandler.currentTime = 0
+        Avern.Sound.targetHandler.play()
         this.isTargeted = true
         this.ring.visible = true
         gsap.set(this.bar, { opacity: 1})
