@@ -132,6 +132,8 @@ class ItemOnMap extends GameplayComponent {
     }
 
     onPlayerAction() {
+        Avern.Sound.itemHandler.currentTime=0
+        Avern.Sound.itemHandler.play()
         this.emitSignal("item_pickup", { item: this.content.item })
         this.emitSignal("show_notice", { notice: `Picked up ${this.content.item.name}`, color: "yellow", delay: 5000})
         this.gameObject.removeFromScene()
