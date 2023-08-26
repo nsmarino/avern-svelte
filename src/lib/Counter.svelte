@@ -7,6 +7,6 @@
   // }
 </script>
 
-<span>
+<!-- <span>
   count is {$stateStore.flaskCount}
-</span>
+</span> -->

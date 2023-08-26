@@ -62,7 +62,7 @@ class Actions extends GameplayComponent {
                 description: "",
                 primeLength: 0.4,
                 cooldown: 0,
-                baseDamage: 3,
+                baseDamage: 5,
                 range: 5,
                 primed: false,
                 input: "KeyA",

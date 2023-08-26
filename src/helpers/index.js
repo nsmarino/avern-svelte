@@ -87,7 +87,7 @@ function generateCapsuleCollider(start, end, radius) {
 
     // Vision helper
     const material = new THREE.LineBasicMaterial({
-        color: 0xEE4B2B
+        color: 0xFFFFFF
     });
     const points = [];
     points.push( capsuleBottom.position );

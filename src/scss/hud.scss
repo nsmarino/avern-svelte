@@ -328,10 +328,10 @@
   backface-visibility: hidden;
 }
 .action-indicator {
-  border: 1px solid var(--avern-blue);
+  border: 1px solid var(--avern-light-grey);
   border-radius: 4px;
-  background: var(--avern-off-black);
-  color: var(--avern-blue);
+  background: linear-gradient(var(--avern-brown), var(--avern-off-black));
+  color: var(--avern-light-grey);
   font-family: var(--sans);
   font-size: 12px;
   width: 18px;
@@ -340,6 +340,7 @@
   justify-content: center;
   align-items: center;
 }
+
 
 @keyframes showDamageNumber {
   0% {

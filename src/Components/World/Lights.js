@@ -7,13 +7,13 @@ class Lights extends GameplayComponent {
     constructor(gameObject) {
         super(gameObject)
 
-        this.directionalLight = new THREE.DirectionalLight( 0xEEE5DD, 2 );
+        this.directionalLight = new THREE.DirectionalLight( 0xEEE5DD, 3 );
         this.directionalLight.position.set(2,2,-1);
         gameObject.transform.parent.add( this.directionalLight );
         this.directionalLight.castShadow = true
         //Set up shadow properties for the light
-        this.directionalLight.shadow.mapSize.width = 1024; // default
-        this.directionalLight.shadow.mapSize.height = 1024; // default
+        this.directionalLight.shadow.mapSize.width = 2048; // default
+        this.directionalLight.shadow.mapSize.height = 2048; // default
         this.directionalLight.shadow.camera.near = 0.5; // default
         this.directionalLight.shadow.camera.far = 500; // default
 

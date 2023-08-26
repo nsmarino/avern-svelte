@@ -5,8 +5,8 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import GameplayComponent from '../../_Component';
 import { generateCapsuleCollider, checkCapsuleCollision } from '../../../helpers';
 import Body from '../Player/Body';
-import zombieBow from "../../../../assets/monsters/zombie-bow.gltf"
-import zombieSword from "../../../../assets/monsters/zombie-sword.gltf"
+import zombieBow from "../../../../assets/monsters/zombie-bow-2.gltf"
+import zombieSword from "../../../../assets/monsters/zombie-sword-2.gltf"
 import Vitals from '../Player/Vitals';
 import Actions from '../Player/Actions';
 import Targeting from '../Player/Targeting';
@@ -15,6 +15,7 @@ import Notices from '../../Interface/Notices';
 class Enemy extends GameplayComponent {
   constructor(gameObject, spawnPoint, enemyType) {
     super(gameObject)
+    this.enemyType = enemyType
     // this.HELPER = Avern.PATHFINDINGHELPER
     // Avern.State.scene.add(this.HELPER)
 
@@ -57,7 +58,7 @@ class Enemy extends GameplayComponent {
     this.prevPlayerPosition = new THREE.Vector3()
 
     const initFromGLTF = async () => {
-      switch(enemyType) {
+      switch(this.enemyType) {
         case "zombie-bow":
           this.body = zombieBow
           this.speed = 5
@@ -136,15 +137,15 @@ class Enemy extends GameplayComponent {
       )
       this.reactLarge.setLoop(THREE.LoopOnce)
 
-      // Set by enemyType; ranged enemies have larger range than melee enemies. Obviously.
       this.attackRange = null
 
-      switch(enemyType) {
+      switch(this.enemyType) {
         case "zombie-bow":
+    
           this.attack = this.mixer.clipAction(
             THREE.AnimationClip.findByName(this.clips, "SHOOT")
           )
-          this.actionRange = 15
+          this.actionRange = 18
           this.crucialFrame = 85
           break;
         case "zombie-sword":
@@ -230,15 +231,10 @@ class Enemy extends GameplayComponent {
 
   onMixerFinish(e) {
     if (e.action == this.attack) {
-      // this.idle.reset()
-      // this.idle.play()
-
-      // setTimeout(() => {
         if (this.behavior=="die_lol") return
         this.behavior = "pursue"
         this.fadeIntoAction(this.walk,0.1)
         this.crucialFrameSent = false
-      // }, 2000)
     }
     if (e.action == this.death) {
       this.onSignal("clear_target")
@@ -336,11 +332,14 @@ class Enemy extends GameplayComponent {
           this.followPursuePath(delta)
           break;
       case "attack":
-        this.updateRotationToFacePoint(this.gameObject.transform, Avern.Player.transform.position, this.lerpFactor)
+        if (!this.crucialFrameSent) this.updateRotationToFacePoint(this.gameObject.transform, Avern.Player.transform.position, this.lerpFactor)
 
         if (Math.floor(this.action.time * 30) >= this.crucialFrame && !this.crucialFrameSent) {
           this.crucialFrameSent = true;
-          if(!Avern.State.playerDead && this.checkTarget()) this.emitSignal("monster_attack", {damage: 20, percentage: 0.5})
+
+          if(!Avern.State.playerDead && this.checkTarget()) {
+            this.emitSignal("monster_attack", {damage: 20, percentage: 0.5})
+          }
         }
         break;
     }
