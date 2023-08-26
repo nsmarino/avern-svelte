@@ -42,7 +42,8 @@ align-items: center;
     align-items: center;
 }
 #narrative-controller p {
-    color: white;
+    color: var(--avern-tan);
+    font-size: 14px;
     text-align: left;
     font-family: var(--sans);
 }

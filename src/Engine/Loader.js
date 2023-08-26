@@ -59,19 +59,15 @@ class Loader {
           prompt: "Talk",
           content: [
             {
-                text: "Woe is me...",
+                text: "Woe is me...I have lost the key to the gatehouse.",
                 image: ""
             },
             {
-                text: "Child, I have lost the key to the gatehouse.",
-                image: ""
-              },
-            {
-                text: "Will you clear the path for me?",
+                text: "Eunuch, will you clear the path for me? There are phantasms...it is too dangerous for me.",
                 image: ""
             },
             {
-                text: "There are phantasms...make use of your SHEPHERD'S RIFLE.",
+                text: "You have your SHEPHERD'S RIFLE. Seek the key, that I might open the fortress gates for weary travelers.",
                 image: ""
             }
           ],
