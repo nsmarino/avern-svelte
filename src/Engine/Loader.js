@@ -1,7 +1,7 @@
 import sanityClient from "../sanityClient"
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import npcGltf from "../../assets/npcs/plateau-npc.gltf"
+import npcGltf from "../../assets/npcs/fse--gatekeeper.gltf"
 import gearGltf from "../../assets/npcs/gear-interaction.gltf"
 import { Pathfinding, PathfindingHelper } from 'three-pathfinding';
 import { acceleratedRaycast } from 'three-mesh-bvh';
@@ -11,7 +11,7 @@ import Enemy from "../Components/Game/NonPlayer/Enemy";
 
 import Interaction from "../Components/Game/NonPlayer/Interaction";
 
-import Fountain from "../Components/Game/NonPlayer/Fountain";
+// import Fountain from "../Components/Game/NonPlayer/Fountain";
 import ItemOnMap from "../Components/Game/NonPlayer/ItemOnMap";
 import Gateway from "../Components/Game/NonPlayer/Gateway";
 
@@ -59,23 +59,27 @@ class Loader {
           prompt: "Talk",
           content: [
             {
-                text: "Ahh...I have locked myself out of the gatehouse...",
+                text: "Woe is me...",
                 image: ""
             },
             {
-                text: "Please traverse the mountain path and enter the gatehouse through the hatch on the roof.",
+                text: "Child, I have lost the key to the gatehouse.",
                 image: ""
               },
             {
-                text: "There you will find a key that will unlock the rear entrance.",
+                text: "Will you clear the path for me?",
                 image: ""
-              }
+            },
+            {
+                text: "There are phantasms...make use of your SHEPHERD'S RIFLE.",
+                image: ""
+            }
           ],
           model: npcGltf
         },
         {
-          label: "example",
-          prompt: "Examine",
+          label: "gears",
+          prompt: "Examine machine",
           content: [
             {
                 text: "It is unclear what purpose this machine serves.",

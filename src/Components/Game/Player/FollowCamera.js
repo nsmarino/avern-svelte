@@ -43,7 +43,7 @@ class FollowCamera extends GameplayComponent {
         this.orbitCamControls.update()
 
         this.originalCameraPosition = this.camera.position.clone();
-        this.lerpingSpeed = 0.1
+        this.lerpingSpeed = 0.5
 
         this.workerVector = new THREE.Vector3()
         this.arrow = null

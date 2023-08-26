@@ -31,7 +31,7 @@ class InteractionOverlay extends GameplayComponent {
             this.textContainer.innerHTML = ''
             const textWrapper = document.createElement("p")
             gsap.set(this.textContainer, { opacity: 0})
-            textWrapper.innerHTML = `${data.text} <span class="next-indicator">H ▶</span>`
+            textWrapper.innerHTML = `${data.text} <span class="next-indicator">▶</span>`
             this.textContainer.appendChild(textWrapper)
             gsap.to(this.textContainer, {opacity: 1})
             break;

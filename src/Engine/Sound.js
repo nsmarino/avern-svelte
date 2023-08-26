@@ -1,3 +1,4 @@
+import intro from '../../assets/audio/intro.mp3'
 import exploration from '../../assets/audio/fse--paths.mp3'
 import testRun from '../../assets/audio/Dirt_Jogging.mp3'
 import gunshot from '../../assets/audio/pistol.mp3'
@@ -10,9 +11,14 @@ import targeting from '../../assets/audio/fse--targeting.mp3'
 import drink from '../../assets/audio/drink.mp3'
 import bayonet from '../../assets/audio/bayonet.wav'
 import pickup from '../../assets/audio/pickup.wav'
-
+ 
 class Sound {
     constructor() {
+        this.introHandler = document.createElement("audio")
+        this.introHandler.src = intro
+        this.introHandler.loop = true
+        this.introHandler.volume = 0.1
+
         this.musicHandler = document.createElement("audio")
         this.musicHandler.src = exploration
         this.musicHandler.loop = true
@@ -76,6 +82,13 @@ class Sound {
         this.itemHandler.volume = 0.1
 
         document.addEventListener("click", () => {
+            if (this.introHandler.classList.contains("active")) return
+            this.introHandler.classList.add("active")
+            this.introHandler.play()
+        })
+        document.querySelector(".start-btn").addEventListener("click", () => {
+            console.log("remove")
+            this.introHandler.pause()
             this.musicHandler.play()
         })
     }

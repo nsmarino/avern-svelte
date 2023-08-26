@@ -74,7 +74,7 @@ class Interaction extends GameplayComponent {
             const clips = this.gltf.animations
 
             this.idle = this.mixer.clipAction(
-                THREE.AnimationClip.findByName(clips, "IDLE")
+                THREE.AnimationClip.findByName(clips, "SIT")
             )
 
             this.action = this.idle
