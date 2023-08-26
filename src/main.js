@@ -26,7 +26,7 @@ function startMenu() {
 	document.addEventListener("click", () => {
 		gsap.set(".intro-prompt", { display: "none"})
 		gsap.set(".intro", { display: 'block'})
-		gsap.to(".intro", { opacity: 1, duration: 3, y: 0, pointerEvents: "auto"  })
+		gsap.to(".intro", { opacity: 1, duration: 4, y: 0, pointerEvents: "auto"  })
 	})
 
 	document.querySelector(".start-btn").addEventListener("click", () => {	
