@@ -45,7 +45,7 @@ class Sky extends GameplayComponent {
         // sky.material.side = THREE.BackSide;
         // gameObject.transform.parent.add(sky);
         // sky.position.y += 200
-        // gameObject.transform.parent.fog = new THREE.Fog( 0x090c10, 100, 200 );
+        gameObject.transform.parent.fog = new THREE.Fog( 0xFFFFFF, 40, 200 );
     }
 
     update(deltaTime) {
