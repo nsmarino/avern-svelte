@@ -88,7 +88,6 @@ class Body extends GameplayComponent {
             this.mixer = new THREE.AnimationMixer( this.gltf.scene );
 
             const clips = this.gltf.animations
-            console.log(clips)
             // Player actions
             this.idle = {
                 id: "idle",
@@ -239,7 +238,6 @@ class Body extends GameplayComponent {
     update(delta) {
         if (this.action.anim != null && this.action.crucialFrame != null) {
             const currentFrame = Math.floor(this.action.anim.time * 30);
-            console.log(currentFrame)
             if (currentFrame >= this.action.crucialFrame && !this.crucialFrameSent) {
               this.crucialFrameSent = true;
               this.emitSignal("action_crucial_frame", {id: this.action.id})
@@ -271,29 +269,44 @@ class Body extends GameplayComponent {
                 this.fadeIntoAction(this.runBack, 0.2, REPLACE)
             }
 
-            if ( inputs.leftWasPressed && this.targeting ) {
+            if ( (inputs.leftWasPressed && this.targeting) || inputs.leftWasPressed && inputs.strafe ) {
                 Avern.Sound.fxHandler.currentTime = 0
                 Avern.Sound.fxHandler.play()
                 this.emitSignal("walk_start")
                 this.fadeIntoAction(this.strafeLeft, 0.2, REPLACE)
             }
-            if ( inputs.rightWasPressed && this.targeting ) {
+            if ( (inputs.rightWasPressed && this.targeting) || inputs.rightWasPressed && inputs.strafe ) {
                 Avern.Sound.fxHandler.currentTime = 0
                 Avern.Sound.fxHandler.play()
                 this.emitSignal("walk_start")
                 this.fadeIntoAction(this.strafeRight, 0.2, REPLACE)
             }
-            if ( (inputs.forwardWasLifted || inputs.backWasLifted || (inputs.leftWasLifted && this.targeting)) || (inputs.rightWasLifted && this.targeting) ) {
+            if (inputs.strafeWasPressed && inputs.left) {
+                Avern.Sound.fxHandler.currentTime = 0
+                Avern.Sound.fxHandler.play()
+                this.emitSignal("walk_start")
+                this.fadeIntoAction(this.strafeLeft, 0.2, REPLACE)
+            }
+            if (inputs.strafeWasPressed && inputs.right) {
+                Avern.Sound.fxHandler.currentTime = 0
+                Avern.Sound.fxHandler.play()
+                this.emitSignal("walk_start")
+                this.fadeIntoAction(this.strafeRight, 0.2, REPLACE)
+            }
+            if ( inputs.forwardWasLifted || inputs.backWasLifted || inputs.leftWasLifted || inputs.rightWasLifted ) {
+
                 if (inputs.forward){
+                    if (this.action.id == this.run.id) return
                     this.fadeIntoAction(this.run, 0.1, REPLACE)
                 } else if (inputs.back) {
+                    if (this.action.id == this.runBack.id) return
                     this.fadeIntoAction(this.runBack, 0.1, REPLACE)
                 } else if (inputs.left && this.targeting) {
                     this.fadeIntoAction(this.strafeLeft, 0.1, REPLACE)
                 } else if (inputs.right && this.targeting) {
                     this.fadeIntoAction(this.strafeRight, 0.1, REPLACE)
                 } else {
-                    this.fadeIntoAction(this.idle, 0.1, REPLACE)
+                    if (this.action != this.idle) this.fadeIntoAction(this.idle, 0.1, REPLACE)
                     Avern.Sound.fxHandler.pause()
                 }
             }        
@@ -465,7 +478,6 @@ class Body extends GameplayComponent {
         const inputVector = new THREE.Vector3()
         const strafeVector = new THREE.Vector3()
 
-        // console.log(transform.getWorldDirection(inputVector))
         if ( inputs.forward && !this.movementLocked) {
             const forwardSpeed = this.targeting ? 6 : 12
             transform.getWorldDirection(inputVector).multiplyScalar(delta).multiplyScalar(forwardSpeed)
@@ -477,12 +489,12 @@ class Body extends GameplayComponent {
             deltaVector.add(inputVector)
         }
         if ( inputs.left ) {
-            if (inputs.strafe && !this.targeting) {
+            if (inputs.strafe && !this.targeting && !this.movementLocked) {
                 const perpendicularVector = new THREE.Vector3();
                 perpendicularVector.crossVectors(transform.getWorldDirection(strafeVector), new THREE.Vector3(0, 1, 0));
                 perpendicularVector.normalize().multiplyScalar(delta).multiplyScalar(-4);
                 deltaVector.add(perpendicularVector);
-            } else if (!inputs.strafe && this.targeting) {
+            } else if (!inputs.strafe && this.targeting && !this.movementLocked) {
                 const perpendicularVector = new THREE.Vector3();
                 perpendicularVector.crossVectors(transform.getWorldDirection(strafeVector), new THREE.Vector3(0, 1, 0));
                 perpendicularVector.normalize().multiplyScalar(delta).multiplyScalar(-4);
@@ -494,12 +506,12 @@ class Body extends GameplayComponent {
         }
             
         if ( inputs.right ) {
-            if (inputs.strafe && !this.targeting) {
+            if (inputs.strafe && !this.targeting && !this.movementLocked) {
                 const perpendicularVector = new THREE.Vector3();
                 perpendicularVector.crossVectors(transform.getWorldDirection(strafeVector), new THREE.Vector3(0, 1, 0));
                 perpendicularVector.normalize().multiplyScalar(delta).multiplyScalar(4);
                 deltaVector.add(perpendicularVector);
-            } else if (!inputs.strafe && this.targeting) {
+            } else if (!inputs.strafe && this.targeting && !this.movementLocked) {
                 const perpendicularVector = new THREE.Vector3();
                 perpendicularVector.crossVectors(transform.getWorldDirection(strafeVector), new THREE.Vector3(0, 1, 0));
                 perpendicularVector.normalize().multiplyScalar(delta).multiplyScalar(4);

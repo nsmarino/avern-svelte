@@ -104,7 +104,7 @@ class Enemy extends GameplayComponent {
         this.visionEnd,
         this.visionRadius
       )
-      this.gameObject.transform.add(this.visionCapsule.spine)
+      // this.gameObject.transform.add(this.visionCapsule.spine)
       this.visionStartWorldPos = new THREE.Vector3()
       this.visionEndWorldPos = new THREE.Vector3()
 
@@ -226,7 +226,8 @@ class Enemy extends GameplayComponent {
       //     new THREE.MeshBasicMaterial()
       // );
       // this.gameObject.transform.parent.add(this.mesh3)
-        this.gameObject.transform.rotation.y = spawnPoint.rotation.z
+        this.gameObject.transform.rotation.y = spawnPoint.rotation.y
+
     }
     initFromGLTF()
   }
@@ -593,9 +594,13 @@ class Enemy extends GameplayComponent {
         this.isTargeted = false;
         this.health = this.initialHealth
         this.innerBar.style.width = `100%`
-        this.behavior = "wander"
+        this.behavior = this.startingBehavior
         this.gameObject.transform.position.copy(this.originalSpawnPoint.position)
-        this.fadeIntoAction(this.walk, 0.1)
+        this.gameObject.transform.rotation.y = this.originalSpawnPoint.rotation.y
+
+        if (this.startingBehavior=="wander")this.fadeIntoAction(this.walk, 0.1)
+        if (this.startingBehavior=="idle")this.fadeIntoAction(this.idle, 0.1)
+        
         this.emitSignal("clear_target", {visible: false, id: this.gameObject.name})
 
         break;
@@ -658,9 +663,3 @@ class Enemy extends GameplayComponent {
 }
 
 export default Enemy
-
-
-// next:
-// refine clearTarget incl on death etc
-// add UI
-// new staging level

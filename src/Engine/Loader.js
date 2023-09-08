@@ -140,7 +140,6 @@ class Loader {
         if (c.userData.gltfExtensions.EXT_collections.collections) {
           switch(c.userData.gltfExtensions.EXT_collections.collections[0]) {
             case "enemies":
-              console.log(c)
               const enemy = Avern.GameObjects.createGameObject(scene, c.name)                        
               enemy.addComponent(Enemy, c)
               break;

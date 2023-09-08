@@ -43,7 +43,6 @@ class ParticleFX extends GameplayComponent {
         // Create a particle system from the buffer geometry and material
         this.particleSystem = new THREE.Points(this.particleGeometry, particleMaterial);
         gameObject.transform.add(this.particleSystem)
-        console.log(this.gameObject)   
 
     }
 
@@ -71,10 +70,8 @@ class ParticleFX extends GameplayComponent {
     }
 
     activate(position){
-        console.log("Activate")
         Avern.State.scene.attach( this.particleSystem ); // detach from parent and add to scene
         this.particleSystem.position.copy( position );
-        console.log(this.particleSystem.position)
         this.status = true
         this.particleSystem.material.visible = true
     }

@@ -211,6 +211,7 @@ class Inputs {
             flask: false,
 
             strafe: false,
+            strafeWasPressed:false,
             strafeWasLifted:false,
         }
         

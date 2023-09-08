@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-// import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 import GameplayComponent from '../../_Component';
 
@@ -11,6 +10,8 @@ class FollowCamera extends GameplayComponent {
         this.targeting = false
         this.targetVector = new THREE.Vector3()
         this.cameraPosVector = new THREE.Vector3()
+        this.comparisonVector = new THREE.Vector3()
+        this.comparisonVector2 = new THREE.Vector3()
         
         this.camera = new THREE.PerspectiveCamera(
             30, window.innerWidth / window.innerHeight
@@ -19,15 +20,15 @@ class FollowCamera extends GameplayComponent {
         const geometry = new THREE.SphereGeometry( 0.25, 32, 16 ); 
         const material = new THREE.MeshBasicMaterial( { color: 0xffff00 } ); 
         material.wireframe = true
-        const sphere = new THREE.Mesh( geometry, material )
+        this.sphere = new THREE.Mesh( geometry, material )
 
-        // this.cameraTarget.add(sphere)
+        // this.cameraTarget.add(this.sphere)
         Avern.State.scene.add(this.camera)
         Avern.State.scene.add(this.cameraTarget)
         Avern.State.camera = this.camera
         this.camera.lookAt(this.cameraTarget.position)
-        this.targetLerp = 0.3
-        this.cameraLerp = 0.3
+        this.targetLerp = 0.1
+        this.cameraLerp = 0.1
 
         // When not targeting an enemy, use these positions:
         this.playerCameraTarget = new THREE.Object3D()
@@ -37,97 +38,28 @@ class FollowCamera extends GameplayComponent {
         this.playerCameraPlaceholder.position.set(0,2,-15)
         this.gameObject.transform.add(this.playerCameraTarget)
 
-        // this.orbitCam = new THREE.PerspectiveCamera(
-        //     50, window.innerWidth / window.innerHeight
-        // )        
-        // Avern.State.scene.add(this.orbitCam)
-
-
-        // this.gameObject.transform.add(this.cameraTarget)
-        // this.cameraTarget.position.y += 1
-        // this.cameraTarget.add(this.camera)
-        // this.camera.position.set(0, 1, -9)
-        // this.camera.lookAt(this.cameraTarget.position)
         window.addEventListener( 'resize', function () {
             this.camera.aspect = window.innerWidth / window.innerHeight;
             this.camera.updateProjectionMatrix();
-            // this.orbitCam.aspect = window.innerWidth / window.innerHeight;
-            // this.orbitCam.updateProjectionMatrix();
         }.bind(this), false );
 
-        // this.orbitCam.position.copy(this.camera.position)
-        // this.orbitCam.lookAt(this.cameraTarget.position)
-        
-        // this.orbitCamControls = new OrbitControls( this.orbitCam, document.querySelector(".canvas") )
-        // this.orbitCamControls.maxDistance = 15.1
-        // this.orbitCamControls.minDistance = 3
-        // this.orbitCamControls.target = this.cameraTarget.position
-        // this.orbitCamControls.update()
-
-        // this.originalCameraPosition = this.camera.position.clone();
-
-        // this.workerVector = new THREE.Vector3()
-        // this.arrow = null
-    }
-
-    // lerpCamera(target, camera, collider) {
-        // const targetPosition = new THREE.Vector3();
-        // const cameraPosition = new THREE.Vector3();
-        // target.getWorldPosition(targetPosition);
-        // camera.getWorldPosition(cameraPosition);
-
-        // const obstaclePoint = this.isCameraViewBlocked(targetPosition, cameraPosition, collider);
-    
-        // if (obstaclePoint) {
-        //     const distanceThreshold = 0.1
-        //     const distanceFromObstaclePointToTarget = obstaclePoint.distanceTo(targetPosition);
-        //     const distanceFromCameraToTarget = cameraPosition.distanceTo(targetPosition);
-        //     const distanceFromCameraToObstaclePoint = cameraPosition.distanceTo(obstaclePoint);
-        //     Avern.State.scene.attach( camera ); // detach from parent and add to scene
-        //     if (distanceFromCameraToObstaclePoint > distanceThreshold && distanceFromCameraToTarget > distanceFromObstaclePointToTarget) camera.position.lerp(obstaclePoint, this.lerpingSpeed)
-        //     this.cameraTarget.attach( camera ); // reattach to original parent
-
-        // } else {
-        //     camera.position.lerp(this.originalCameraPosition, this.lerpingSpeed);
-        // }
-    // }
-
-    setLockOn() {
-        // set cameraTarget as child of enemy gameobject
-    }
-    clearLockOn() {
-        // set cameraTarget back to child of player gameobject
     }
 
     update() {
         if (!this.targeting) {
-            this.playerCameraTarget.getWorldPosition(this.cameraTarget.position)
-            // this.playerCameraPlaceholder.getWorldPosition(this.camera.position)
-            this.playerCameraPlaceholder.getWorldPosition(this.cameraPosVector)
-            this.camera.position.copy(this.cameraPosVector)
-
-            this.camera.lookAt(this.cameraTarget.position)    
+            if ((this.playerCameraTarget.getWorldPosition(this.comparisonVector).distanceTo(this.cameraTarget.getWorldPosition(this.comparisonVector2)) > 0.2 )) {
+                this.playerCameraTarget.getWorldPosition(this.targetVector)
+                this.playerCameraPlaceholder.getWorldPosition(this.cameraPosVector)
+                this.camera.position.lerp(this.cameraPosVector, 0.3)
+                this.cameraTarget.position.lerp(this.targetVector, 0.3)
+                this.camera.lookAt(this.cameraTarget.position)
+            } else {
+                this.playerCameraTarget.getWorldPosition(this.cameraTarget.position)
+                this.playerCameraPlaceholder.getWorldPosition(this.cameraPosVector)
+                this.camera.position.copy(this.cameraPosVector)
+                this.camera.lookAt(this.cameraTarget.position)   
+            }     
         }
-        // this.camera.lookAt(this.cameraTarget.position)
-        // this.lerpCamera(this.cameraTarget, this.camera, Avern.State.collider)
-
-        // const inputs = Avern.Inputs.getInputs()
-        // this.orbitCamControls.target = Avern.Player.transform.position
-
-        // if (inputs.freeCam) {
-        //     this.camera.getWorldPosition(this.orbitCam.position)
-        //     this.orbitCam.lookAt(this.cameraTarget.position)
-        //     Avern.State.camera = this.orbitCam
-        //     Avern.State.camera.updateProjectionMatrix()
-        //     gsap.set(document.body, {cursor: "var(--camera-cursor)"})
-
-        // }
-
-        // if (inputs.freeCamWasLifted) {
-        //     Avern.State.camera = this.camera
-        //     gsap.set(document.body, {cursor: "var(--pointer-cursor)"})
-        // }
-        // this.orbitCamControls.update()
     }
 
     onSignal(signalName, data={}) {
@@ -138,15 +70,15 @@ class FollowCamera extends GameplayComponent {
             data.object.transform.getWorldPosition(this.targetVector)
             this.targetVector.y+=1
             this.playerCameraPlaceholder.getWorldPosition(this.cameraPosVector)
-            const distanceThreshold = 0.15
+            const distanceThreshold = 0.1
             const distanceFromCurrentCameraTargetToUpdatedCameraTarget = this.cameraTarget.position.distanceTo(this.targetVector);
-            if (distanceFromCurrentCameraTargetToUpdatedCameraTarget > distanceThreshold) {
+            // if (distanceFromCurrentCameraTargetToUpdatedCameraTarget > distanceThreshold) {
                 this.cameraTarget.position.lerp(this.targetVector, this.targetLerp)
                 this.camera.position.lerp(this.cameraPosVector, this.cameraLerp)
-            } else {
-                this.cameraTarget.position.copy(this.targetVector)
-                this.camera.position.copy(this.cameraPosVector)
-            }
+            // } else {
+            //     this.cameraTarget.position.copy(this.targetVector)
+            //     this.camera.position.copy(this.cameraPosVector)
+            // }
             this.camera.lookAt(this.cameraTarget.position)    
 
             // data.object.transform.getWorldPosition(this.cameraTarget.position)
@@ -193,6 +125,3 @@ class FollowCamera extends GameplayComponent {
 }
 
 export default FollowCamera
-
-// on "lock_on" signal from targeting component: initLockOn
-// on "clear_lock_on" signal from targeting component: clearLockOn

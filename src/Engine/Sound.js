@@ -87,7 +87,6 @@ class Sound {
             this.introHandler.play()
         })
         document.querySelector(".start-btn").addEventListener("click", () => {
-            console.log("remove")
             this.introHandler.pause()
             this.musicHandler.play()
         })

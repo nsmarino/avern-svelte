@@ -4,6 +4,7 @@ import GameplayComponent from '../../_Component';
 import Enemy from '../NonPlayer/Enemy';
 import Body from "./Body"
 import FollowCamera from "./FollowCamera"
+import Actions from "./Actions"
     
 class Targeting extends GameplayComponent {
     constructor(gameObject, ) {
@@ -172,7 +173,7 @@ class Targeting extends GameplayComponent {
                 }
                 break;
             case "clear_target":
-                console.log("Received clear_target in Targeting", data)
+                this.targetIndex= 0
                 if (data.visible) {
                     this.targetsMap.set(data.id, {proximity: data.proximity, y:data.y, order: null})
                 } else {
@@ -192,6 +193,7 @@ class Targeting extends GameplayComponent {
         }
         this.addObserver(parent.getComponent(Body))
         this.addObserver(parent.getComponent(FollowCamera))
+        this.addObserver(parent.getComponent(Actions))
     }
 }
 

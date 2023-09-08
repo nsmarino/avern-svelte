@@ -78,6 +78,8 @@ class Actions extends GameplayComponent {
         this.casting = false
         this.castingProgress = 0
 
+        this.targeting = false
+
         this.actionIndicator = document.createElement("div")
         this.actionIndicator.classList.add("action-indicator")
         gsap.set(this.actionIndicator, { opacity: 0 })
@@ -91,7 +93,6 @@ class Actions extends GameplayComponent {
         
         if ( inputs.action1 ) {
             this.handleAction(Avern.State.actionData[0],inputs)
-            console.log()
         }
         if ( inputs.action2 ) {
             this.handleAction(Avern.State.actionData[1],inputs)
@@ -112,7 +113,7 @@ class Actions extends GameplayComponent {
         if (action.primed) {
             this.doAction(action)
         } else if (this.casting && this.activeCast.id !== action.id) {
-            if (inputs.forward || inputs.back) return;
+            if (inputs.forward || inputs.back || (this.left && (this.targeting || inputs.strafe)) || (this.right && (this.targeting || inputs.strafe))) return;
             this.interruptCast()
             this.startCast(action)
         } else {
@@ -184,7 +185,6 @@ class Actions extends GameplayComponent {
         if (this.gameObject.getComponent(Body).movementLocked) return
         this.casting = true
         this.activeCast = action
-        console.log(action)
         this.emitSignal("casting_start", {animation: action.primeAnimation})
         switch(action.id) {
             case "bayonet_slash":
@@ -217,7 +217,6 @@ class Actions extends GameplayComponent {
 
     reduceCast() {
         this.castingProgress = (this.castingProgress - 0.5 <= 0) ? 0 : this.castingProgress - 0.5
-        console.log("Resulting casting progress", this.castingProgress)
         this.emitSignal("casting_reduce", { 
             progress: this.castingProgress, 
             threshold: this.activeCast.primeLength 
@@ -312,7 +311,6 @@ class Actions extends GameplayComponent {
             this.interruptCast()
             break;
           case "action_crucial_frame":
-            console.log("Crucial frame reached", data.id)
             this.handleActionResult(data.id)
             break;
           case "monster_attack":
@@ -320,6 +318,12 @@ class Actions extends GameplayComponent {
             break;
           case "player_death":
             if (this.activeCast) this.interruptCast()
+            break;
+          case "active_target":
+            this.targeting = true
+            break;
+          case "clear_target":
+            this.targeting = false
             break;
         }
     }
