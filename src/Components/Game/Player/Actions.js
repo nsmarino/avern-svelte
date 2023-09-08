@@ -18,9 +18,9 @@ class Actions extends GameplayComponent {
                 id: "shoot_from_distance",
                 label: "Shoot from a distance",
                 description: ".",
-                primeLength: 1,
-                baseDamage: 15,
-                range: 10,
+                primeLength: 0.4,
+                baseDamage: 80,
+                range: 15,
                 primed: false,
                 input: "KeyF",
                 indicator: "F",
@@ -29,22 +29,24 @@ class Actions extends GameplayComponent {
                 animation: "shoot",
             },
             {
-                id: "blast_at_close_range",
-                label: "Blast at close range",
-                description: ".",
-                primeLength: 2.5,
-                baseDamage: 2,
-                range: 20,
+                id: "bayonet_slash",
+                label: "Slash with bayonet",
+                description: "",
+                primeLength: 0.6,
+                cooldown: 0,
+                baseDamage: 10,
+                range: 5,
                 primed: false,
                 input: "KeyD",
                 indicator: "D",
-                requiresTarget: true,
-                primeAnimation: "loadShotgun",
-                animation: "shotgun",
+                requiresTarget: false,
+                primeAnimation: "load",
+                animation: "slash"
             },
             {
                 id: "set_land_mine",
                 label: "Set Landmine",
+                locked: true,
                 primeLength: 3,
                 cooldown: 0,
                 baseDamage: 40,
@@ -57,19 +59,19 @@ class Actions extends GameplayComponent {
                 animation: "detonate",
             },
             {
-                id: "bayonet_slash",
-                label: "Slash with bayonet",
-                description: "",
-                primeLength: 0.4,
-                cooldown: 0,
-                baseDamage: 5,
-                range: 5,
+                id: "blast_at_close_range",
+                label: "Blast at close range",
+                description: ".",
+                primeLength: 2.5,
+                baseDamage: 2,
+                locked: true,
+                range: 20,
                 primed: false,
                 input: "KeyA",
                 indicator: "A",
-                requiresTarget: false,
-                primeAnimation: "load",
-                animation: "slash"
+                requiresTarget: true,
+                primeAnimation: "loadShotgun",
+                animation: "shotgun",
             },
         ]
 
@@ -120,10 +122,10 @@ class Actions extends GameplayComponent {
         }
     }
     doAction(action) {
-        if (!Avern.State.target && action.requiresTarget) {
-            this.emitSignal("show_notice", {notice: "Target required", color: "red", delay: 2000})
-            return;
-        }
+        // if (!Avern.State.target && action.requiresTarget) {
+        //     this.emitSignal("show_notice", {notice: "Target required", color: "red", delay: 2000})
+        //     return;
+        // }
         action.primed = false
 
         this.emitSignal("action_availed", { action })
@@ -135,8 +137,8 @@ class Actions extends GameplayComponent {
         let flashPosition
         switch (action.id) {
             case "shoot_from_distance":
-                if (!Avern.State.target) return
-                this.emitSignal("receive_player_attack", {damage: action.baseDamage })
+                // if (!Avern.State.target) return
+                this.emitSignal("receive_direct_attack", {damage: action.baseDamage })
                 // eslint-disable-next-line no-case-declarations
                 flashPosition = Avern.Player.getComponent(Body).rifleMesh.getWorldPosition(new THREE.Vector3())
                 flashPosition.y += 1
@@ -145,21 +147,15 @@ class Actions extends GameplayComponent {
                 Avern.Sound.gunshotHandler.play()        
                 break;
             case "bayonet_slash":
-                if (!Avern.State.target) return
-                if (Avern.Player.transform.position.distanceTo(Avern.State.target.transform.position) <= action.range) {
-                    this.emitSignal("receive_player_attack", {damage: action.baseDamage })
-                    Avern.Sound.thudHandler.currentTime = 0.1
-                    Avern.Sound.thudHandler.play()   
+                    this.emitSignal("receive_direct_attack", {damage: action.baseDamage, range: action.range })
                     // eslint-disable-next-line no-case-declarations
                     flashPosition = Avern.Player.getComponent(Body).rifleMesh.getWorldPosition(new THREE.Vector3())
                     flashPosition.y += 1
-                    this.emitSignal("particle_fx", { position: flashPosition, duration: 20 })
-                }
-     
+                    this.emitSignal("particle_fx", { position: flashPosition, duration: 20 })     
                 break;
 
             case "blast_at_close_range":
-                if (!Avern.State.target) return
+                // if (!Avern.State.target) return
                 this.emitSignal("receive_player_attack", {damage: 
                     calculateDamageByDistance(
                         action.baseDamage, 

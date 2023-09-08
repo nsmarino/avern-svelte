@@ -54,7 +54,7 @@ class Sound {
         this.thudHandler = document.createElement("audio") // button fx for main menu
         this.thudHandler.id = "thud-fx"
         this.thudHandler.src = thud
-        this.thudHandler.volume = 0.1
+        this.thudHandler.volume = 0.03
 
         this.readyHandler = document.createElement("audio") // button fx for main menu
         this.readyHandler.id = "ready-fx"

@@ -52,7 +52,7 @@
 }
 #hud .action-inventory {
   position: absolute;
-  top: -12px;
+  top: 8px;
   left: 0;
   display: flex;
   flex-direction: column;
@@ -75,7 +75,7 @@
 #hud .flask-count span,  #hud .ammo-count span {
   color: white;
   font-family: var(--serif);
-  font-size: 70%;
+  font-size: 90%;
   line-height: 1;
   letter-spacing: 0.08em;
 }
@@ -132,7 +132,7 @@
 // left hand
 #hud .player-input .equipped {
   position: fixed;
-  bottom: 40px;
+  bottom: 20px;
   left: 40px;
   display: flex;
   flex-direction: column;
@@ -145,6 +145,7 @@
     background: var(--avern-input-border-gradient);
     position: relative;
     transition: all 0.2s;
+
     &:hover {
       .action-tooltip {
         opacity: 1;
@@ -208,6 +209,16 @@
 
     }
   }
+  #hud .bottom-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  #hud .bottom-row .input-key {
+    width: 40px;
+    height: 40px;
+    margin: 8px 24px;
+  }
 
   #hud .input-key .key-inner {
     border-radius: 8px;
@@ -233,7 +244,7 @@
     }
 #hud .player-input .offhand {
   position: fixed;
-  bottom: 40px;
+  bottom: 20px;
   right: 40px;
   .action-tooltip {
     left: unset;
@@ -311,6 +322,28 @@
   top: 0;
   left: 0;
   backface-visibility: hidden;
+}
+.order-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  backface-visibility: hidden;
+  border: 1px solid var(--avern-off-black);
+  border-radius: 4px;
+  color: var(--avern-off-black);
+  background: var(--avern-light-grey);
+  font-family: var(--sans);
+  font-size: 14px;
+  width: 16px;
+  height: 16px;
+  justify-content: center;
+  align-items: center;
+  transition: background 0.1s ease;
+
+  &.targeted {
+    color: var(--avern-off-black);
+    background: var(--avern-green);
+    }
 }
 .numbers-container span {
   font-family: var(--sans);

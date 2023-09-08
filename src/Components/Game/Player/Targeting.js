@@ -1,13 +1,17 @@
 import * as THREE from 'three';
 
 import GameplayComponent from '../../_Component';
-import ActionBar from '../../Interface/ActionBar';
 import Enemy from '../NonPlayer/Enemy';
+import Body from "./Body"
+import FollowCamera from "./FollowCamera"
     
 class Targeting extends GameplayComponent {
     constructor(gameObject, ) {
         super(gameObject)
         this.gameObject = gameObject
+
+        this.targetsMap = new Map()
+        this.targetIndex = 0
         this.clickRaycast = new THREE.Raycaster();
         this.pointer = new THREE.Vector2();
 
@@ -63,13 +67,52 @@ class Targeting extends GameplayComponent {
     }
 
     update() {
+        const targetsArray = Array.from(this.targetsMap)
+            .sort((a, b) => a[1].proximity - b[1].proximity)
+
+        const targetsArrayWithOrder = targetsArray.map(i => {
+            const targetOrder = targetsArray.indexOf(i)
+            i[1] = {...i[1], order: targetOrder+1}
+            return i
+        })
+        
+        this.mapOfOrderedTargets = new Map(targetsArrayWithOrder)
+
+        this.emitSignal("ordered_targets", { targets: this.mapOfOrderedTargets })
+
+
         const inputs = Avern.Inputs.getInputs()
         if (inputs.setTarget && !Avern.State.worldUpdateLocked) {
-            this.setTargetFromInputKey()
+            this.setTargetFromInputKey(true)
         } else if (inputs.primaryClick && !Avern.State.worldUpdateLocked) {
-            this.setTargetFromClick(inputs.primaryClick)
+            // this.setTargetFromClick(inputs.primaryClick)
+        } else if (inputs.prevTarget && !Avern.State.worldUpdateLocked) {
+            console.log("Prev target")
+            this.setTargetFromInputKey(false)
+
+        } else if (inputs.clearTarget && !Avern.State.worldUpdateLocked) {
+            this.emitSignal("clear_target")
+            this.targetIndex=0
         }
+
+        // This needs to be refactored to be action-specific :)
         this.checkTarget()
+    }
+
+    setTargetFromInputKey(next) {
+        const increment = next ? 1 : -1
+        // console.log("Current target index", this.targetIndex, "increment", increment, "ordered targets", this.mapOfOrderedTargets)
+        const targetIds = Array.from(this.mapOfOrderedTargets.keys())
+        // console.log(targetIds)
+        // console.log(this.targetIndex+increment)
+        const indexToTarget = next ? targetIds[this.targetIndex] : targetIds[this.targetIndex-2]
+        console.log("Find index", this.targetIndex-2, "in", targetIds)
+        console.log("Target this:", indexToTarget)
+        if (indexToTarget){
+            console.log("EMITTING SIGNAL", this.targetIndex-2, indexToTarget)
+            this.emitSignal("set_target", {id: indexToTarget})
+            this.targetIndex += increment
+        }
     }
 
     checkTarget(){
@@ -94,57 +137,24 @@ class Targeting extends GameplayComponent {
             Avern.State.target.getComponent(Enemy).onSignal("exited_range")
         }
     }
-    
-    setTargetFromClick(e) {
-        this.pointer.x = ( e.clientX / window.innerWidth ) * 2 - 1;
-        this.pointer.y = - ( e.clientY / window.innerHeight ) * 2 + 1;
 
-        this.clickRaycast.setFromCamera( this.pointer, Avern.State.camera );
-        const intersects = this.clickRaycast.intersectObjects( Avern.State.scene.children );
-        if (intersects.length === 0 && Avern.State.target || Avern.State.target && intersects[0] && intersects[0].object && !intersects[0].object.parent.canBeTargeted) {
-            this.clearTarget()
-        } else if (intersects[0] && intersects[0].object.parent.canBeTargeted) {
-            const enemyToTarget = Avern.State.Enemies.find(enem => enem.name === intersects[0].object.parent.name)
-            if (Avern.State.target) {
-                Avern.State.target.getComponent(Enemy).onSignal("clear_target")
-            }
-            Avern.State.target = enemyToTarget
-            Avern.State.target.getComponent(Enemy).onSignal("set_target")
-        }
-    }
+    // setTargetFromClick(e) {
+    //     this.pointer.x = ( e.clientX / window.innerWidth ) * 2 - 1;
+    //     this.pointer.y = - ( e.clientY / window.innerHeight ) * 2 + 1;
 
-    // Needs optimization:
-    setTargetFromInputKey(){
-        if (Avern.State.target) {
-            Avern.State.target.getComponent(Enemy).onSignal("clear_target")
-        }
-        const frustum = new THREE.Frustum()
-        const matrix = new THREE.Matrix4().multiplyMatrices(Avern.State.camera.projectionMatrix, Avern.State.camera.matrixWorldInverse)
-        frustum.setFromProjectionMatrix(matrix)
-
-
-        // Get array of visible enemies
-        for (const enemy of Avern.State.Enemies) {
-            if(frustum.intersectsObject(enemy.getComponent(Enemy).colliderCapsule.body)) {
-                if (!Avern.State.visibleEnemies.find(enem => enem.name === enemy.name)) Avern.State.visibleEnemies.push(enemy)
-            } else {
-                Avern.State.visibleEnemies = Avern.State.visibleEnemies.filter(enem => enem.name != enemy.name)
-            }
-        }
-
-        Avern.State.target = null
-
-        if (Avern.State.visibleEnemies.length === 0){ 
-            // handle?
-        } else {
-            if ((Avern.State.visibleEnemies.length === 1 && Avern.State.targetIndex >= 1 )|| Avern.State.targetIndex >= Avern.State.visibleEnemies.length) Avern.State.targetIndex = 0 // TRYING TO FIX A BUG THAT I CANT CONSISTENTLY RE-CREATE.
-            Avern.State.target = Avern.State.visibleEnemies[Avern.State.targetIndex]
-            if (Avern.State.target) {
-                Avern.State.target.getComponent(Enemy).onSignal("set_target")
-                Avern.State.targetIndex = Avern.State.targetIndex === Avern.State.visibleEnemies.length - 1 ? 0 : Avern.State.targetIndex+=1;
-            }
-        }
-    }
+    //     this.clickRaycast.setFromCamera( this.pointer, Avern.State.camera );
+    //     const intersects = this.clickRaycast.intersectObjects( Avern.State.scene.children );
+    //     if (intersects.length === 0 && Avern.State.target || Avern.State.target && intersects[0] && intersects[0].object && !intersects[0].object.parent.canBeTargeted) {
+    //         this.clearTarget()
+    //     } else if (intersects[0] && intersects[0].object.parent.canBeTargeted) {
+    //         const enemyToTarget = Avern.State.Enemies.find(enem => enem.name === intersects[0].object.parent.name)
+    //         if (Avern.State.target) {
+    //             Avern.State.target.getComponent(Enemy).onSignal("clear_target")
+    //         }
+    //         Avern.State.target = enemyToTarget
+    //         Avern.State.target.getComponent(Enemy).onSignal("set_target")
+    //     }
+    // }
     
     clearTarget() {
         if (Avern.State.target) {
@@ -152,50 +162,37 @@ class Targeting extends GameplayComponent {
             Avern.State.target = null
         }
     }
+    onSignal(signalName, data={}) {
+        switch(signalName) {
+            case "target_visible":
+                if (data.visible) {
+                    this.targetsMap.set(data.id, {proximity: data.proximity, y:data.y, order: null})
+                } else {
+                    this.targetsMap.delete(data.id)
+                }
+                break;
+            case "clear_target":
+                console.log("Received clear_target in Targeting", data)
+                if (data.visible) {
+                    this.targetsMap.set(data.id, {proximity: data.proximity, y:data.y, order: null})
+                } else {
+                    this.targetsMap.delete(data.id)
+                }
+                break;
+            case "targeted_object":
+                const indexOfCurrentTarget = this.mapOfOrderedTargets.get(data.object.name)?.order
+                if (indexOfCurrentTarget) this.targetIndex = indexOfCurrentTarget
+                break;
+        }
+    }
 
     attachObservers(parent) {
-        this.addObserver(Avern.Interface.getComponent(ActionBar))
         for (const enemy of Avern.State.Enemies) {
             this.addObserver(enemy.getComponent(Enemy))
         }
+        this.addObserver(parent.getComponent(Body))
+        this.addObserver(parent.getComponent(FollowCamera))
     }
 }
 
 export default Targeting
-
-
-
-// via chatgpt:
-function sortByProximityToLeft(points, camera, renderer) {
-    const sortedPoints = points.slice().sort((a, b) => {
-        // Convert 3D points to 2D screen coordinates
-        const screenPosA = a.clone().project(camera);
-        const screenPosB = b.clone().project(camera);
-
-        // Map screen coordinates to actual screen pixel positions
-        const screenWidth = renderer.domElement.width;
-        const screenHeight = renderer.domElement.height;
-        const pixelPosXA = (screenPosA.x + 1) * (screenWidth / 2);
-        const pixelPosXB = (screenPosB.x + 1) * (screenWidth / 2);
-
-        // Compare the X positions to sort by proximity to the left side
-        return pixelPosXA - pixelPosXB;
-    });
-
-    return sortedPoints;
-}
-
-// use:
-// Assume you have an array of Three.js points, a camera, and a renderer
-// const points = [
-//     new THREE.Vector3(1, 0, 0),
-//     new THREE.Vector3(0, 1, 0),
-//     new THREE.Vector3(0, 0, 1)
-// ];
-
-// const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-// const renderer = new THREE.WebGLRenderer();
-
-// // Call the sorting function
-// const sortedPoints = sortByProximityToLeft(points, camera, renderer);
-

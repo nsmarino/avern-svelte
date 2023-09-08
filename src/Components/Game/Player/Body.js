@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import playerGltf from "../../../../assets/pc/fse--player1.gltf"
+import playerGltf from "../../../../assets/pc/fse--player1-strafe.gltf"
 import GameplayComponent from '../../_Component';
 import Actions from "./Actions"
 import InteractionOverlay from '../../Interface/InteractionOverlay';
@@ -22,6 +22,8 @@ class Body extends GameplayComponent {
         this.radius = 0.8
         this.velocity = new THREE.Vector3();
         this.transform = gameObject.transform
+
+        this.targeting = false
 
         this.action = {
             id: null,
@@ -86,7 +88,7 @@ class Body extends GameplayComponent {
             this.mixer = new THREE.AnimationMixer( this.gltf.scene );
 
             const clips = this.gltf.animations
-
+            console.log(clips)
             // Player actions
             this.idle = {
                 id: "idle",
@@ -106,6 +108,18 @@ class Body extends GameplayComponent {
                 crucialFrame: null,
                 canInterrupt: false,
             }
+            this.strafeLeft = {
+                id: "strafe_left",
+                anim: this.setUpAnim(clips, "STRAFE_L", true, false),
+                crucialFrame: null,
+                canInterrupt: false,
+            },
+            this.strafeRight = {
+                id: "strafe_right",
+                anim: this.setUpAnim(clips, "STRAFE_R", true, false),
+                crucialFrame: null,
+                canInterrupt: false,
+            },
             this.death = {
                 id: "death",
                 anim: this.setUpAnim(clips, "DEATH", false, true),
@@ -256,9 +270,32 @@ class Body extends GameplayComponent {
                 this.emitSignal("walk_start")
                 this.fadeIntoAction(this.runBack, 0.2, REPLACE)
             }
-            if ( (inputs.forwardWasLifted || inputs.backWasLifted) ) {
-                this.fadeIntoAction(this.idle, 0.1, REPLACE)
-                Avern.Sound.fxHandler.pause()
+
+            if ( inputs.leftWasPressed && this.targeting ) {
+                Avern.Sound.fxHandler.currentTime = 0
+                Avern.Sound.fxHandler.play()
+                this.emitSignal("walk_start")
+                this.fadeIntoAction(this.strafeLeft, 0.2, REPLACE)
+            }
+            if ( inputs.rightWasPressed && this.targeting ) {
+                Avern.Sound.fxHandler.currentTime = 0
+                Avern.Sound.fxHandler.play()
+                this.emitSignal("walk_start")
+                this.fadeIntoAction(this.strafeRight, 0.2, REPLACE)
+            }
+            if ( (inputs.forwardWasLifted || inputs.backWasLifted || (inputs.leftWasLifted && this.targeting)) || (inputs.rightWasLifted && this.targeting) ) {
+                if (inputs.forward){
+                    this.fadeIntoAction(this.run, 0.1, REPLACE)
+                } else if (inputs.back) {
+                    this.fadeIntoAction(this.runBack, 0.1, REPLACE)
+                } else if (inputs.left && this.targeting) {
+                    this.fadeIntoAction(this.strafeLeft, 0.1, REPLACE)
+                } else if (inputs.right && this.targeting) {
+                    this.fadeIntoAction(this.strafeRight, 0.1, REPLACE)
+                } else {
+                    this.fadeIntoAction(this.idle, 0.1, REPLACE)
+                    Avern.Sound.fxHandler.pause()
+                }
             }        
         }
 
@@ -314,6 +351,7 @@ class Body extends GameplayComponent {
 
                     // Send signal to other components
                     this.emitSignal("reset_stage")
+                    this.gameObject.transform.rotation.y = 0
 
                     // by that token this should probably be somewhere else
                     gsap.to(".mask", { opacity: 0, duration: 1, delay: 1})
@@ -324,6 +362,16 @@ class Body extends GameplayComponent {
                 break;
             case "capsule_collide":
                 this.onCapsuleCollide(data)
+                break;
+            case "active_target":
+                this.targeting = true
+                break;
+            case "clear_target":
+                this.targeting = false
+                break;
+            case "targeted_object":
+                const lookVector = new THREE.Vector3(data.object.transform.position.x, this.transform.position.y, data.object.transform.position.z)
+                this.transform.lookAt(lookVector)
                 break;
             case "world_collide":
                 if (!Avern.State.playerDead) this.onWorldCollide(data)
@@ -415,9 +463,12 @@ class Body extends GameplayComponent {
 
         // Add movement from user input to vector from collision data
         const inputVector = new THREE.Vector3()
+        const strafeVector = new THREE.Vector3()
 
+        // console.log(transform.getWorldDirection(inputVector))
         if ( inputs.forward && !this.movementLocked) {
-            transform.getWorldDirection(inputVector).multiplyScalar(delta).multiplyScalar(12)
+            const forwardSpeed = this.targeting ? 6 : 12
+            transform.getWorldDirection(inputVector).multiplyScalar(delta).multiplyScalar(forwardSpeed)
             deltaVector.add(inputVector)
         }
   
@@ -425,13 +476,37 @@ class Body extends GameplayComponent {
             transform.getWorldDirection(inputVector).multiplyScalar(delta).multiplyScalar(-6)
             deltaVector.add(inputVector)
         }
-        
         if ( inputs.left ) {
-            transform.rotateY(0.01)
+            if (inputs.strafe && !this.targeting) {
+                const perpendicularVector = new THREE.Vector3();
+                perpendicularVector.crossVectors(transform.getWorldDirection(strafeVector), new THREE.Vector3(0, 1, 0));
+                perpendicularVector.normalize().multiplyScalar(delta).multiplyScalar(-4);
+                deltaVector.add(perpendicularVector);
+            } else if (!inputs.strafe && this.targeting) {
+                const perpendicularVector = new THREE.Vector3();
+                perpendicularVector.crossVectors(transform.getWorldDirection(strafeVector), new THREE.Vector3(0, 1, 0));
+                perpendicularVector.normalize().multiplyScalar(delta).multiplyScalar(-4);
+                deltaVector.add(perpendicularVector);
+            } else if (!this.targeting) {
+                transform.rotateY(0.004)
+            }
+
         }
             
         if ( inputs.right ) {
-            transform.rotateY(-0.01)
+            if (inputs.strafe && !this.targeting) {
+                const perpendicularVector = new THREE.Vector3();
+                perpendicularVector.crossVectors(transform.getWorldDirection(strafeVector), new THREE.Vector3(0, 1, 0));
+                perpendicularVector.normalize().multiplyScalar(delta).multiplyScalar(4);
+                deltaVector.add(perpendicularVector);
+            } else if (!inputs.strafe && this.targeting) {
+                const perpendicularVector = new THREE.Vector3();
+                perpendicularVector.crossVectors(transform.getWorldDirection(strafeVector), new THREE.Vector3(0, 1, 0));
+                perpendicularVector.normalize().multiplyScalar(delta).multiplyScalar(4);
+                deltaVector.add(perpendicularVector);
+            } else if (!this.targeting) {
+                transform.rotateY(-0.004)
+            }
         }
 
         if ( inputs.jump ) {

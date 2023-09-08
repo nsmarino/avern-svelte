@@ -306,7 +306,7 @@
             <p>You wear a wooden mask, as all the empire's eunuchs do, and you carry a bolt action rifle.</p>
             <p>There are goats on the cliffs above the fortress, and you are their guardian.</p>
 
-            <button class="start-btn"><span>Play</span></button>
+              <button class="start-btn"><span>Play</span></button>
         </div>
 
     </section>
@@ -366,7 +366,7 @@
               <span data-flask>5</span>
             </div>
           </div>
-          <div class="ammo-count">
+          <!-- <div class="ammo-count">
             <div class="ammo-count-inner">
               <svg viewBox="0 0 23 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M2.27592 22C2.27592 18.3175 2.0541 14.7339 2.0541 11.0583C2.0541 10.4208 1.90422 8.28492 2.10339 7.8268C2.33185 7.30132 2.73643 7.23456 2.9414 6.40948C3.17374 5.47428 3.38506 4.96993 3.38506 3.88665C3.38506 3.12638 3.23609 0.947202 3.55759 2.61107C3.75011 3.60741 3.49164 4.87227 3.61921 5.89925C3.77553 7.15773 4.40562 6.20577 4.66672 6.80633C4.71419 6.91553 4.16005 8.93246 4.09983 9.24412C3.92955 10.1254 4.05054 11.6054 4.05054 12.5607C4.05054 14.8813 4.04756 16.9944 4.26004 19.1937C4.31665 19.7796 4.66154 21.4898 4.49419 21.4898C3.98344 21.4898 3.68447 21.2856 3.26182 21.0079C2.8308 20.7246 2.72634 22.2112 3.21253 21.0929C3.48155 20.4741 3.75267 19.9678 3.93962 19.1937C4.26591 17.8428 3.82871 14.9838 3.82871 13.326C3.82871 12.2302 3.72318 11.0733 3.59456 10.0378C3.49945 9.27217 3.16038 11.5549 3.11394 11.7953C2.83199 13.2544 2.68063 17.6548 3.05232 19.1937C3.25797 20.0452 3.38506 21.3764 3.38506 19.8457C3.38506 17.6725 3.38506 15.4992 3.38506 13.326C3.38506 12.2205 3.38506 11.115 3.38506 10.0095C3.38506 7.63906 3.17616 10.6454 2.71958 10.1512C2.14489 9.52915 4.36383 8.68624 4.71602 8.73389C5.3459 8.81911 4.73397 13.603 4.71602 14.3465C4.65941 16.6902 3.96564 18.0378 4.49419 20.4693" stroke="#D20000" stroke-width="3" stroke-linecap="round"/>
@@ -377,7 +377,7 @@
               <div class="ammo-instruction">[SHIFT]</div>
               <span data-ammo>0</span>
             </div>
-          </div>
+          </div> -->
         </div>
 
         <div class="top-row">
@@ -407,22 +407,21 @@
           
         </div>
         <div class="main-row">
-          <div id="KeyA" data-linked-action="3" class="equipment-action input-key action4">
+          <div id="KeyA" data-linked-action="3" class="equipment-action input-key action4 locked">
             <div class="key-inner">
 
             <span>A</span>
-            <img class="svg" src="/assets/ui/bayonet.svg" alt="">
-
+            <img class="svg" src="/assets/ui/aimed-shot.svg" alt="">
           </div>
           <div class="action-active-indicator"></div>
           <div class="action-tooltip">
-            <h3>Slash with bayonet</h3>
-            <p>A quick slash with the blade attachment on the rifle. Does little damage.</p>
-            <p  style="font-family: var(--serif-italic);">[Bravado]</p>
+            <h3>Blast at close range</h3>
+            <p>You stuff the barrel of the rifle with dozens of razor sharp projectiles. The closer an enemy, the more savagely will their flesh be torn.</p>
+            <p style="font-family: var(--serif-italic);">[Bravado]</p>
           </div>
           </div>
 
-          <div id="KeyS"  data-linked-action="2" class="equipment-action input-key action3">
+          <div id="KeyS"  data-linked-action="2" class="equipment-action input-key action3 locked">
             <div class="key-inner">
 
             <span>S</span>
@@ -441,15 +440,16 @@
             <div class="key-inner">
 
             <span>D</span>
-            <img class="svg" src="/assets/ui/aimed-shot.svg" alt="">
-          </div>
-          <div class="action-active-indicator"></div>
-          <div class="action-tooltip">
-            <h3>Blast at close range</h3>
-            <p>You stuff the barrel of the rifle with dozens of razor sharp projectiles. The closer an enemy, the more savagely will their flesh be torn.</p>
-            <p style="font-family: var(--serif-italic);">[Bravado]</p>
-          </div>
-          </div>
+          <img class="svg" src="/assets/ui/bayonet.svg" alt="">
+
+        </div>
+        <div class="action-active-indicator"></div>
+        <div class="action-tooltip">
+          <h3>Slash with bayonet</h3>
+          <p>A quick slash with the blade attachment on the rifle. Does little damage.</p>
+          <p  style="font-family: var(--serif-italic);">[Bravado]</p>
+        </div>
+        </div>
 
           <div id="KeyF" data-linked-action="0" class="equipment-action input-key action1">
             <div class="key-inner">
@@ -466,18 +466,31 @@
           </div>
 
           <div id="KeyG" class="target-key input-key">   
-            <div class="key-inner">
-        
-            <span>G</span>
-            <img class="svg" src="/assets/ui/target.svg" alt="">
-          </div>
-          <div class="action-active-indicator"></div>
-          <div class="action-tooltip">
-            <h3>Target</h3>
-            <p>Tap to target enemies. The targeting indicator is green when you can attack, and red when the target is out of range.</p>
-          </div>
+            <div class="key-inner">     
+              <span>G</span>
+              <img class="svg" src="/assets/ui/target-next.svg" alt="">
+            </div>
+            <div class="action-active-indicator"></div>
+            <div class="action-tooltip">
+              <h3>Target Next</h3>
+              <p>Tap to target enemy. The numbers above targetable enemies indicate the order they will be targeted.</p>
+            </div>
           </div>
 
+        </div>
+        <div class="bottom-row">
+          <div>[SHIFT] - Clear Target</div>
+          <div id="KeyV" class="target-key input-key">   
+            <div class="key-inner">     
+              <span>V</span>
+              <img class="svg" src="/assets/ui/target-prev.svg" alt="">
+            </div>
+            <div class="action-active-indicator"></div>
+            <div class="action-tooltip">
+              <h3>Target Previous</h3>
+              <p>Tap to target previous enemy. The numbers above targetable enemies indicate the order they will be targeted.</p>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -561,18 +574,33 @@
           </div>
           </div>
 
-          <div id="Semicolon" class="free-cam input-key">
+          <div id="Semicolon" class="strafe input-key">
             <div class="key-inner">
 
             <span>;</span>
-            <img class="svg" src="/assets/ui/camera.svg" alt="">
+            <img class="svg" src="/assets/ui/strafe-toggle.svg" alt="">
           </div>
           <div class="action-active-indicator"></div>
           <div class="action-tooltip">
-            <h3>Look around</h3>
-            <p>When held down, you can click and drag the mouse to look around your environment.</p>
+            <h3>Strafe</h3>
+            <p>When not targeting an enemy, hold down to enable left and right movement.</p>
           </div>
           </div>
+
+        </div>
+        <div class="bottom-row">
+          <div id="KeyN" class="target-key input-key">   
+            <div class="key-inner">     
+              <span>N</span>
+              <img class="svg" src="/assets/ui/propel-self.svg" alt="">
+            </div>
+            <div class="action-active-indicator"></div>
+            <div class="action-tooltip">
+              <h3>NULL</h3>
+              <p>This button does not yet have a purpose.</p>
+            </div>
+          </div>
+          <div>[SPACE] - Jump</div>
 
         </div>
       </div>

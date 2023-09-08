@@ -4,7 +4,7 @@ import Engine from "./Engine"
 
 window.Avern = Engine
 
-import stagingBase from "../assets/fse--graham.gltf"
+import stagingBase from "../assets/fse--target-practice.gltf"
 
 import App from './App.svelte'
 
@@ -29,10 +29,11 @@ function startMenu() {
 		gsap.to(".intro", { opacity: 1, duration: 4, y: 0, pointerEvents: "auto"  })
 	})
 
-	document.querySelector(".start-btn").addEventListener("click", () => {	
+	document.querySelector(".start-btn").addEventListener("click", () => {
 		init()	
 		clearChildren()
 	})
+
 }
 
 async function init() {

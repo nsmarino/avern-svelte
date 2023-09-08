@@ -22,6 +22,8 @@ class State {
         // populated by Loader (e)
         this.inventory = []
 
+
+        // Revisit this:
         // populated by Loader (e)
         this.Enemies = [
 

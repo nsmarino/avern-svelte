@@ -124,7 +124,7 @@ class Loader {
       Avern.PATHFINDING.setZoneData(Avern.pathfindingZone, Pathfinding.createZone(navmesh.geometry));
       // visualize:
       // for (const vert of Avern.PATHFINDING.zones[baseFile.name].vertices) {
-      //     const indicatorSize = 0.1
+      //     const indicatorSize = 0.1 
       //     const geometry = new THREE.BoxGeometry( indicatorSize,indicatorSize,indicatorSize); 
       //     const material = new THREE.MeshBasicMaterial( {color: 0x000000} ); 
       //     const cube = new THREE.Mesh( geometry, material ); 
@@ -139,15 +139,16 @@ class Loader {
       baseFile.traverse(c => {
         if (c.userData.gltfExtensions.EXT_collections.collections) {
           switch(c.userData.gltfExtensions.EXT_collections.collections[0]) {
-            case "bow":
-              const zombieBow = Avern.GameObjects.createGameObject(scene, c.name)                        
-              zombieBow.addComponent(Enemy, c, "zombie-bow")
+            case "enemies":
+              console.log(c)
+              const enemy = Avern.GameObjects.createGameObject(scene, c.name)                        
+              enemy.addComponent(Enemy, c)
               break;
 
-            case "sword":
-              const zombieSword = Avern.GameObjects.createGameObject(scene, c.name)                        
-              zombieSword.addComponent(Enemy, c, "zombie-sword")
-              break;
+            // case "sword":
+            //   const zombieSword = Avern.GameObjects.createGameObject(scene, c.name)                        
+            //   zombieSword.addComponent(Enemy, c, "zombie-sword")
+            //   break;
 
             case "fountains":
               // const fountain = Avern.GameObjects.createGameObject(scene, c.name)                        

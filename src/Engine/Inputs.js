@@ -1,4 +1,4 @@
-;class Inputs {
+class Inputs {
     constructor() {
         this.config = {
             forward: {
@@ -26,8 +26,8 @@
                 pressed: false,
 
                 onlyOnce: false,
-                trackWasPressed: false,
-                trackUp: false,
+                trackWasPressed: true,
+                trackUp: true,
 
             },
             right: {
@@ -36,8 +36,8 @@
                 pressed: false,
 
                 onlyOnce: false,
-                trackWasPressed: false,
-                trackUp: false,
+                trackWasPressed: true,
+                trackUp: true,
 
             },
         
@@ -74,6 +74,24 @@
             setTarget: {
                 code:"KeyG",
                 name: "G",
+                pressed: false,
+
+                onlyOnce: true,
+                trackWasPressed: false,
+                trackUp: false,
+            },
+            prevTarget: {
+                code:"KeyV",
+                name: "V",
+                pressed: false,
+
+                onlyOnce: true,
+                trackWasPressed: false,
+                trackUp: false,
+            },
+            clearTarget: {
+                code:"ShiftLeft",
+                name: "ShiftLeft",
                 pressed: false,
 
                 onlyOnce: true,
@@ -144,13 +162,13 @@
 
             },
         
-            freeCam: {
+            strafe: {
                 code: "Semicolon",
                 name: ";",
                 pressed: false,
 
-                onlyOnce: true,
-                trackWasPressed: false,
+                onlyOnce: false,
+                trackWasPressed: true,
                 trackUp: true,
             },
         }
@@ -170,11 +188,19 @@
             backWasPressed:false,
             backWasLifted:false,
 
+            leftWasPressed:false,
+            leftWasLifted:false,
+
+            rightWasPressed:false,
+            rightWasLifted:false,
+
             interact:false,
             jump:false,
 
             characterMenu:false,
             setTarget:false,
+            prevTarget:false,
+            clearTarget:false,
 
             action1:false,
             action2:false,
@@ -184,8 +210,8 @@
             reset: false,
             flask: false,
 
-            freeCam: false,
-            freeCamWasLifted:false,
+            strafe: false,
+            strafeWasLifted:false,
         }
         
         window.addEventListener( 'keydown', function(e) {

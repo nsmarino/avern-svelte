@@ -5,6 +5,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import GameplayComponent from '../../_Component';
 import { generateCapsuleCollider, checkCapsuleCollision } from '../../../helpers';
 import Body from '../Player/Body';
+import FollowCamera from '../Player/FollowCamera';
 import zombieBow from "../../../../assets/monsters/zombie-bow-2.gltf"
 import zombieSword from "../../../../assets/monsters/zombie-sword-2.gltf"
 import Vitals from '../Player/Vitals';
@@ -13,9 +14,13 @@ import Targeting from '../Player/Targeting';
 import Notices from '../../Interface/Notices';
 
 class Enemy extends GameplayComponent {
-  constructor(gameObject, spawnPoint, enemyType) {
+  constructor(gameObject, spawnPoint) {
     super(gameObject)
-    this.enemyType = enemyType
+    this.gameObject = gameObject
+    this.gameObject.transform.position.copy(spawnPoint.position)
+  
+    this.enemyType = spawnPoint.userData.label
+    this.startingBehavior = spawnPoint.userData.behavior
     // this.HELPER = Avern.PATHFINDINGHELPER
     // Avern.State.scene.add(this.HELPER)
 
@@ -33,23 +38,24 @@ class Enemy extends GameplayComponent {
     this.numbersContainer.classList.add("numbers-container")
     document.body.appendChild(this.numbersContainer)
 
+    this.orderContainer = document.createElement("div")
+    this.orderContainer.classList.add("order-container")
+    document.body.appendChild(this.orderContainer)
+
     this.initialHealth = 55
     this.health = 55
 
     this.prevAngle = null
-    this.gameObject = gameObject
     this.originalSpawnPoint = spawnPoint
-
-    this.gameObject.transform.position.copy(spawnPoint.position)
 
     Avern.State.Enemies.push(this.gameObject)
     this.gameObject.transform.canBeTargeted = true
 
     this.isTargeted = false
 
-    this.behavior = "wander"
+    this.behavior = this.startingBehavior
     this.velocity = new THREE.Vector3( 0, 0, 0 );
-    this.speed = 3
+    this.speed = 2
     this.targetGroup = Avern.PATHFINDING.getGroup(Avern.pathfindingZone, spawnPoint.position);
     this.lerpFactor = 0.2
     this.originNode = Avern.PATHFINDING.getClosestNode(spawnPoint.position, Avern.pathfindingZone, this.targetGroup)
@@ -59,16 +65,16 @@ class Enemy extends GameplayComponent {
 
     const initFromGLTF = async () => {
       switch(this.enemyType) {
-        case "zombie-bow":
+        case "bow":
           this.body = zombieBow
-          this.speed = 5
           break;
-        case "zombie-sword":
+        case "sword":
           this.body = zombieSword
           break;
       }
       this.gltf = await new GLTFLoader().loadAsync(this.body)
       this.gltf.scene.name = gameObject.name
+
       gameObject.transform.add(this.gltf.scene)
       this.gltf.scene.traverse(child => {
         child.castShadow = true;
@@ -98,14 +104,15 @@ class Enemy extends GameplayComponent {
         this.visionEnd,
         this.visionRadius
       )
+      this.gameObject.transform.add(this.visionCapsule.spine)
       this.visionStartWorldPos = new THREE.Vector3()
       this.visionEndWorldPos = new THREE.Vector3()
 
-      const torusGeometry = new THREE.TorusGeometry( 1, 0.05, 12, 40 ); 
-      const torusMaterial = new THREE.MeshBasicMaterial( { color: 0xD20000 } ); 
+      const torusGeometry = new THREE.TorusGeometry( 1, 0.02, 12, 40 ); 
+      const torusMaterial = new THREE.MeshBasicMaterial( { color: 0x56FBA1 } ); 
       this.ring = new THREE.Mesh( torusGeometry, torusMaterial );
       this.ring.rotation.x = Math.PI / 2
-      this.ring.position.y+=0.2
+      this.ring.position.y+=1
       this.gameObject.transform.add( this.ring );
       this.ring.visible = false
 
@@ -113,7 +120,14 @@ class Enemy extends GameplayComponent {
       this.mixer = new THREE.AnimationMixer( this.gltf.scene );
 
       this.clips = this.gltf.animations
-      this.action = this.mixer.clipAction(THREE.AnimationClip.findByName(this.clips, "WALK"))
+      switch (this.startingBehavior) {
+        case "wander":
+          this.action = this.mixer.clipAction(THREE.AnimationClip.findByName(this.clips, "WALK"))
+          break;
+        case "idle":
+          this.action = this.mixer.clipAction(THREE.AnimationClip.findByName(this.clips, "IDLE"))
+          break;
+      }
 
       this.idle = this.mixer.clipAction(
         THREE.AnimationClip.findByName(this.clips, "IDLE")
@@ -140,15 +154,14 @@ class Enemy extends GameplayComponent {
       this.attackRange = null
 
       switch(this.enemyType) {
-        case "zombie-bow":
-    
+        case "bow":
           this.attack = this.mixer.clipAction(
             THREE.AnimationClip.findByName(this.clips, "SHOOT")
           )
           this.actionRange = 18
           this.crucialFrame = 85
           break;
-        case "zombie-sword":
+        case "sword":
           this.attack = this.mixer.clipAction(
             THREE.AnimationClip.findByName(this.clips, "SLASH")
           )
@@ -213,7 +226,7 @@ class Enemy extends GameplayComponent {
       //     new THREE.MeshBasicMaterial()
       // );
       // this.gameObject.transform.parent.add(this.mesh3)
-
+        this.gameObject.transform.rotation.y = spawnPoint.rotation.z
     }
     initFromGLTF()
   }
@@ -237,10 +250,7 @@ class Enemy extends GameplayComponent {
         this.crucialFrameSent = false
     }
     if (e.action == this.death) {
-      this.onSignal("clear_target")
-      Avern.State.Enemies = Avern.State.Enemies.filter(enem => enem.name !== this.gameObject.name)
-      Avern.State.visibleEnemies = Avern.State.visibleEnemies.filter(enem => enem.name !== this.gameObject.name)
-      this.dead = true
+
   
       setTimeout(() => {
         this.removeFromScene()
@@ -301,6 +311,16 @@ class Enemy extends GameplayComponent {
 
     if (this.colliderCapsule) {
       const { x, y, distanceToCamera, visible } = this.getScreenCoordinatesAndDistance();
+      // const proximity = this.gameObject.transform.position.distanceTo(Avern.Player.transform.position)
+
+      if (!this.dead) this.emitSignal("target_visible", {
+        visible, 
+        id: this.gameObject.name, 
+        proximity: x,
+        y
+      })
+      if(this.isTargeted) this.emitSignal("targeted_object", {object: this.gameObject})
+
       if (visible) {
         const minDistance = 10; // Minimum distance for scaling
         const maxDistance = 100; // Maximum distance for scaling
@@ -325,6 +345,8 @@ class Enemy extends GameplayComponent {
 
 
     switch(this.behavior) {
+      case "idle":
+          break;
       case "wander":
           this.followWanderPath(delta)
           break;
@@ -370,7 +392,8 @@ class Enemy extends GameplayComponent {
 
       if (Avern.Player) {
         const visionCollision = checkCapsuleCollision({ segment: Avern.Player.getComponent(Body).tempSegment, radius: Avern.Player.getComponent(Body).radius}, this.visionCapsule)
-        if (visionCollision.isColliding && this.behavior=="wander") {
+        if (visionCollision.isColliding && (this.behavior=="wander" || this.behavior=="idle")) {
+          if (this.behavior=="idle") this.fadeIntoAction(this.walk, 0.1)
           this.behavior="pursue"
         }
       }
@@ -456,23 +479,48 @@ class Enemy extends GameplayComponent {
   }
   handleDeath() {
     this.behavior = "die_lol"
+    this.onSignal("clear_target")
+    this.emitSignal("clear_target", {visible: false, id: this.gameObject.name})
+    this.orderContainer.remove()
+    Avern.State.Enemies = Avern.State.Enemies.filter(enem => enem.name !== this.gameObject.name)
+    this.dead = true
     this.fadeIntoAction(this.death, 0.2)
   }
 
   onSignal(signalName, data={}) {
     switch(signalName){
       case "set_target":
-        Avern.Sound.targetHandler.currentTime = 0
-        Avern.Sound.targetHandler.play()
-        this.isTargeted = true
-        this.ring.visible = true
-        gsap.set(this.bar, { opacity: 1})
+        if (data.id !== this.gameObject.name && this.isTargeted) {
+          // clear target
+          this.orderContainer.classList.remove("targeted")
+          this.isTargeted = false
+          this.ring.visible = false
+          gsap.set(this.bar, { opacity: 0})
+        } else if (data.id === this.gameObject.name) {
+          Avern.Sound.targetHandler.currentTime = 0
+          Avern.Sound.targetHandler.play()
+          this.isTargeted = true
+          this.ring.visible = true
+          gsap.set(this.bar, { opacity: 1})
+          this.orderContainer.classList.add("targeted")
+          this.emitSignal("active_target", { object: this.gameObject})
+        }
+        break;
+      case "ordered_targets":
+        if(data.targets.get(this.gameObject.name)){
+          this.orderContainer.style.display = "flex"
+          this.orderContainer.innerHTML = data.targets.get(this.gameObject.name).order
+          this.orderContainer.style.transform = `translate(-50%, -150%) translate(${data.targets.get(this.gameObject.name).proximity}px, ${data.targets.get(this.gameObject.name).y}px )`;
+        } else {
+          this.orderContainer.style.display = "none"
+          this.orderContainer.innerHTML = ""
+        }
         break;
       case "entered_range":
-        this.ring.material.color.setHex( 0x56FBA1 );
+        // this.ring.material.color.setHex( 0x56FBA1 );
         break;
       case "exited_range":
-        this.ring.material.color.setHex( 0xD20000 );
+        // this.ring.material.color.setHex( 0xD20000 );
         break;  
       case "landmine_detonated":
         if (this.gameObject.transform.position.distanceTo(data.position) < data.radius) {
@@ -497,16 +545,26 @@ class Enemy extends GameplayComponent {
           }
         }
         break;
-      case("receive_player_attack"):
+      case("receive_direct_attack"):
         if (this.isTargeted===true) {
-          if (!Avern.Player.getComponent(Targeting).targetInRange) {
+          if (Avern.Player.transform.position.distanceTo(this.gameObject.transform.position) >= data.range) {
             this.emitSignal("show_notice", {notice: "Out of range", color: "red", delay: 2000})
             return
           }
+          Avern.Sound.thudHandler.currentTime = 0.1
+          Avern.Sound.thudHandler.play()   
+
           if (this.behavior === "wander") {
             this.path = null
             this.behavior = "pursue"
           }
+          if (this.behavior=="idle") {
+            this.path = null
+            this.behavior = "pursue"
+
+            this.fadeIntoAction(this.walk, 0.1)
+          }
+
           this.health -= data.damage
           this.innerBar.style.width = this.health > 0 ? `${(this.health / this.initialHealth) * 100}%` : 0
 
@@ -538,11 +596,13 @@ class Enemy extends GameplayComponent {
         this.behavior = "wander"
         this.gameObject.transform.position.copy(this.originalSpawnPoint.position)
         this.fadeIntoAction(this.walk, 0.1)
+        this.emitSignal("clear_target", {visible: false, id: this.gameObject.name})
 
         break;
       case "clear_target":
         this.isTargeted = false
         this.ring.visible = false
+        this.orderContainer.classList.remove("targeted")
         gsap.set(this.bar, { opacity: 0})
     }
   }
@@ -563,9 +623,23 @@ class Enemy extends GameplayComponent {
     const frustum = new THREE.Frustum()
     const matrix = new THREE.Matrix4().multiplyMatrices(Avern.State.camera.projectionMatrix, Avern.State.camera.matrixWorldInverse)
     frustum.setFromProjectionMatrix(matrix)
+
+    // enemy raycasts toward player
+    // is its first collision with the player? if not there is something in the way
+    const towardsEnemy = this.gameObject.transform.position.clone()
+    towardsEnemy.y += 1
+    towardsEnemy.sub(Avern.Player.transform.position.clone());
+    const raycaster = new THREE.Raycaster(Avern.Player.transform.position, towardsEnemy.normalize());
+
+    // Avern.State.scene.remove ( this.arrow );
+    // this.arrow = new THREE.ArrowHelper( raycaster.ray.direction, raycaster.ray.origin, 100, 0.5 * 0xffffff );
+    // Avern.State.scene.add( this.arrow );
+
+    const intersects = raycaster.intersectObjects([this.colliderCapsule.body, Avern.State.collider], false);
+    const obstructed = intersects[0] && intersects[0].object.name !== "worldCollider"
     const visible = frustum.intersectsObject(this.colliderCapsule.body)
 
-    return { x, y, distanceToCamera, visible };
+    return { x, y, distanceToCamera, visible, obstructed };
   }
 
   attachObservers(parent) {
@@ -574,12 +648,19 @@ class Enemy extends GameplayComponent {
         this.addObserver(component)
       }
     }
+    this.addObserver(Avern.Player.getComponent(Targeting))
     this.addObserver(Avern.Player.getComponent(Body))
+    this.addObserver(Avern.Player.getComponent(FollowCamera))
     this.addObserver(Avern.Player.getComponent(Vitals))
     this.addObserver(Avern.Player.getComponent(Actions))
-
     this.addObserver(Avern.Interface.getComponent(Notices))
   }
 }
 
 export default Enemy
+
+
+// next:
+// refine clearTarget incl on death etc
+// add UI
+// new staging level
