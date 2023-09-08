@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import playerGltf from "../../../../assets/pc/fse--player1-strafe.gltf"
+import playerGltf from "../../../../assets/pc/fse--player-with-vision.gltf"
 import GameplayComponent from '../../_Component';
 import Actions from "./Actions"
 import InteractionOverlay from '../../Interface/InteractionOverlay';
@@ -8,6 +8,7 @@ import Enemy from '../NonPlayer/Enemy';
 import Vitals from './Vitals';
 import Inventory from './Inventory';
 import gsap from "gsap"
+import {generateCapsuleCollider} from "../../../helpers"
 
 const RESET = "RESET"
 const REPLACE = "REPLACE"
@@ -185,6 +186,15 @@ class Body extends GameplayComponent {
 
             this.mixer.addEventListener('finished', this.onMixerFinish.bind(this))
 
+            this.visionStart = this.gltf.scene.getObjectByName("vision-start")
+            this.visionEnd = this.gltf.scene.getObjectByName("vision-end")
+            this.visionRadius = this.gltf.scene.getObjectByName("vision-radius")
+            this.visionCapsule = generateCapsuleCollider(
+              this.visionStart,
+              this.visionEnd,
+              this.visionRadius
+            )
+            // this.gameObject.transform.add(this.visionCapsule.spine)
         }
         initFromGLTF()
     }
@@ -311,7 +321,6 @@ class Body extends GameplayComponent {
                 }
             }        
         }
-
         if (this.mixer && Avern.State.worldUpdateLocked == false) this.mixer.update(delta);
     }
 

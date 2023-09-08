@@ -3,7 +3,7 @@ import gsap from "gsap"
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
 import GameplayComponent from '../../_Component';
-import { generateCapsuleCollider, checkCapsuleCollision } from '../../../helpers';
+import { generateCapsuleCollider, checkCapsuleCollision, distancePointToLine } from '../../../helpers';
 import Body from '../Player/Body';
 import FollowCamera from '../Player/FollowCamera';
 import zombieBow from "../../../../assets/monsters/zombie-bow-2.gltf"
@@ -312,13 +312,14 @@ class Enemy extends GameplayComponent {
 
     if (this.colliderCapsule) {
       const { x, y, distanceToCamera, visible } = this.getScreenCoordinatesAndDistance();
-      // const proximity = this.gameObject.transform.position.distanceTo(Avern.Player.transform.position)
+      const losDistance = Avern.Player.getComponent(Body).visionCapsule ? distancePointToLine(this.gameObject.transform.position, Avern.Player.getComponent(Body).visionCapsule.segment, Avern.Player.transform) : null
 
       if (!this.dead) this.emitSignal("target_visible", {
         visible, 
         id: this.gameObject.name, 
         proximity: x,
-        y
+        y,
+        losDistance
       })
       if(this.isTargeted) this.emitSignal("targeted_object", {object: this.gameObject})
 
@@ -517,6 +518,10 @@ class Enemy extends GameplayComponent {
           this.orderContainer.innerHTML = ""
         }
         break;
+      case "closest_los":
+        if (data.id === this.gameObject.name && !this.orderContainer.classList.contains("targeted")) this.orderContainer.classList.add("targeted")
+        if (data.id !== this.gameObject.name && this.orderContainer.classList.contains("targeted")) this.orderContainer.classList.remove("targeted")
+        break;
       case "entered_range":
         // this.ring.material.color.setHex( 0x56FBA1 );
         break;
@@ -609,6 +614,13 @@ class Enemy extends GameplayComponent {
         this.ring.visible = false
         this.orderContainer.classList.remove("targeted")
         gsap.set(this.bar, { opacity: 0})
+        break;
+      // case "line_of_sight":
+      //   console.log(data.capsule.segment)
+      //   const distance = distancePointToLine(this.gameObject.transform.position, data.capsule.segment, Avern.Player.transform)
+      //   console.log(distance)
+      //   this.emitSignal("los_distance", { distance })
+      //   break;
     }
   }
   getScreenCoordinatesAndDistance() {

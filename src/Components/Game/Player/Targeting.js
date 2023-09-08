@@ -12,7 +12,7 @@ class Targeting extends GameplayComponent {
         this.gameObject = gameObject
 
         this.targetsMap = new Map()
-        this.targetIndex = 0
+        this.targetIndex = null
         this.clickRaycast = new THREE.Raycaster();
         this.pointer = new THREE.Vector2();
 
@@ -71,16 +71,26 @@ class Targeting extends GameplayComponent {
         const targetsArray = Array.from(this.targetsMap)
             .sort((a, b) => a[1].proximity - b[1].proximity)
 
-        const targetsArrayWithOrder = targetsArray.map(i => {
+        const targetsArrayByOrder = targetsArray.map(i => {
             const targetOrder = targetsArray.indexOf(i)
             i[1] = {...i[1], order: targetOrder+1}
             return i
         })
         
-        this.mapOfOrderedTargets = new Map(targetsArrayWithOrder)
+        this.mapOfOrderedTargets = new Map(targetsArrayByOrder)
+
+        this.losArray = Array.from(this.targetsMap)
+            .sort((a, b) => a[1].losDistance - b[1].losDistance)
+
+        if (this.targetIndex===null && this.losArray[0])this.emitSignal("closest_los", {id: this.losArray[0][0]})
+        // const targetsArrayByLos = losArray.map(i => {
+        //     const targetOrder = targetsArray.indexOf(i)
+        //     i[1] = {...i[1], order: targetOrder+1}
+        //     return i
+        // })        
+        // this.mapOfLosTargets = new Map(targetsArrayByLos)
 
         this.emitSignal("ordered_targets", { targets: this.mapOfOrderedTargets })
-
 
         const inputs = Avern.Inputs.getInputs()
         if (inputs.setTarget && !Avern.State.worldUpdateLocked) {
@@ -88,12 +98,11 @@ class Targeting extends GameplayComponent {
         } else if (inputs.primaryClick && !Avern.State.worldUpdateLocked) {
             // this.setTargetFromClick(inputs.primaryClick)
         } else if (inputs.prevTarget && !Avern.State.worldUpdateLocked) {
-            console.log("Prev target")
             this.setTargetFromInputKey(false)
 
         } else if (inputs.clearTarget && !Avern.State.worldUpdateLocked) {
             this.emitSignal("clear_target")
-            this.targetIndex=0
+            this.targetIndex=null
         }
 
         // This needs to be refactored to be action-specific :)
@@ -101,19 +110,26 @@ class Targeting extends GameplayComponent {
     }
 
     setTargetFromInputKey(next) {
-        const increment = next ? 1 : -1
-        // console.log("Current target index", this.targetIndex, "increment", increment, "ordered targets", this.mapOfOrderedTargets)
+        console.log(this.targetsMap)
+        // const increment = next ? 1 : -1
         const targetIds = Array.from(this.mapOfOrderedTargets.keys())
-        // console.log(targetIds)
-        // console.log(this.targetIndex+increment)
-        const indexToTarget = next ? targetIds[this.targetIndex] : targetIds[this.targetIndex-2]
-        console.log("Find index", this.targetIndex-2, "in", targetIds)
-        console.log("Target this:", indexToTarget)
-        if (indexToTarget){
-            console.log("EMITTING SIGNAL", this.targetIndex-2, indexToTarget)
-            this.emitSignal("set_target", {id: indexToTarget})
-            this.targetIndex += increment
+        if (this.targetIndex === null) {
+            console.log(this.losArray)
+            console.log(this.losArray[0][0])
+            if (this.losArray[0]) this.emitSignal("set_target", { id: this.losArray[0][0] })
+        } else {
+            const indexToTarget = next ? targetIds[this.targetIndex] : targetIds[this.targetIndex-2]
+
+            if (indexToTarget){
+                this.emitSignal("set_target", {id: indexToTarget})
+                // this.targetIndex += increment
+            }        
         }
+        // if(this.targetIndex === null && next) {
+        //     this.targetIndex = 0
+        // } else if (this.targetIndex === null && !next) {
+        //     this.targetIndex = targetIds.length + 1
+        // }
     }
 
     checkTarget(){
@@ -121,11 +137,6 @@ class Targeting extends GameplayComponent {
         const targetPosition = Avern.State.target.transform.position
 
         this.targetingTriangle.set(this.triangleA.getWorldPosition(new THREE.Vector3()), this.triangleB.getWorldPosition(new THREE.Vector3()), this.triangleC.getWorldPosition(new THREE.Vector3()))
-
-        // Just for visualizing:
-        // this.triangleA.getWorldPosition(this.mesh.position)
-        // this.triangleB.getWorldPosition(this.mesh2.position)
-        // this.triangleC.getWorldPosition(this.mesh3.position)
 
         // Handle target being in range:
         if(this.targetingTriangle.containsPoint(targetPosition)){
@@ -138,24 +149,6 @@ class Targeting extends GameplayComponent {
             Avern.State.target.getComponent(Enemy).onSignal("exited_range")
         }
     }
-
-    // setTargetFromClick(e) {
-    //     this.pointer.x = ( e.clientX / window.innerWidth ) * 2 - 1;
-    //     this.pointer.y = - ( e.clientY / window.innerHeight ) * 2 + 1;
-
-    //     this.clickRaycast.setFromCamera( this.pointer, Avern.State.camera );
-    //     const intersects = this.clickRaycast.intersectObjects( Avern.State.scene.children );
-    //     if (intersects.length === 0 && Avern.State.target || Avern.State.target && intersects[0] && intersects[0].object && !intersects[0].object.parent.canBeTargeted) {
-    //         this.clearTarget()
-    //     } else if (intersects[0] && intersects[0].object.parent.canBeTargeted) {
-    //         const enemyToTarget = Avern.State.Enemies.find(enem => enem.name === intersects[0].object.parent.name)
-    //         if (Avern.State.target) {
-    //             Avern.State.target.getComponent(Enemy).onSignal("clear_target")
-    //         }
-    //         Avern.State.target = enemyToTarget
-    //         Avern.State.target.getComponent(Enemy).onSignal("set_target")
-    //     }
-    // }
     
     clearTarget() {
         if (Avern.State.target) {
@@ -167,13 +160,13 @@ class Targeting extends GameplayComponent {
         switch(signalName) {
             case "target_visible":
                 if (data.visible) {
-                    this.targetsMap.set(data.id, {proximity: data.proximity, y:data.y, order: null})
+                    this.targetsMap.set(data.id, {proximity: data.proximity, y:data.y, order: null, losDistance: data.losDistance})
                 } else {
                     this.targetsMap.delete(data.id)
                 }
                 break;
             case "clear_target":
-                this.targetIndex= 0
+                this.targetIndex= null
                 if (data.visible) {
                     this.targetsMap.set(data.id, {proximity: data.proximity, y:data.y, order: null})
                 } else {
@@ -198,3 +191,8 @@ class Targeting extends GameplayComponent {
 }
 
 export default Targeting
+
+// next steps:
+// 1. can init target from right side as well
+// 2. first target should be the one closest to the player vision line, not target_1 (indicate by coloring the order tag)
+// 3. auto-target enemy closest to player vision line when currently targeted enemy dies

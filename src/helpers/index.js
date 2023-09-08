@@ -174,8 +174,44 @@ function checkCapsuleCollision(capsule1, capsule2) {
     }
   
     // No collision
-    return {isColliding: false};
+    return {isColliding: false, closestPoint1, closestPoint2};
 }
+
+function distancePointToLine(point, line, parent) {
+    // Get the world matrix of the parent object
+    const worldMatrix = new THREE.Matrix4();
+    parent.updateMatrixWorld(); // Make sure the parent's world matrix is up to date
+    worldMatrix.copy(parent.matrixWorld);
+
+    // Apply the world matrix to the line's start and end points
+    const worldStart = new THREE.Vector3().copy(line.start).applyMatrix4(worldMatrix);
+    const worldEnd = new THREE.Vector3().copy(line.end).applyMatrix4(worldMatrix);
+
+    // Create a vector that points from the worldStart to the point
+    const v1 = new THREE.Vector3();
+    v1.subVectors(point, worldStart);
+
+    // Create a vector representing the direction of the line
+    const lineDirection = new THREE.Vector3();
+    lineDirection.subVectors(worldEnd, worldStart).normalize();
+
+    // Project v1 onto the line direction
+    const projection = v1.dot(lineDirection);
+
+    // If the projection is outside the line segment, clamp it
+    const clampedProjection = Math.max(0, Math.min(projection, worldStart.distanceTo(worldEnd)));
+
+    // Calculate the closest point on the line
+    const closestPoint = new THREE.Vector3();
+    closestPoint.copy(lineDirection).multiplyScalar(clampedProjection).add(worldStart);
+
+    // Calculate the distance between the point and the closest point on the line
+    const distance = point.distanceTo(closestPoint);
+
+    return distance;
+}
+
+
 
 function calculateDamageByDistance(baseDamage, distance, maxDistance, exponent=2) {
     
@@ -191,6 +227,7 @@ function calculateDamageByDistance(baseDamage, distance, maxDistance, exponent=2
 export { 
     generateCapsuleCollider, 
     checkCapsuleCollision, 
+    distancePointToLine,
     removeArrayElement, 
     getSine, 
     randomIntFromInterval,
