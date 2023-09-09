@@ -113,13 +113,12 @@ class Actions extends GameplayComponent {
         if (action.primed) {
             this.doAction(action)
         } else if (this.casting && this.activeCast.id !== action.id) {
-            if (inputs.forward || inputs.back || (this.left && (this.targeting || inputs.strafe)) || (this.right && (this.targeting || inputs.strafe))) return;
+            if (inputs.forward || inputs.back || (inputs.left && this.targeting) || (inputs.right && this.targeting)) return;
             this.interruptCast()
             this.startCast(action)
         } else {
-            if (inputs.forward || inputs.back) return;
+            if (inputs.forward || inputs.back || (inputs.left && this.targeting) || (inputs.right && this.targeting)) return;
             this.startCast(action)
-
         }
     }
     doAction(action) {
