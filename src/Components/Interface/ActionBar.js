@@ -7,6 +7,7 @@ class ActionBar extends GameplayComponent {
     constructor(gameObject, ) {
         super(gameObject)
         this.bar = document.querySelector("#casting-bar")
+        this.caption = document.querySelector("#casting-bar-caption")
         this.EquipmentInterface = document.querySelector(".equipped")
 
     }
@@ -16,6 +17,7 @@ class ActionBar extends GameplayComponent {
       switch(signalName) {
         case "casting_start":
           gsap.set(this.bar, { opacity: 1 })
+          this.caption.innerText = data.caption
           break;
 
         case "casting_progress":

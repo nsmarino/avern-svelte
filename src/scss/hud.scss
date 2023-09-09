@@ -315,6 +315,18 @@
   width: var(--player-casting-width);
   height: 100%;
 }
+#hud #casting-bar #casting-bar-caption {
+  position: absolute;
+  top: 16px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  width: 100%;
+  color: var(--avern-yellow);
+  font-family: var(--serif-italic);
+  font-size: 12px;
+  letter-spacing: 0.02em;
+}
 
 
 .numbers-container {

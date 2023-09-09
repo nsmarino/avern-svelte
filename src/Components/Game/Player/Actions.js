@@ -17,6 +17,7 @@ class Actions extends GameplayComponent {
             {
                 id: "shoot_from_distance",
                 label: "Shoot from a distance",
+                caption: "Loading rifle",
                 description: ".",
                 primeLength: 1,
                 baseDamage: 30,
@@ -32,6 +33,7 @@ class Actions extends GameplayComponent {
                 id: "bayonet_slash",
                 label: "Slash with bayonet",
                 description: "",
+                caption: "Affixing bayonet",
                 primeLength: 0.6,
                 cooldown: 0,
                 baseDamage: 10,
@@ -184,7 +186,7 @@ class Actions extends GameplayComponent {
         if (this.gameObject.getComponent(Body).movementLocked) return
         this.casting = true
         this.activeCast = action
-        this.emitSignal("casting_start", {animation: action.primeAnimation})
+        this.emitSignal("casting_start", {animation: action.primeAnimation, caption: action.caption})
         switch(action.id) {
             case "bayonet_slash":
                 Avern.Sound.bayonetHandler.currentTime = 0
