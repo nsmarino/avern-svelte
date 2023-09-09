@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import playerGltf from "../../../../assets/pc/fse--player-with-vision.gltf"
+import playerGltf from "../../../../assets/pc/fse--player1-turn180.gltf"
 import GameplayComponent from '../../_Component';
 import Actions from "./Actions"
 import InteractionOverlay from '../../Interface/InteractionOverlay';
@@ -108,6 +108,18 @@ class Body extends GameplayComponent {
                 crucialFrame: null,
                 canInterrupt: false,
             }
+            this.runTurn = {
+                id: "run_turn",
+                anim: this.setUpAnim(clips, "RUNNING_TURN", false, true),
+                crucialFrame: null,
+                canInterrupt: false,
+            }
+            this.idleTurn = {
+                id: "idle_turn",
+                anim: this.setUpAnim(clips, "IDLE_TURN", false, true),
+                crucialFrame: null,
+                canInterrupt: false,
+            }
             this.strafeLeft = {
                 id: "strafe_left",
                 anim: this.setUpAnim(clips, "STRAFE_L", true, false),
@@ -211,6 +223,17 @@ class Body extends GameplayComponent {
 
         /* eslint-disable no-fallthrough */
         switch(e.action) {
+            case this.idleTurn.anim:
+            case this.runTurn.anim:
+                if (inputs.forward) {
+                    this.fadeIntoAction(this.run, 0.001, REPLACE)
+                } else if (inputs.back) {
+                    this.fadeIntoAction(this.runBack, 0.001, REPLACE)
+                } else {
+                    this.fadeIntoAction(this.idle, 0.001, REPLACE)
+                }
+                this.gameObject.transform.rotateY(Math.PI)
+                break;
             case this.drink.anim:
                 this.emitSignal("player_heal")
             case this.shoot.anim:
@@ -262,7 +285,12 @@ class Body extends GameplayComponent {
                 this.fadeIntoAction(this.drink,0.2, REPLACE)
             }
             if (inputs.strafeWasPressed && !this.targeting) {
-                this.gameObject.transform.rotateY(Math.PI)
+                if (inputs.forward || inputs.back) {
+                    this.fadeIntoAction(this.runTurn, 0.1, REPLACE)
+                } else {
+                    this.fadeIntoAction(this.idleTurn, 0.1, REPLACE)
+                }
+                // this.gameObject.transform.rotateY(Math.PI)
             }
             if ( inputs.forwardWasPressed) {
                 if (this.rifleMesh && this.rifleOnBackMesh) {
