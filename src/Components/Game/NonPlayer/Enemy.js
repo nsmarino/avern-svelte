@@ -21,8 +21,8 @@ class Enemy extends GameplayComponent {
   
     this.enemyType = spawnPoint.userData.label
     this.startingBehavior = spawnPoint.userData.behavior
-    // this.HELPER = Avern.PATHFINDINGHELPER
-    // Avern.State.scene.add(this.HELPER)
+    this.HELPER = Avern.PATHFINDINGHELPER
+    Avern.State.scene.add(this.HELPER)
 
     this.bar = document.createElement("div")
     this.innerBar = document.createElement("div")
@@ -440,14 +440,18 @@ class Enemy extends GameplayComponent {
   }
 
   followPursuePath(deltaTime) {
-    const destination = Avern.GameObjects.getGameObjectByName("player").transform.position
+    const destination = Avern.Player.transform.position
 
     if (this.checkTarget() && this.gameObject.transform.position.distanceTo(destination) < this.actionRange) {
         this.behavior = "attack"
         this.fadeIntoAction(this.attack, 0)
         return
     } else {
-        if (this.prevPlayerPosition.distanceTo(destination) > 0.1 || !this.path) {
+        // Set path anytime player moves:
+        console.log(this.prevPlayerPosition.distanceTo(destination))
+        if (this.prevPlayerPosition.distanceTo(destination) > 0.05 || !this.path) {
+
+          console.log("Set new path")
             const targetGroup = Avern.PATHFINDING.getGroup(Avern.pathfindingZone, this.gameObject.transform.position);
 
             const closestNode = Avern.PATHFINDING.getClosestNode(this.gameObject.transform.position, Avern.pathfindingZone, targetGroup)
@@ -455,11 +459,11 @@ class Enemy extends GameplayComponent {
     
             const path = Avern.PATHFINDING.findPath(closestNode.centroid, destinationNode.centroid, Avern.pathfindingZone, 0);
     
-            // if (path) {
-            //   this.HELPER.setPlayerPosition(this.gameObject.transform.position)
-            //   this.HELPER.setTargetPosition(destination)
-            //   this.HELPER.setPath(path)
-            // }
+            if (path) {
+              this.HELPER.setPlayerPosition(this.gameObject.transform.position)
+              this.HELPER.setTargetPosition(destination)
+              this.HELPER.setPath(path)
+            }
             this.path = path
         }
 
