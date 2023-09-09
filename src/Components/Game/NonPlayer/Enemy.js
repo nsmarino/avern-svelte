@@ -482,7 +482,7 @@ class Enemy extends GameplayComponent {
   handleDeath() {
     this.behavior = "die_lol"
     this.onSignal("clear_target")
-    this.emitSignal("clear_target", {visible: false, id: this.gameObject.name})
+    this.emitSignal("clear_target", {visible: false, dead: true, id: this.gameObject.name})
     this.orderContainer.remove()
     Avern.State.Enemies = Avern.State.Enemies.filter(enem => enem.name !== this.gameObject.name)
     this.dead = true
@@ -610,6 +610,7 @@ class Enemy extends GameplayComponent {
 
         break;
       case "clear_target":
+        console.log("Clear target on self")
         this.isTargeted = false
         this.ring.visible = false
         this.orderContainer.classList.remove("targeted")

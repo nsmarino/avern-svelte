@@ -194,7 +194,6 @@ class Body extends GameplayComponent {
               this.visionEnd,
               this.visionRadius
             )
-            // this.gameObject.transform.add(this.visionCapsule.spine)
         }
         initFromGLTF()
     }
@@ -262,6 +261,9 @@ class Body extends GameplayComponent {
                 Avern.Sound.drinkHandler.play()
                 this.fadeIntoAction(this.drink,0.2, REPLACE)
             }
+            if (inputs.strafeWasPressed && !this.targeting) {
+                this.gameObject.transform.rotateY(Math.PI)
+            }
             if ( inputs.forwardWasPressed) {
                 if (this.rifleMesh && this.rifleOnBackMesh) {
                     this.rifleOnBackMesh.visible = true
@@ -279,30 +281,30 @@ class Body extends GameplayComponent {
                 this.fadeIntoAction(this.runBack, 0.2, REPLACE)
             }
 
-            if ( (inputs.leftWasPressed && this.targeting) || inputs.leftWasPressed && inputs.strafe ) {
+            if ( inputs.leftWasPressed && this.targeting ) {
                 Avern.Sound.fxHandler.currentTime = 0
                 Avern.Sound.fxHandler.play()
                 this.emitSignal("walk_start")
                 this.fadeIntoAction(this.strafeLeft, 0.2, REPLACE)
             }
-            if ( (inputs.rightWasPressed && this.targeting) || inputs.rightWasPressed && inputs.strafe ) {
+            if ( inputs.rightWasPressed && this.targeting ) {
                 Avern.Sound.fxHandler.currentTime = 0
                 Avern.Sound.fxHandler.play()
                 this.emitSignal("walk_start")
                 this.fadeIntoAction(this.strafeRight, 0.2, REPLACE)
             }
-            if (inputs.strafeWasPressed && inputs.left) {
-                Avern.Sound.fxHandler.currentTime = 0
-                Avern.Sound.fxHandler.play()
-                this.emitSignal("walk_start")
-                this.fadeIntoAction(this.strafeLeft, 0.2, REPLACE)
-            }
-            if (inputs.strafeWasPressed && inputs.right) {
-                Avern.Sound.fxHandler.currentTime = 0
-                Avern.Sound.fxHandler.play()
-                this.emitSignal("walk_start")
-                this.fadeIntoAction(this.strafeRight, 0.2, REPLACE)
-            }
+            // if (inputs.strafeWasPressed && inputs.left) {
+            //     Avern.Sound.fxHandler.currentTime = 0
+            //     Avern.Sound.fxHandler.play()
+            //     this.emitSignal("walk_start")
+            //     this.fadeIntoAction(this.strafeLeft, 0.2, REPLACE)
+            // }
+            // if (inputs.strafeWasPressed && inputs.right) {
+            //     Avern.Sound.fxHandler.currentTime = 0
+            //     Avern.Sound.fxHandler.play()
+            //     this.emitSignal("walk_start")
+            //     this.fadeIntoAction(this.strafeRight, 0.2, REPLACE)
+            // }
             if ( inputs.forwardWasLifted || inputs.backWasLifted || inputs.leftWasLifted || inputs.rightWasLifted ) {
 
                 if (inputs.forward){
@@ -386,12 +388,16 @@ class Body extends GameplayComponent {
                 this.onCapsuleCollide(data)
                 break;
             case "active_target":
+                console.log("Received active target")
                 this.targeting = true
                 break;
             case "clear_target":
+                console.log("Received clear target")
                 this.targeting = false
                 break;
             case "targeted_object":
+                // lazy fix for bug in auto-target on death of current target
+                if (!this.targeting) this.targeting=true
                 const lookVector = new THREE.Vector3(data.object.transform.position.x, this.transform.position.y, data.object.transform.position.z)
                 this.transform.lookAt(lookVector)
                 break;

@@ -114,8 +114,6 @@ class Targeting extends GameplayComponent {
         // const increment = next ? 1 : -1
         const targetIds = Array.from(this.mapOfOrderedTargets.keys())
         if (this.targetIndex === null) {
-            console.log(this.losArray)
-            console.log(this.losArray[0][0])
             if (this.losArray[0]) this.emitSignal("set_target", { id: this.losArray[0][0] })
         } else {
             const indexToTarget = next ? targetIds[this.targetIndex] : targetIds[this.targetIndex-2]
@@ -171,6 +169,12 @@ class Targeting extends GameplayComponent {
                     this.targetsMap.set(data.id, {proximity: data.proximity, y:data.y, order: null})
                 } else {
                     this.targetsMap.delete(data.id)
+                }
+                if (data.dead) {
+                    this.losArray = Array.from(this.targetsMap)
+                        .sort((a, b) => a[1].losDistance - b[1].losDistance)
+                    this.targetIndex = null
+                    this.setTargetFromInputKey(true)
                 }
                 break;
             case "targeted_object":
