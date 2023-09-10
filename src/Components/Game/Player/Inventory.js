@@ -14,6 +14,18 @@ class Inventory extends GameplayComponent {
         switch(signalName) {
           case "item_pickup":
             Avern.State.inventory.push(data.item)
+
+            // temp:
+            Avern.State.flaskCount += 1
+            document.querySelectorAll('[data-flask]').forEach(el => el.innerHTML = Avern.State.flaskCount)
+            console.log(stateStore)
+            stateStore.update(st => {
+                const updatedSt = {
+                    ...st,
+                    flaskCount: st.flaskCount + 1
+                }
+                return updatedSt
+            })
             break;
           case "player_heal":
             if (Avern.State.flaskCount > 0) Avern.State.flaskCount -= 1

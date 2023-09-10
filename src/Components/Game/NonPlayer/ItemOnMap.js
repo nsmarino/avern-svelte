@@ -4,6 +4,7 @@ import GameplayComponent from '../../_Component';
 import InteractionOverlay from '../../Interface/InteractionOverlay';
 import Inventory from '../Player/Inventory';
 import Notices from '../../Interface/Notices';
+import { stateStore } from "../../../Engine/State"
 
 class ItemOnMap extends GameplayComponent {
     constructor(gameObject, spawnPoint, content) {
@@ -80,6 +81,7 @@ class ItemOnMap extends GameplayComponent {
         gameObject.transform.add(tubeWireframe)
         tubeWireframe.onPlayerLook = this.onPlayerLook.bind(this)
         tubeWireframe.onPlayerAction = this.onPlayerAction.bind(this)
+        console.log("Item on enemy death", this)
     }
 
     update(deltaTime) {
@@ -128,6 +130,7 @@ class ItemOnMap extends GameplayComponent {
     }
 
     onPlayerLook() {
+        console.log("PLayer is looking")
         this.emitSignal("player_look", { prompt: "Pick up item" })
     }
 

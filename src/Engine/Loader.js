@@ -43,7 +43,7 @@ class Loader {
         {
           label: "healing-flask",
           item: {
-            name: "Lazarene Connector",
+            name: "Healing Flask",
             category: "flask"
           }
         }

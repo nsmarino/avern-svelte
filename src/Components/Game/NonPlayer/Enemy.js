@@ -3,13 +3,14 @@ import gsap from "gsap"
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
 import GameplayComponent from '../../_Component';
-import { generateCapsuleCollider, checkCapsuleCollision, distancePointToLine } from '../../../helpers';
+import { generateCapsuleCollider, checkCapsuleCollision, distancePointToLine, randomIntFromInterval } from '../../../helpers';
 import Body from '../Player/Body';
 import FollowCamera from '../Player/FollowCamera';
 import zombieBow from "../../../../assets/monsters/zombie-bow-2.gltf"
 import zombieSword from "../../../../assets/monsters/zombie-sword-2.gltf"
 import Vitals from '../Player/Vitals';
 import Actions from '../Player/Actions';
+import ItemOnMap from './ItemOnMap';
 import Targeting from '../Player/Targeting';
 import Notices from '../../Interface/Notices';
 
@@ -252,8 +253,18 @@ class Enemy extends GameplayComponent {
     }
     if (e.action == this.death) {
       setTimeout(() => {
+        // add item
+        const randomInt = randomIntFromInterval(1,4)
+        console.log(randomInt)
+        if (randomInt===1) {
+          const itemOnMap = Avern.GameObjects.createGameObject(Avern.State.scene, `${this.gameObject.name}-item`)
+          const itemContent = Avern.Content.itemsOnMap.find(i => i.label === "healing-flask")
+          itemOnMap.addComponent(ItemOnMap, this.gameObject.transform, itemContent)
+          itemOnMap.getComponent(ItemOnMap).attachObservers()
+        }
+
         this.removeFromScene()
-      }, 2000)
+      }, 1000)
     }
   }
   removeFromScene() {

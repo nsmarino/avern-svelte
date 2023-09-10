@@ -15,6 +15,7 @@ class InteractionOverlay extends GameplayComponent {
     onSignal(signalName, data={}) {
         switch(signalName) {
           case "player_look":
+            console.log("Received player look")
             this.promptEl.innerText = data.prompt
             const span = document.createElement("span")
             span.innerText = `[${Avern.Inputs.config.interact.name}]`
