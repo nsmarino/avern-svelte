@@ -56,7 +56,7 @@ class Enemy extends GameplayComponent {
 
     this.behavior = this.startingBehavior
     this.velocity = new THREE.Vector3( 0, 0, 0 );
-    this.speed = 2
+    this.speed = 3
     this.targetGroup = Avern.PATHFINDING.getGroup(Avern.pathfindingZone, spawnPoint.position);
     this.lerpFactor = 0.2
     this.originNode = Avern.PATHFINDING.getClosestNode(spawnPoint.position, Avern.pathfindingZone, this.targetGroup)
@@ -252,17 +252,17 @@ class Enemy extends GameplayComponent {
         this.crucialFrameSent = false
     }
     if (e.action == this.death) {
-      setTimeout(() => {
-        // add item
-        const randomInt = randomIntFromInterval(1,4)
-        console.log(randomInt)
-        if (randomInt===1) {
-          const itemOnMap = Avern.GameObjects.createGameObject(Avern.State.scene, `${this.gameObject.name}-item`)
-          const itemContent = Avern.Content.itemsOnMap.find(i => i.label === "healing-flask")
-          itemOnMap.addComponent(ItemOnMap, this.gameObject.transform, itemContent)
-          itemOnMap.getComponent(ItemOnMap).attachObservers()
-        }
 
+      // chance of dropping item
+      const randomInt = randomIntFromInterval(1,4)
+      if (randomInt===1) {
+        const itemOnMap = Avern.GameObjects.createGameObject(Avern.State.scene, `${this.gameObject.name}-item`)
+        const itemContent = Avern.Content.itemsOnMap.find(i => i.label === "healing-flask")
+        itemOnMap.addComponent(ItemOnMap, this.gameObject.transform, itemContent)
+        itemOnMap.getComponent(ItemOnMap).attachObservers()
+      }
+
+      setTimeout(() => {
         this.removeFromScene()
       }, 1000)
     }

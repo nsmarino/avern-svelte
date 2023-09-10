@@ -20,7 +20,7 @@ class Actions extends GameplayComponent {
                 caption: "Loading rifle",
                 description: ".",
                 primeLength: 1,
-                baseDamage: 30,
+                baseDamage: 25,
                 range: 15,
                 primed: false,
                 input: "KeyF",
