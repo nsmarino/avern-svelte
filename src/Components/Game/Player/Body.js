@@ -228,9 +228,11 @@ class Body extends GameplayComponent {
                 if (inputs.forward) {
                     this.fadeIntoAction(this.run, 0.001, REPLACE)
                 } else if (inputs.back) {
-                    this.fadeIntoAction(this.runBack, 0.001, REPLACE)
+                    this.fadeIntoAction(this.run, 0.001, REPLACE)
+                    this.backIsForwards = true
                 } else {
                     this.fadeIntoAction(this.idle, 0.001, REPLACE)
+                    Avern.Sound.fxHandler.pause()
                 }
                 this.gameObject.transform.rotateY(Math.PI)
                 break;
@@ -247,6 +249,7 @@ class Body extends GameplayComponent {
                 } else {
                     this.fadeIntoAction(this.idle, 0.1, REPLACE)
                 }
+                if (inputs.forward || inputs.back || (inputs.left && this.targeting) || (inputs.right && this.targeting) ) Avern.Sound.fxHandler.play()
                 this.movementLocked = false
                 this.crucialFrameSent = false;        
                 break;
@@ -284,12 +287,13 @@ class Body extends GameplayComponent {
                 Avern.Sound.drinkHandler.play()
                 this.fadeIntoAction(this.drink,0.2, REPLACE)
             }
-            if (inputs.strafeWasPressed && !this.targeting) {
+            if (inputs.strafeWasPressed) {
                 if (inputs.forward || inputs.back) {
                     this.fadeIntoAction(this.runTurn, 0.1, REPLACE)
                 } else {
                     this.fadeIntoAction(this.idleTurn, 0.1, REPLACE)
                 }
+                // do this on crucial frame, not on animation complete
                 // this.gameObject.transform.rotateY(Math.PI)
             }
             if ( inputs.forwardWasPressed) {
@@ -321,24 +325,15 @@ class Body extends GameplayComponent {
                 this.emitSignal("walk_start")
                 this.fadeIntoAction(this.strafeRight, 0.2, REPLACE)
             }
-            // if (inputs.strafeWasPressed && inputs.left) {
-            //     Avern.Sound.fxHandler.currentTime = 0
-            //     Avern.Sound.fxHandler.play()
-            //     this.emitSignal("walk_start")
-            //     this.fadeIntoAction(this.strafeLeft, 0.2, REPLACE)
-            // }
-            // if (inputs.strafeWasPressed && inputs.right) {
-            //     Avern.Sound.fxHandler.currentTime = 0
-            //     Avern.Sound.fxHandler.play()
-            //     this.emitSignal("walk_start")
-            //     this.fadeIntoAction(this.strafeRight, 0.2, REPLACE)
-            // }
-            if ( inputs.forwardWasLifted || inputs.backWasLifted || inputs.leftWasLifted || inputs.rightWasLifted ) {
 
-                if (inputs.forward){
+            if (inputs.backWasLifted && this.backIsForwards) this.backIsForwards = false
+
+            if ( inputs.forwardWasLifted || inputs.backWasLifted || inputs.leftWasLifted || inputs.rightWasLifted ) {
+                if (this.action == this.runTurn || this.action == this.idleTurn) return
+                if (inputs.forward || (inputs.back && this.backIsForwards)){
                     if (this.action.id == this.run.id) return
                     this.fadeIntoAction(this.run, 0.1, REPLACE)
-                } else if (inputs.back) {
+                } else if (inputs.back && !this.backIsForwards) {
                     if (this.action.id == this.runBack.id) return
                     this.fadeIntoAction(this.runBack, 0.1, REPLACE)
                 } else if (inputs.left && this.targeting) {
@@ -369,6 +364,7 @@ class Body extends GameplayComponent {
                 break;
             case "action_availed":
                 this.movementLocked = true
+                Avern.Sound.fxHandler.pause()
 
                 this.fadeIntoAction(this[data.action.animation],0.1, REPLACE)
                 if (this.rifleMesh && this.rifleOnBackMesh && data.action.id !== "set_land_mine") {
@@ -521,23 +517,16 @@ class Body extends GameplayComponent {
         const inputVector = new THREE.Vector3()
         const strafeVector = new THREE.Vector3()
 
-        if ( inputs.forward && !this.movementLocked) {
+        if ( (inputs.forward && !this.movementLocked) || inputs.back && !this.movementLocked && this.backIsForwards) {
             const forwardSpeed = this.targeting ? 6 : 12
             transform.getWorldDirection(inputVector).multiplyScalar(delta).multiplyScalar(forwardSpeed)
             deltaVector.add(inputVector)
-        }
-  
-        if ( inputs.back && !this.movementLocked ) {
+        } else if ( inputs.back && !this.movementLocked ) {
             transform.getWorldDirection(inputVector).multiplyScalar(delta).multiplyScalar(-6)
             deltaVector.add(inputVector)
         }
         if ( inputs.left ) {
-            if (inputs.strafe && !this.targeting && !this.movementLocked) {
-                const perpendicularVector = new THREE.Vector3();
-                perpendicularVector.crossVectors(transform.getWorldDirection(strafeVector), new THREE.Vector3(0, 1, 0));
-                perpendicularVector.normalize().multiplyScalar(delta).multiplyScalar(-4);
-                deltaVector.add(perpendicularVector);
-            } else if (!inputs.strafe && this.targeting && !this.movementLocked) {
+            if (this.targeting && !this.movementLocked) {
                 const perpendicularVector = new THREE.Vector3();
                 perpendicularVector.crossVectors(transform.getWorldDirection(strafeVector), new THREE.Vector3(0, 1, 0));
                 perpendicularVector.normalize().multiplyScalar(delta).multiplyScalar(-4);
@@ -545,16 +534,10 @@ class Body extends GameplayComponent {
             } else if (!this.targeting) {
                 transform.rotateY(0.004)
             }
-
         }
             
         if ( inputs.right ) {
-            if (inputs.strafe && !this.targeting && !this.movementLocked) {
-                const perpendicularVector = new THREE.Vector3();
-                perpendicularVector.crossVectors(transform.getWorldDirection(strafeVector), new THREE.Vector3(0, 1, 0));
-                perpendicularVector.normalize().multiplyScalar(delta).multiplyScalar(4);
-                deltaVector.add(perpendicularVector);
-            } else if (!inputs.strafe && this.targeting && !this.movementLocked) {
+            if (this.targeting && !this.movementLocked) {
                 const perpendicularVector = new THREE.Vector3();
                 perpendicularVector.crossVectors(transform.getWorldDirection(strafeVector), new THREE.Vector3(0, 1, 0));
                 perpendicularVector.normalize().multiplyScalar(delta).multiplyScalar(4);

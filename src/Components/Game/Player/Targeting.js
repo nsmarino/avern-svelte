@@ -100,7 +100,7 @@ class Targeting extends GameplayComponent {
         } else if (inputs.prevTarget && !Avern.State.worldUpdateLocked) {
             this.setTargetFromInputKey(false)
 
-        } else if (inputs.clearTarget && !Avern.State.worldUpdateLocked) {
+        } else if ((inputs.clearTarget && !Avern.State.worldUpdateLocked) || (inputs.strafeWasPressed && !Avern.State.worldUpdateLocked)) {
             this.emitSignal("clear_target")
             this.targetIndex=null
         }
