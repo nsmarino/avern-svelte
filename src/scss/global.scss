@@ -1,0 +1,34 @@
+.menu-bg {
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    z-index: 10;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(180deg, rgba(48, 30, 3, 0.4) 0%, rgba(50, 50, 50, 0.8) 100%);;
+}
+.menu-pane {
+  border: 2px solid var(--avern-grey);
+  background: linear-gradient(180deg, rgba(48, 30, 3, 0.8) 0%, rgba(50, 50, 50, 0.8) 100%);;
+}
+.menu-heading {
+
+}
+.menu-inner-bg {
+
+}
+
+.btn-large {}
+
+.flex-col {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.right-align {
+  text-align: right;
+}

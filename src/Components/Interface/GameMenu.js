@@ -1,5 +1,6 @@
 import GameplayComponent from '../_Component';
 import {get} from 'svelte/store'
+
 class GameMenu extends GameplayComponent {
     constructor(gameObject) {
         super(gameObject)
@@ -31,7 +32,6 @@ class GameMenu extends GameplayComponent {
             Avern.State.worldUpdateLocked = true
         }    
     }
-
 
 }
 

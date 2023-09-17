@@ -6,28 +6,49 @@ const stateStore = writable({
     flaskCount: 5
 })
 
-// keyboard map [x]
-// left/right config [x]
 
-// today:
+// sunday:
 // pause menu []
 // world state and triggers []
 // modals []
-// fountain menu []
+// save states
+// NIGHT: level design
 
-// tomorrow:
+// monday:
 // character menu []
 // return to encounter design:
 // - deal damage w/o target?
 // - enemy projectiles
 // - can rearrange actions
 // - explosives kit and ceremonial dagger
-// - xp
+// - gain xp
+// NIGHT: level design
+
+// tuesday:
+// fountain menu []
+// stage resets and loads
+// enemy updates
+// NIGHT: level design
+
+// wednesday:
+// cleanup and create github template
+// connect to CMS
+// NIGHT: level design
+
+// thursday:
+// blog posts and update personal website
+// NIGHT: level design
+
+// friday: JA
+// NIGHT: level design
+
 
 const Store = {
     player: writable({ 
         flasks: 5,
         hp: 100,
+        level: 10,
+        xp: 0,
     }),
 
     pauseMenu: writable(false),
@@ -49,10 +70,51 @@ const Store = {
         leftHanded: true,
     }),
 
-    inventory: writable({
-        weapons: [],
-        items: []
-    }),
+    weapons: writable([
+        {
+            label: "Goatherd's Rifle",
+            img: "",
+            description: "",
+            primary: "",
+            actions: [
+                {},
+                {},
+                {},
+                {}
+            ]
+        },
+        {
+            label: "Explosives Kit",
+            img: "",
+            description: "",
+            primary: "",
+            actions: [
+                {},
+                {},
+                {},
+                {}
+            ]
+        },
+        {
+            label: "Ceremonial Dagger",
+            img: "",
+            description: "",
+            primary: "",
+            actions: [
+                {},
+                {},
+                {},
+                {}
+            ]
+        },
+    ]),
+
+    items: writable([
+        {
+            label: "Key to the gatehouse",
+            img: ""
+        }
+    ]),
 
     actions: writable([
         {
