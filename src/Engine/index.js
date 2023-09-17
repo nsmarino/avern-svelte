@@ -2,7 +2,7 @@ import Core from "./Core"
 import GameObjects from "./GameObjects"
 import Inputs from "./Inputs"
 import Loader from "./Loader"
-import State from "./State"
+import State, { Store } from "./State"
 import Sound from "./Sound"
 import Progress from "./Progress"
 import Config from "./Config"
@@ -23,6 +23,8 @@ const Engine = {
     PATHFINDINGHELPER: new PathfindingHelper(),
 
     Config,
+    // Prototyping a store feature for ui updates
+    Store
 }
 
 export default Engine

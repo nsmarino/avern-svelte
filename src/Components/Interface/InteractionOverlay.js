@@ -3,6 +3,8 @@ import gsap from "gsap"
 
 import GameplayComponent from '../_Component';
 
+
+// might no longer be needed at all ??????
 // Handles display of interaction content
 class InteractionOverlay extends GameplayComponent {
     constructor(gameObject, ) {

@@ -19,6 +19,10 @@ import Collider from "../Components/World/Collider";
 import Sky from "../Components/World/Sky";
 import Lights from "../Components/World/Lights";
 
+import yoshuaAlert from "../../assets/portraits/yoshua/alert.svg"
+import yoshuaHappy from "../../assets/portraits/yoshua/happy.svg"
+import yoshuaSerious from "../../assets/portraits/yoshua/serious.svg"
+
 class Loader {
     constructor() {
         this.scene = null
@@ -55,39 +59,73 @@ class Loader {
       }
       Avern.Content.interactions = [
         {
-          label: "gatekeeper",
-          prompt: "Talk",
+          label: "yoshua_haystack",
+          index: 0,
+          model: gearGltf,
           content: [
             {
-                text: "Woe is me...I have lost the key to the gatehouse.",
-                image: ""
-            },
-            {
-                text: "Eunuch, will you clear the path for me? There are phantasms...it is too dangerous for me.",
-                image: ""
-            },
-            {
-                text: "You have your SHEPHERD'S RIFLE. Seek the key, that I might open the fortress gates for weary travelers.",
-                image: ""
-            }
-          ],
-          model: npcGltf
-        },
-        {
-          label: "gears",
-          prompt: "Examine machine",
-          content: [
-            {
-                text: "It is unclear what purpose this machine serves.",
-                image: ""
-            },
-            {
-                text: "Presumably the gatekeeper has a use for it. Its careful maintenance is a treasured part of his morning routine.",
-                image: ""
+              prompt: "Talk to the drowsy interloper",
+              nodes:[
+                {
+                type: "dialogue",
+                text: "Ah...is this your haystack? I couldn't resist...I have been running all night.",
+                image: yoshuaAlert,
+                label: "Drowsy interloper",
               },
+              {
+                type: "narration",
+                image: yoshuaAlert,
+                text: "He is a curly haired and delicate adolescent, about your age. His cheeks are flushed with the cold morning air and there is a stalk of hay sticking out of his ear.",
+              },
+              {
+                  type: "dialogue",
+                  text: "I am in your debt...are you a castrate? That mask...it is so hard to know if you are angry!",
+                  image: yoshuaAlert,
+                  label: "Drowsy interloper",
+              },
+              {
+                  type: "dialogue",
+                  text: "Forgive me! I mean no offense. I am very tired. I was captured by slavers...",
+                  image: yoshuaHappy,
+                  label: "Drowsy interloper",
+              },
+              {
+                  type: "dialogue",
+                  text: "I am Yoshua. I come from the capital. I was taken there -- along with my sister.",
+                  image: yoshuaHappy,
+                  label: "Yoshua, fugitive",
+              },
+              {
+                type: "narration",
+                text: "He frowns and glances downward. His strange cheeriness melts away.",
+                image: yoshuaSerious,
+              },
+              {
+                  type: "dialogue",
+                  text: "My sister...they still have her. In a palanquin, deep in the swamp. Would you help me, castrate? I am at your mercy.",
+                  image: yoshuaSerious,
+                  label: "Yoshua, fugitive",
+              },
+              {
+                  type: "trigger",
+                  label: "help_yoshua"
+              },
+              ]
+            },
+            {
+              prompt: "Talk to Yoshua",
+              nodes: [
+                {
+                  type: "dialogue",
+                  text: "I'm so happy you will help me! Let's make for the swamp...the slavers have their camp there. That is where my sister is imprisoned.",
+                  image: "",
+                  label: "Yoshua, fugitive",
+                }
+              ]
+            }
+
           ],
-          model: gearGltf
-        },
+        }
       ]
     }
 

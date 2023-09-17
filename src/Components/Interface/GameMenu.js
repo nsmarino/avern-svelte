@@ -16,7 +16,7 @@ class GameMenu extends GameplayComponent {
 
     update() {
         const inputs = Avern.Inputs.getInputs()
-        if ( inputs.characterMenu ) {
+        if ( inputs.pauseMenu ) {
             if (!this.gmActive) {
                 this.openGameMenu()
             }
@@ -24,7 +24,7 @@ class GameMenu extends GameplayComponent {
                 this.closeGameMenu()
             }
         }    
-        if ( inputs.reset ) {
+        if ( inputs.characterMenu ) {
             if (!this.cmActive) {
                 this.openCharacterMenu()
             }

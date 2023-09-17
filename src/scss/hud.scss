@@ -1,25 +1,20 @@
 // HEALTH
-#hud .player-state .energy {
+
+.energy {
   position: fixed;
   top: 40px;
   left: 40px;
-}
-#hud .open-menu {
-  position: relative;
-  z-index: 100;
-}
-#hud .energy {
   border: 1px solid var(--avern-off-black);
   padding: 2px;
   background: linear-gradient(var(--avern-grey), var(--avern-off-black));
 }
-#hud .player-state .energy .health {
+.player-state .energy .health {
   height: 8px;
   width: 300px;
   background: linear-gradient(var(--avern-brown), var(--avern-off-black));
   border: 1px solid var(--avern-off-black);
 }
-#hud .player-state .energy .health .inner-health { 
+.player-state .energy .health .inner-health { 
   background-color: var(--avern-dark-red);
   width: var(--player-vitality-width);
   height: 100%;
@@ -27,7 +22,7 @@
 }
 
 // XP
-#hud .player-state .xp {
+.player-state .xp {
   position: fixed;
   top: 40px;
   right: 40px;
@@ -35,7 +30,7 @@
   padding: 1px;
   background: linear-gradient(var(--avern-grey), var(--avern-off-black))
 }
-#hud .xp-inner {
+.xp-inner {
   width: 60px;
   background: linear-gradient(var(--avern-brown), var(--avern-off-black));
   border: 1px solid var(--avern-off-black);
@@ -43,101 +38,36 @@
   justify-content: flex-end;
   padding: 0px 4px
 }
-#hud .player-state .xp span {
+.player-state .xp span {
   color: white;
   font-family: var(--serif);
   font-size: 70%;
   line-height: 1;
   letter-spacing: 0.08em;
 }
-#hud .action-inventory {
-  position: absolute;
-  top: 8px;
-  left: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+
+.player-input {
+  opacity: 1;
+  transition: opacity 0.2s ease-in-out;
 }
-#hud .flask-count, #hud .ammo-count {
-  border: 1px solid var(--avern-off-black);
-  padding: 1px;
-  background: linear-gradient(var(--avern-grey), var(--avern-off-black));
-  position: relative;
-}
-#hud .flask-count-inner,  #hud .ammo-count-inner {
-  width: 60px;
-  background: linear-gradient(var(--avern-brown), var(--avern-off-black));
-  border: 1px solid var(--avern-off-black);
-  display: flex;
-  justify-content: flex-end;
-  padding: 0px 4px
-}
-#hud .flask-count span,  #hud .ammo-count span {
-  color: white;
-  font-family: var(--serif);
-  font-size: 90%;
-  line-height: 1;
-  letter-spacing: 0.08em;
-}
-#hud .flask-count svg,  #hud .ammo-count svg {
-  position: absolute;
-  left: 6px;
-  width: 15px;
-  top: 50%;
-  transform: translateY(-50%);
-}
-#hud .ammo-count .ammo-instruction {
-  position: absolute;
-  left: 2px;
-  top: 80%;
-  // transform: translateY(-50%);
-  font-size: 8px;
+.player-input.interactionActive {
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
 }
 
-// NOTICES
-#hud #notices-container {
-  position: fixed;
-  top: 80px;
-  left: 40%;
-  right: 40%;
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  p {
-    text-align: center;
-    margin:0 0 5px;
-    font-family: var(--serif);
-    filter: drop-shadow(0 0.1rem 0.2rem black)    
-  }
-}
-
-// to be deleted
-#hud .target-bar {
-  position: fixed;
-  background-color: black; 
-  top: 40px;
-  left: 40%;
-  right: 40%;
-  height: 10px;
-}
-#hud .target-bar .target-vitality {
-  background-color: #EC6F6F;
-  width: var(--target-vitality-width);
-  height: 100%;
-  position: absolute;
-  top: 0;
-}
-
-
-// left hand
-#hud .player-input .equipped {
+// main hand
+.equipped {
   position: fixed;
   bottom: 20px;
   left: 40px;
   display: flex;
   flex-direction: column;
+  .rightHanded & {
+    left: unset;
+    right: 40px;
+  }
 }
-  #hud .input-key {
+  .input-key {
     border-radius: 8px;
     width: 55px;
     height: 55px;
@@ -151,7 +81,6 @@
         opacity: 1;
         transform: translateY(0);
         transition: all 0.2s;
-
       }
     }
     &.is-casting {
@@ -193,6 +122,10 @@
       border: 2px solid var(--avern-light-grey);
       border-radius: 8px;
       padding: 12px;
+      .rightHanded & {
+        left: unset;
+        right: 0;
+      }
       h3 {
         margin: 0px;
         font-family: var(--serif-italic);
@@ -209,18 +142,21 @@
 
     }
   }
-  #hud .bottom-row {
+  .bottom-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    .rightHanded & {
+      flex-direction: row-reverse;
+    }
   }
-  #hud .bottom-row .input-key {
+  .bottom-row .input-key {
     width: 40px;
     height: 40px;
     margin: 8px 24px;
   }
 
-  #hud .input-key .key-inner {
+  .input-key .key-inner {
     border-radius: 8px;
     width: 100%;
     height: 100%;
@@ -238,36 +174,73 @@
     font-family: sans-serif;
     font-size: 12px;
   }
-  #hud .player-input .equipped .main-row .input-key svg {
+   .equipped .main-row .input-key svg {
     width: 55%;
     height: 55%;
     }
-#hud .player-input .offhand {
+
+.offhand {
   position: fixed;
   bottom: 20px;
   right: 40px;
   .action-tooltip {
     left: unset;
     right: 0;
+    .rightHanded & {
+      right: unset;
+      left: 0;
+    }
+  }
+  .rightHanded & {
+    right: unset;
+    left: 40px;
   }
 }
-#hud .player-input .offhand .top-row {
+ .offhand .top-row {
   display: flex;
   gap: 8px;
   margin-bottom: 8px;
   margin-left: 58px;
+  .rightHanded & {
+    flex-direction: row-reverse;
+    margin-right: 82px;
+  }
 }
-#hud .player-input .equipped .top-row {
+ .equipped .top-row {
   display: flex;
   gap: 8px;
   margin-bottom: 8px;
   margin-left: 110px;
+  .rightHanded & {
+    flex-direction: row-reverse;
+    margin-left: 0;
+    margin-right: 140px;
+  }
 }
 
 // offhand
-#hud .player-input .offhand .main-row, #hud .player-input .equipped .main-row {
+.offhand .main-row, .equipped .main-row {
   display: flex;
   gap: 8px;
+  .rightHanded & {
+    flex-direction: row-reverse;
+    #turn {
+      order: 4;
+    }
+    #left {
+      order: 3;
+    }
+    #back {
+      order: 2;
+    }
+    #right {
+      order: 1;
+    }
+    #interact {
+      order: 0;
+    }
+}
+
 }
 .offhand .input-key, .equipped .input-key {
   display: flex;
@@ -287,14 +260,50 @@
 .input-key.locked {
   opacity: 0.4;
 }
-.input-key.restart-playtest {
+
+.action-inventory {
+  position: absolute;
+  top: 8px;
+  left: 0;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-direction: column;
+  gap: 8px;
+  .rightHanded & {
+    left: unset;
+    right: 0px;
+  }
+  
+  .flask-count {
+    border: 1px solid var(--avern-off-black);
+    padding: 1px;
+    background: linear-gradient(var(--avern-grey), var(--avern-off-black));
+    position: relative;
+  }
+  .flask-count-inner {
+    width: 60px;
+    background: linear-gradient(var(--avern-brown), var(--avern-off-black));
+    border: 1px solid var(--avern-off-black);
+    display: flex;
+    justify-content: flex-end;
+    padding: 0px 4px
+  }
+  .flask-count span {
+    color: white;
+    font-family: var(--serif);
+    font-size: 90%;
+    line-height: 1;
+    letter-spacing: 0.08em;
+  }
+  .flask-count svg {
+    position: absolute;
+    left: 6px;
+    width: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+  }  
 }
 
-
-#hud #casting-bar {
+#casting-bar {
   border: 1px solid var(--avern-off-black);
   padding: 2px;
   background: linear-gradient(var(--avern-grey), var(--avern-off-black));
@@ -302,30 +311,47 @@
   bottom: 80px;
   left: 50%;
   transform: translateX(-50%);
+
+  .outer-casting-bar { 
+    height: 6px;
+    width: 300px;
+    background: linear-gradient(var(--avern-brown), var(--avern-off-black));
+    border: 1px solid var(--avern-off-black);
+  }
+  .inner-casting-bar { 
+    background-color: var(--avern-blue);
+    width: var(--player-casting-width);
+    height: 100%;
+  }
+  #casting-bar-caption {
+    position: absolute;
+    top: 16px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    width: 100%;
+    color: var(--avern-yellow);
+    font-family: var(--serif-italic);
+    font-size: 12px;
+    letter-spacing: 0.02em;
+  }
 }
 
-#hud #casting-bar .outer-casting-bar { 
-  height: 6px;
-  width: 300px;
-  background: linear-gradient(var(--avern-brown), var(--avern-off-black));
-  border: 1px solid var(--avern-off-black);
-}
-#hud #casting-bar .inner-casting-bar { 
-  background-color: var(--avern-blue);
-  width: var(--player-casting-width);
-  height: 100%;
-}
-#hud #casting-bar #casting-bar-caption {
-  position: absolute;
-  top: 16px;
-  left: 0;
-  right: 0;
-  text-align: center;
-  width: 100%;
-  color: var(--avern-yellow);
-  font-family: var(--serif-italic);
-  font-size: 12px;
-  letter-spacing: 0.02em;
+// NOTICES
+#notices-container {
+  position: fixed;
+  top: 80px;
+  left: 40%;
+  right: 40%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  p {
+    text-align: center;
+    margin:0 0 5px;
+    font-family: var(--serif);
+    filter: drop-shadow(0 0.1rem 0.2rem black)    
+  }
 }
 
 
@@ -374,6 +400,7 @@
 }
 .action-indicator {
   border: 1px solid var(--avern-light-grey);
+  border-bottom: 2px solid var(--avern-light-grey);
   border-radius: 4px;
   background: linear-gradient(var(--avern-brown), var(--avern-off-black));
   color: var(--avern-light-grey);

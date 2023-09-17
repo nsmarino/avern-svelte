@@ -1,6 +1,8 @@
 class Inputs {
     constructor() {
-        this.config = {
+        this.leftHanded=true
+
+        this.leftHandedConfig = {
             forward: {
                 code: "KeyI",
                 name: "I",
@@ -61,7 +63,7 @@ class Inputs {
                 trackUp: false,
             },
         
-            characterMenu: {
+            pauseMenu: {
                 code:"KeyU",
                 name: "U",
                 pressed: false,
@@ -140,7 +142,7 @@ class Inputs {
 
             },
         
-            reset: {
+            characterMenu: {
                 code: "KeyR",
                 name: "R",
                 pressed: false,
@@ -162,7 +164,7 @@ class Inputs {
 
             },
         
-            strafe: {
+            turn: {
                 code: "Semicolon",
                 name: ";",
                 pressed: false,
@@ -172,7 +174,165 @@ class Inputs {
                 trackUp: true,
             },
         }
+        this.rightHandedConfig = {
+            forward: {
+                code: "KeyE",
+                pressed: false,
+
+                onlyOnce: false,
+                trackWasPressed: true,
+                trackUp: true,
+            },
+            back: {
+                code:"KeyD",
+                pressed: false,
+
+                onlyOnce: false,
+                trackWasPressed: true,
+                trackUp: true,
+
+            },
+            left: {
+                code:"KeyS",
+                pressed: false,
+
+                onlyOnce: false,
+                trackWasPressed: true,
+                trackUp: true,
+
+            },
+            right: {
+                code:"KeyF",
+                pressed: false,
+
+                onlyOnce: false,
+                trackWasPressed: true,
+                trackUp: true,
+
+            },
         
+            interact: {
+                code:"KeyG",
+                pressed: false,
+
+                onlyOnce: true,
+                trackWasPressed: false,
+                trackUp: false,
+
+            },
+            jump: {
+                code:"Space",
+                name: "Space",
+                pressed: false,
+
+                onlyOnce: true,
+                trackWasPressed: true,
+                trackUp: false,
+            },
+        
+            pauseMenu: {
+                code:"KeyR",
+                pressed: false,
+
+                onlyOnce: true,
+                trackWasPressed: false,
+                trackUp: false,
+
+            },
+            setTarget: {
+                code:"KeyH",
+                pressed: false,
+
+                onlyOnce: true,
+                trackWasPressed: false,
+                trackUp: false,
+            },
+            prevTarget: {
+                code:"KeyN",
+                pressed: false,
+
+                onlyOnce: true,
+                trackWasPressed: false,
+                trackUp: false,
+            },
+            clearTarget: {
+                code:"ShiftRight",
+                pressed: false,
+
+                onlyOnce: true,
+                trackWasPressed: false,
+                trackUp: false,
+            },
+        
+            action1: {
+                code:"KeyJ",
+                pressed: false,
+
+                onlyOnce: true,
+                trackWasPressed: false,
+                trackUp: false,
+
+            },
+            action2: {
+                code:"KeyK",
+                pressed: false,
+
+                onlyOnce: true,
+                trackWasPressed: false,
+                trackUp: false,
+
+            },
+            action3: {
+                code:"KeyL",
+                pressed: false,
+
+                onlyOnce: true,
+                trackWasPressed: false,
+                trackUp: false,
+
+            },
+            action4: {
+                code:"Semicolon",
+                pressed: false,
+
+                onlyOnce: true,
+                trackWasPressed: false,
+                trackUp: false,
+
+            },
+        
+            characterMenu: {
+                code: "KeyU",
+                pressed: false,
+
+                onlyOnce: true,
+                trackWasPressed: false,
+                trackUp: false,
+
+            },
+        
+            flask: {
+                code: "KeyI",
+                pressed: false,
+
+                onlyOnce: true,
+                trackWasPressed: false,
+                trackUp: false,
+
+            },
+        
+            turn: {
+                code: "KeyA",
+                pressed: false,
+
+                onlyOnce: false,
+                trackWasPressed: true,
+                trackUp: true,
+            },
+        }
+        
+        this.config = this.leftHandedConfig
+
         this.inputs = {
             primaryClick:false,
             secondaryClick: false,
@@ -210,9 +370,9 @@ class Inputs {
             reset: false,
             flask: false,
 
-            strafe: false,
-            strafeWasPressed:false,
-            strafeWasLifted:false,
+            turn: false,
+            turnWasPressed:false,
+            turnWasLifted:false,
         }
         
         window.addEventListener( 'keydown', function(e) {
@@ -236,6 +396,27 @@ class Inputs {
         // Disable context menu on canvas
         document.querySelector("canvas").addEventListener('contextmenu', function(e) {
             e.preventDefault();
+            if(this.leftHanded) {
+                this.leftHanded = false
+                this.config=this.rightHandedConfig
+                Avern.Store.config.update(st => {
+                    const updatedSt = {
+                        ...st,
+                        leftHanded: false
+                    }
+                    return updatedSt
+                })
+            } else {
+                this.leftHanded = true
+                this.config=this.leftHandedConfig
+                Avern.Store.config.update(st => {
+                    const updatedSt = {
+                        ...st,
+                        leftHanded: true
+                    }
+                    return updatedSt
+                })
+            }
             return false;
         }.bind(this), false);
 
@@ -259,12 +440,15 @@ class Inputs {
     }
 
     handleDown(code) {
-        if (document.querySelector(`#${code}`)) {
-            document.querySelector(`#${code}`).classList.add("active")
-        }
+        // if (document.querySelector(`#${code}`)) {
+        //     document.querySelector(`#${code}`).classList.add("active")
+        // }
 
         for (const property in this.config) {
             if (this.config[property].code === code) {
+                if (document.querySelector(`#${property}`)) {
+                    document.querySelector(`#${property}`).classList.add("active")
+                }
                 if (!this.config[property].onlyOnce) this.inputs[property] = true
                 if (!this.config[property].pressed) {
                     if (this.config[property].onlyOnce) this.inputs[property] = true
@@ -276,14 +460,17 @@ class Inputs {
     }
 
     handleUp(code) {
-        if (document.querySelector(`#${code}`)) {
-            document.querySelector(`#${code}`).classList.remove("active")
-        }
+        // if (document.querySelector(`#${code}`)) {
+        //     document.querySelector(`#${code}`).classList.remove("active")
+        // }
         for (const property in this.config) {
             if (this.config[property].code === code) {
-                    if (!this.config[property].onlyOnce) this.inputs[property] = false
-                    this.config[property].pressed = false
-                    if (this.config[property].trackUp) this.inputs[`${property}WasLifted`] = true
+                if (document.querySelector(`#${property}`)) {
+                    document.querySelector(`#${property}`).classList.remove("active")
+                }
+                if (!this.config[property].onlyOnce) this.inputs[property] = false
+                this.config[property].pressed = false
+                if (this.config[property].trackUp) this.inputs[`${property}WasLifted`] = true
             }
         }
     }

@@ -287,7 +287,7 @@ class Body extends GameplayComponent {
                 Avern.Sound.drinkHandler.play()
                 this.fadeIntoAction(this.drink,0.2, REPLACE)
             }
-            if (inputs.strafeWasPressed) {
+            if (inputs.turnWasPressed) {
                 if (inputs.forward || inputs.back) {
                     this.fadeIntoAction(this.runTurn, 0.1, REPLACE)
                 } else {

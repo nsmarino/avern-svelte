@@ -5,7 +5,62 @@ import { writable } from 'svelte/store';
 const stateStore = writable({
     flaskCount: 5
 })
-export { stateStore }
+
+// Store Interaction content here
+// Use it in a svelte component
+// Understand svelte store better
+// keyboard map
+// left/right config
+// modals
+// pause menu
+// fountain menu
+// character menu
+// main menu and intro text
+// audit index.html for other things to replace
+
+const Store = {
+    player: writable({ 
+        flasks: 5,
+        hp: 100,
+    }),
+    simple: writable(true),
+
+    worldEvents: writable({
+        foo: true,
+        bar: false,
+    }),
+
+    prompt: writable(""),
+    
+    interaction: writable({
+        active: false,
+        node: {}
+    }),
+
+    config: writable({
+        leftHanded: true,
+    }),
+
+    inventory: writable({
+        weapons: [],
+        items: []
+    }),
+
+    actions: writable({
+        action1: {},
+        action2: {},
+        action3: {},
+        action4: {},
+    }),
+
+    info: writable({
+        log: [],
+        tips: []
+    })
+}
+
+export { stateStore, Store }
+
 class State {
     constructor(){
         this.playerDead = false

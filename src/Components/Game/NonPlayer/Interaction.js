@@ -1,26 +1,27 @@
 import * as THREE from 'three';
+import {get} from 'svelte/store'
 
-import gltf from '../../../../assets/npcs/plateau-npc.gltf'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import GameplayComponent from '../../_Component';
 import InteractionOverlay from '../../Interface/InteractionOverlay';
 
 class Interaction extends GameplayComponent {
-    constructor(gameObject, spawnPoint, src) {
+    constructor(gameObject, spawnPoint, interactions) {
         super(gameObject)
         this.gameObject = gameObject
         this.gameObject.transform.position.copy(spawnPoint.position)
         this.gameObject.transform.rotation.copy(spawnPoint.rotation)
 
         // Interaction content:
-        this.prompt = src.prompt
-        this.content = src.content
+        this.prompt = interactions.content[interactions.index].prompt
+        this.content = interactions.content[interactions.index].nodes
 
         this.contentIndex = 0
 
+        console.log("Content", this.content)
         // In world:
         const initFromGLTF = async () => {
-            this.gltf = await new GLTFLoader().loadAsync(src.model)
+            this.gltf = await new GLTFLoader().loadAsync(interactions.model)
             this.gltf.scene.name = gameObject.name
             gameObject.transform.add(this.gltf.scene)
             this.gltf.scene.traverse(c => {
@@ -99,24 +100,35 @@ class Interaction extends GameplayComponent {
     }
 
     onPlayerLook() {
-        this.emitSignal("player_look", { prompt: this.prompt })
+        console.log("Player look")
+        console.log(Avern.Store)
+        Avern.Store.prompt.set(this.prompt)
+        // this.emitSignal("player_look", { prompt: this.prompt })
     }
+
+    // set Store from here
+    // check Store from here
+    // trigger something here from UI
 
     onPlayerAction() {
         if (this.contentIndex === 0) {
-            this.emitSignal("player_interaction", { text: this.content[this.contentIndex].text, first: true })
+            Avern.Store.prompt.set("")
+            Avern.State.worldUpdateLocked = true
+            Avern.Store.interaction.set({active: true, node: this.content[0]})
             this.contentIndex += 1
         } else if (this.content[this.contentIndex] && this.contentIndex > 0) {
-            this.emitSignal("player_interaction", { text: this.content[this.contentIndex].text, first: false })
+            Avern.Store.interaction.set({active: true, node: this.content[this.contentIndex]})
             this.contentIndex += 1
         } else {
-            this.emitSignal("end_interaction")
+            Avern.State.worldUpdateLocked = false
+            Avern.Store.interaction.set({active: false, node: {}})
             this.contentIndex = 0
+            Avern.Store.prompt.set(this.prompt)
         }
     }
 
     attachObservers(parent) {
-        this.addObserver(Avern.Interface.getComponent(InteractionOverlay))
+        // this.addObserver(Avern.Interface.getComponent(InteractionOverlay))
     }
 }
 

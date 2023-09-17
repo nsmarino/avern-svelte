@@ -1,55 +1,113 @@
-/* Interactions (could still use a refactor maybe): */
-.prompt {
-width: 300px;
-background-color: black;
-color: white;
-position: fixed;
-bottom: 2rem;
-padding: 0.25rem;
-text-align: center;
-left: 50%;
-transform: translateX(-50%);
-}
-.prompt span {
-margin-left: 1rem;
-color: aquamarine;
-}
-#narrative-controller {
-width: 100%;
-height: 300px;
-background: linear-gradient(transparent, black);;
-position: fixed;
-left: 0rem;
-right: 0rem;
-bottom: 0rem;
-display: flex;
-justify-content: center;
-align-items: center;
+.interaction-bg {
 
 }
-#narrative-controller .text-container {
-    width: 400px;
-    padding: 0 30px;
+
+.interaction-prompt {
+    position: fixed;
+    left: 50%;
+    bottom: 110px;
+    transform: translateX(-50%);
+    padding: 5px 30px;
+    border: 2px solid var(--avern-grey);
+    border-radius: 6px;
+    color: var(--avern-tan);
+    background: var(--avern-input-gradient);
+    text-align: center;
+    font-size: 14px;
+
+    .prompt-input-key {
+        position: absolute;
+        right: 5px;
+        bottom: -15px;
+        font-size: 12px;
+        color: var(--avern-rich-blue);
+        border-radius: 4px;
+        border-top: 1px solid var(--avern-rich-blue);
+        border-left: 1px solid var(--avern-rich-blue);
+        border-right: 1px solid var(--avern-rich-blue);
+        border-bottom: 2px solid var(--avern-rich-blue);
+        width: 18px;
+        height: 18px;
+        background: var(--avern-brown);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
 }
-#narrative-controller #narrative-illustration {
-    width: 200px;
-    height: 150px;
-    background-color: var(--avern-blue);
-    color: var(--avern-off-black);
-    border-radius: 50%;
+
+.interaction-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient( rgba(0,0,0,0.2),var(--avern-off-black));
+}
+.interaction-container {
+    position: fixed;
+    bottom: 40px;
+    left: 0;
+    right: 0;
     display: flex;
     justify-content: center;
-    align-items: center;
-}
-#narrative-controller p {
-    color: var(--avern-tan);
-    font-size: 14px;
-    text-align: left;
-    font-family: var(--sans);
-}
-#narrative-controller .next-indicator {
-    color: var(--avern-green);
-    font-size: 80%;
-    display: inline-block;
-    transform: translateX(10px);
+    img {
+        width: 200px;
+    }
+    .interaction-content {
+        display: flex;
+        align-items: end;
+        gap: 20px;
+    }
+    .interaction- {
+    }
+    .interaction-card {
+        position: relative;
+        background: var(--avern-off-black);
+        border: 2px solid var(--avern-grey);
+        border-radius: 6px;
+        height: 150px;
+        width: 500px;
+        .text-content {
+            max-width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            padding: 0px 20px;
+            color: var(--avern-tan);
+            font-size: 14px;
+            &.narration {
+                color: white;
+            }
+        }
+    }
+    .interaction-card h2 {
+        font-family: var(--serif-italic);
+        position: absolute;
+        padding: 0;
+        margin: 0;
+        font-weight: normal;
+        top: -20px;
+        left: 20px;
+    }
+    
+    .next-node-input-key {
+        position: absolute;
+        position: absolute;
+        right: 10px;
+        bottom: -10px;
+        font-size: 12px;
+        color: var(--avern-rich-blue);
+        border-radius: 4px;
+        border-top: 1px solid var(--avern-rich-blue);
+        border-left: 1px solid var(--avern-rich-blue);
+        border-right: 1px solid var(--avern-rich-blue);
+        border-bottom: 2px solid var(--avern-rich-blue);
+        width: 18px;
+        height: 18px;
+        background: var(--avern-brown);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 }

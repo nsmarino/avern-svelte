@@ -38,7 +38,7 @@ class Interaction extends GameplayComponent {
         } else {
             if (this.interact) {
                 this.interact = null
-                this.emitSignal("clear_prompt")
+                Avern.Store.prompt.set("")
             }
         }
 
