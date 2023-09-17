@@ -308,7 +308,6 @@ class Inputs {
                 onlyOnce: true,
                 trackWasPressed: false,
                 trackUp: false,
-
             },
         
             flask: {

@@ -1,9 +1,9 @@
 <script>
     // @ts-ignore
-    const interaction = Avern.Store.interaction
-  
-  </script>
-  <div id="character-menu" style="opacity: 0; pointer-events: none;">
+    const characterMenu = Avern.Store.characterMenu
+</script>
+{#if $characterMenu}
+  <div id="character-menu">
     <div class="actions">
       <div class="currently-equipped">currently equipped</div>
       <div class="description">description</div>
@@ -21,7 +21,6 @@
       </div>
     </div>
   </div>  
-  <style>
-  
-  </style>
+{/if}
+
   

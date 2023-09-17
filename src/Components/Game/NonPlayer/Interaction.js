@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-import {get} from 'svelte/store'
 
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import GameplayComponent from '../../_Component';
@@ -13,15 +12,17 @@ class Interaction extends GameplayComponent {
         this.gameObject.transform.rotation.copy(spawnPoint.rotation)
 
         // Interaction content:
-        this.prompt = interactions.content[interactions.index].prompt
-        this.content = interactions.content[interactions.index].nodes
+        this.interactions=interactions
+        this.interactionsIndex = interactions.index
 
+        this.prompt = this.interactions.content[this.interactionsIndex].prompt
+        this.content = this.interactions.content[this.interactionsIndex].nodes
         this.contentIndex = 0
 
         console.log("Content", this.content)
         // In world:
         const initFromGLTF = async () => {
-            this.gltf = await new GLTFLoader().loadAsync(interactions.model)
+            this.gltf = await new GLTFLoader().loadAsync(this.interactions.model)
             this.gltf.scene.name = gameObject.name
             gameObject.transform.add(this.gltf.scene)
             this.gltf.scene.traverse(c => {
@@ -101,9 +102,7 @@ class Interaction extends GameplayComponent {
 
     onPlayerLook() {
         console.log("Player look")
-        console.log(Avern.Store)
         Avern.Store.prompt.set(this.prompt)
-        // this.emitSignal("player_look", { prompt: this.prompt })
     }
 
     // set Store from here
@@ -111,18 +110,30 @@ class Interaction extends GameplayComponent {
     // trigger something here from UI
 
     onPlayerAction() {
+        Avern.Sound.pageHandler.currentTime = 0
+        Avern.Sound.pageHandler.play()
+
         if (this.contentIndex === 0) {
             Avern.Store.prompt.set("")
             Avern.State.worldUpdateLocked = true
             Avern.Store.interaction.set({active: true, node: this.content[0]})
             this.contentIndex += 1
         } else if (this.content[this.contentIndex] && this.contentIndex > 0) {
+            if(this.content[this.contentIndex].type==="trigger") {
+                console.log("TRIGGER !!!")
+            }
             Avern.Store.interaction.set({active: true, node: this.content[this.contentIndex]})
             this.contentIndex += 1
         } else {
             Avern.State.worldUpdateLocked = false
             Avern.Store.interaction.set({active: false, node: {}})
             this.contentIndex = 0
+            console.log(this.interactions, this.interactions.content[this.interactionsIndex], this.interactionsIndex+1)
+            if (this.interactions.content[this.interactionsIndex+1]) {
+                this.content= this.interactions.content[this.interactionsIndex+1].nodes
+                this.prompt= this.interactions.content[this.interactionsIndex+1].prompt
+                this.interactionsIndex+1
+            }
             Avern.Store.prompt.set(this.prompt)
         }
     }

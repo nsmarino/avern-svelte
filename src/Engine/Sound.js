@@ -11,6 +11,7 @@ import targeting from '../../assets/audio/fse--targeting.mp3'
 import drink from '../../assets/audio/drink.mp3'
 import bayonet from '../../assets/audio/bayonet.wav'
 import pickup from '../../assets/audio/pickup.wav'
+import page from '../../assets/audio/page-flip.mp3'
  
 class Sound {
     constructor() {
@@ -80,6 +81,12 @@ class Sound {
         this.itemHandler.id = "item-fx"
         this.itemHandler.src = pickup
         this.itemHandler.volume = 0.1
+
+
+        this.pageHandler = document.createElement("audio") // button fx for main menu
+        this.pageHandler.id = "page-fx"
+        this.pageHandler.src = page
+        this.pageHandler.volume = 0.2
 
         document.addEventListener("click", () => {
             if (this.introHandler.classList.contains("active")) return

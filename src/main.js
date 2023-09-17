@@ -4,7 +4,7 @@ import Engine from "./Engine"
 
 window.Avern = Engine
 
-import stagingBase from "../assets/staging_interface.gltf"
+import stagingBase from "../assets/staging-world-state.gltf"
 
 import App from './App.svelte'
 

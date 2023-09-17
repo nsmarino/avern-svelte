@@ -118,7 +118,7 @@ class Loader {
                 {
                   type: "dialogue",
                   text: "I'm so happy you will help me! Let's make for the swamp...the slavers have their camp there. That is where my sister is imprisoned.",
-                  image: "",
+                  image: yoshuaHappy,
                   label: "Yoshua, fugitive",
                 }
               ]

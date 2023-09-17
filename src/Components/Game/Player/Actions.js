@@ -7,75 +7,16 @@ import Landmine from './Landmine';
 import ParticleFX from './ParticleFX';
 import * as THREE from 'three';
 import gsap from "gsap"
+import {get} from 'svelte/store'
 
 import { calculateDamageByDistance } from '../../../helpers';
 
 class Actions extends GameplayComponent {
     constructor(gameObject) {
         super(gameObject)
-        Avern.State.actionData = [
-            {
-                id: "shoot_from_distance",
-                label: "Shoot from a distance",
-                caption: "Loading rifle",
-                description: ".",
-                primeLength: 1,
-                baseDamage: 25,
-                range: 15,
-                primed: false,
-                input: "KeyF",
-                indicator: "F",
-                requiresTarget: true,
-                primeAnimation: "load",
-                animation: "shoot",
-            },
-            {
-                id: "bayonet_slash",
-                label: "Slash with bayonet",
-                description: "",
-                caption: "Affixing bayonet",
-                primeLength: 0.6,
-                cooldown: 0,
-                baseDamage: 10,
-                range: 5,
-                primed: false,
-                input: "KeyD",
-                indicator: "D",
-                requiresTarget: false,
-                primeAnimation: "load",
-                animation: "slash"
-            },
-            {
-                id: "set_land_mine",
-                label: "Set Landmine",
-                locked: true,
-                primeLength: 3,
-                cooldown: 0,
-                baseDamage: 40,
-                range: 3,
-                primed: false,
-                input: "KeyS",
-                indicator: "S",
-                requiresTarget: false,
-                primeAnimation: "plant",
-                animation: "detonate",
-            },
-            {
-                id: "blast_at_close_range",
-                label: "Blast at close range",
-                description: ".",
-                primeLength: 2.5,
-                baseDamage: 2,
-                locked: true,
-                range: 20,
-                primed: false,
-                input: "KeyA",
-                indicator: "A",
-                requiresTarget: true,
-                primeAnimation: "loadShotgun",
-                animation: "shotgun",
-            },
-        ]
+
+        this.actionData = get(Avern.Store.actions)
+        console.log(this.actionData)
 
         this.casting = false
         this.castingProgress = 0
@@ -94,16 +35,16 @@ class Actions extends GameplayComponent {
         const inputs = Avern.Inputs.getInputs()
         
         if ( inputs.action1 ) {
-            this.handleAction(Avern.State.actionData[0],inputs)
+            this.handleAction(this.actionData[0],inputs)
         }
         if ( inputs.action2 ) {
-            this.handleAction(Avern.State.actionData[1],inputs)
+            this.handleAction(this.actionData[1],inputs)
         }
         if ( inputs.action3 ) {
-            this.handleAction(Avern.State.actionData[2],inputs)
+            this.handleAction(this.actionData[2],inputs)
         }
         if ( inputs.action4 ) {
-            this.handleAction(Avern.State.actionData[3],inputs)
+            this.handleAction(this.actionData[3],inputs)
         }
     }
 
@@ -135,7 +76,7 @@ class Actions extends GameplayComponent {
     
     handleActionResult(animation){
         gsap.to(this.actionIndicator, { opacity: 0, duration: 0.1 })
-        const action = Avern.State.actionData.find(act => act.animation===animation)
+        const action = this.actionData.find(act => act.animation===animation)
         let flashPosition
         switch (action.id) {
             case "shoot_from_distance":
@@ -236,7 +177,7 @@ class Actions extends GameplayComponent {
         this.casting = false
         this.castingProgress = 0
         this.activeCast = null
-        Avern.State.actionData.forEach(act=>act.primed=false)
+        this.actionData.forEach(act=>act.primed=false)
         action.primed = true
         this.emitSignal("casting_finish", { action })
 

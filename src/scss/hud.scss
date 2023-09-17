@@ -48,11 +48,9 @@
 
 .player-input {
   opacity: 1;
-  transition: opacity 0.2s ease-in-out;
 }
 .player-input.interactionActive {
   opacity: 0;
-  transition: opacity 0.2s ease-in-out;
 }
 
 // main hand

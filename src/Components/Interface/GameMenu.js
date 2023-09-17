@@ -1,61 +1,38 @@
-import gsap from "gsap"
 import GameplayComponent from '../_Component';
-
-// import { Equipment, Inventory, Attributes } from "../jsx/GameMenu"
-// this.gm_equipment = document.querySelector("#game-menu .equipment")
-// this.gm_equipment.replaceChildren(Equipment())
-
+import {get} from 'svelte/store'
 class GameMenu extends GameplayComponent {
     constructor(gameObject) {
         super(gameObject)
-        this.gm = document.querySelector("#game-menu")
-        this.cm = document.querySelector("#character-menu")
-        this.gmActive = false
-        this.cmActive = false
     }
 
     update() {
         const inputs = Avern.Inputs.getInputs()
-        if ( inputs.pauseMenu ) {
-            if (!this.gmActive) {
-                this.openGameMenu()
-            }
-            else {
-                this.closeGameMenu()
-            }
-        }    
-        if ( inputs.characterMenu ) {
-            if (!this.cmActive) {
-                this.openCharacterMenu()
-            }
-            else {
-                this.closeCharacterMenu()
-            }
-        }    
+        if ( inputs.pauseMenu ) this.openGameMenu()
+        if ( inputs.characterMenu ) this.openCharacterMenu()
     }
 
     openGameMenu(){
-        Avern.State.worldUpdateLocked = true
-        this.gmActive = true
-        gsap.set(this.gm, {opacity: 1, pointerEvents: "auto"})
+        console.log("Opening game menu")
+        if (get(Avern.Store.pauseMenu)) {
+            Avern.Store.pauseMenu.set(false)
+            Avern.State.worldUpdateLocked = false
+        } else {
+            Avern.Store.pauseMenu.set(true)
+            Avern.State.worldUpdateLocked = true
+        }
     }
 
-    closeGameMenu(){
-        this.gmActive = false
-        gsap.set(this.gm, {opacity: 0, pointerEvents: "none"})
-        Avern.State.worldUpdateLocked = false
-    }
     openCharacterMenu(){
-        Avern.State.worldUpdateLocked = true
-        this.cmActive = true
-        gsap.set(this.cm, {opacity: 1, pointerEvents: "auto"})
+        if (get(Avern.Store.characterMenu)) {
+            Avern.Store.characterMenu.set(false)
+            Avern.State.worldUpdateLocked = false
+        } else {
+            Avern.Store.characterMenu.set(true)
+            Avern.State.worldUpdateLocked = true
+        }    
     }
 
-    closeCharacterMenu(){
-        this.cmActive = false
-        gsap.set(this.cm, {opacity: 0, pointerEvents: "none"})
-        Avern.State.worldUpdateLocked = false
-    }
+
 }
 
 export default GameMenu
