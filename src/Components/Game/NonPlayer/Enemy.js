@@ -21,7 +21,7 @@ class Enemy extends GameplayComponent {
     this.gameObject.transform.position.copy(spawnPoint.position)
   
     this.enemyType = spawnPoint.userData.label
-    this.startingBehavior = spawnPoint.userData.behavior
+    this.startingBehavior = spawnPoint.userData.behavior || "idle"
     // this.HELPER = Avern.PATHFINDINGHELPER
     // Avern.State.scene.add(this.HELPER)
 

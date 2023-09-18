@@ -1,21 +1,25 @@
 import * as THREE from 'three';
 import { writable } from 'svelte/store';
 
-// sunday:
-// NIGHT: level design / enemy design / other thing in blender
-// gate / key / event !!!
+// MONDAY ---
+    // fix flakiness of interaction prompt
+    // can pick up key
+    // can show key in inventory
+    // can open gate with key
+    // can save that picked up key
+    // can save yoshua_haystack event
+    // can save xp from enemies
+    // can rest at fountain
+    // can go to another scene
+    // can go back to previous scene
+    // can get new weapon
+    // can change actions
+    // can save weapon and actions
+    // can save player position, health, flasks, current level state (which enemies are alive)
+    // can show tutorial modal and change hand config
+    // can save if tutorial was shown and save hand config preference
 
-// monday:
-// pause menu []
-// world state and triggers []
-// modals []
-// save states
-// fountain menu []
-// take a pass at stage resets and loads
-// character menu incl action reassignment []
-
-
-// NIGHT: level design
+    // NIGHT: level design
 
 // tuesday:
 // return to encounter design:
@@ -28,8 +32,8 @@ import { writable } from 'svelte/store';
 // NIGHT: level design
 
 // wednesday:
-// continue encounter design, this should be the day with less coding and more "game design"
-// NIGHT: level design
+// structural improvements (start gathering list)
+// NIGHT: encounter design
 
 // thursday:
 // cleanup and create github template

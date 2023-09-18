@@ -5,14 +5,21 @@
   import KeyboardMap from "./lib/KeyboardMap.svelte";
   import Prompt from "./lib/Prompt.svelte";
   import Tutorial from "./lib/Tutorial.svelte";
+
+  // @ts-ignore
+  const pauseMenu = Avern.Store.pauseMenu
+
 </script>
 
 <div id="hud">
   <Prompt />
   <Interaction />
   <KeyboardMap />
-  <PauseMenu />
+  {#if $pauseMenu}
+    <PauseMenu />    
+  {/if}
+
   <CharacterMenu />
-  <Tutorial />  
+  <!-- <Tutorial />   -->
 </div>
 

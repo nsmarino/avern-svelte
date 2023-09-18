@@ -13,10 +13,20 @@
 }
 .menu-pane {
   border: 2px solid var(--avern-grey);
+  position: relative;
+  border-radius: 6px;
   background: linear-gradient(180deg, rgba(48, 30, 3, 0.8) 0%, rgba(50, 50, 50, 0.8) 100%);;
 }
 .menu-heading {
-
+  font-family: var(--serif-italic);
+  position: absolute;
+  padding: 0;
+  margin: 0;
+  font-size: 20px;
+  font-weight: normal;
+  text-shadow: 1px 1px 2px var(--avern-brown);
+  top: -18px;
+  left: 20px;
 }
 .menu-inner-bg {
 

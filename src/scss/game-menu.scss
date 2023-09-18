@@ -1,0 +1,37 @@
+#game-menu {
+    position: fixed;
+    z-index: 10;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--avern-input-gradient);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    .info-pane {
+        height: 60vh;
+    }
+    .files-pane {
+        height: 30vh;
+        width: 300px;
+        padding: 20px;
+        .files-root {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            height: 100%;
+            a {
+                color: var(--avern-blue);
+                font-family: var(--serif);
+                text-transform: uppercase;
+                letter-spacing: 0.02em;
+                font-size: 12px;
+                margin-top: auto;
+                display: block;
+            }
+        }
+    }
+}

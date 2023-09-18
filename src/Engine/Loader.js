@@ -165,6 +165,7 @@ class Loader {
 
     initNavmeshFromBaseFile(baseFile, scene) {
       const navmesh = baseFile.children.filter(child=> child.isMesh && child.userData.gltfExtensions.EXT_collections.collections[0]==="navmesh")[0]
+      console.log("Navmesh found")
       if (!navmesh) return;
       Avern.pathfindingZone = baseFile.name
       Avern.PATHFINDING.setZoneData(Avern.pathfindingZone, Pathfinding.createZone(navmesh.geometry));
@@ -183,7 +184,8 @@ class Loader {
 
     initNonPlayerFromBaseFile(baseFile, scene) {
       baseFile.traverse(c => {
-        if (c.userData.gltfExtensions.EXT_collections.collections) {
+        console.log(c.userData)
+        if (c.userData.gltfExtensions?.EXT_collections?.collections) {
           switch(c.userData.gltfExtensions.EXT_collections.collections[0]) {
             case "enemies":
               const enemy = Avern.GameObjects.createGameObject(scene, c.name)                        
