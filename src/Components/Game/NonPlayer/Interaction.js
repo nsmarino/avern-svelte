@@ -1,7 +1,8 @@
 import * as THREE from 'three';
-
+import { generateCapsuleCollider, checkCapsuleCollision } from '../../../helpers';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import GameplayComponent from '../../_Component';
+import Body from '../Player/Body';
 
 class Interaction extends GameplayComponent {
     constructor(gameObject, spawnPoint, interactions) {
@@ -28,46 +29,24 @@ class Interaction extends GameplayComponent {
                 c.castShadow = true
             })
 
-            // Capsule collision
             this.capsuleBottom = this.gltf.scene.getObjectByName("capsule-bottom")
             this.capsuleTop = this.gltf.scene.getObjectByName("capsule-top")
-            this.capsuleBottom.visible = false
-            this.capsuleTop.visible = false
-            let bbox = new THREE.Box3().setFromObject(this.capsuleBottom);
-            let bsphere = bbox.getBoundingSphere(new THREE.Sphere());
-            const color = new THREE.Color( 0x008800 );
-            this.wireframe = new THREE.Mesh(
-                new THREE.CapsuleGeometry( bsphere.radius, 1.8, 4, 8 ),
-                new THREE.MeshStandardMaterial( { color: color } )
-            )
-            this.wireframe.material.wireframe = true
-            this.wireframe.visible = false
-            this.wireframe.position.y += (this.capsuleTop.position.y / 2)
-            gameObject.transform.add(this.wireframe)
-
-            const torusGeometry = new THREE.TorusGeometry( bsphere.radius, 0.025, 12, 40 ); 
-            const torusMaterial = new THREE.MeshBasicMaterial( { color: 0xFFFFFF } );
-            torusMaterial.transparent = true
-            torusMaterial.opacity = 0.6
-            this.ring = new THREE.Mesh( torusGeometry, torusMaterial );
-            this.ring.rotation.x = Math.PI / 2
-            this.ring.position.y+=0.2
-            this.gameObject.transform.add( this.ring );
+            this.capsuleRadius = this.gltf.scene.getObjectByName("capsule-radius")
       
-            const startVector = new THREE.Vector3().copy(gameObject.transform.position)
-            const endVector = new THREE.Vector3().copy(gameObject.transform.position)
-            this.capsuleHeight = startVector.distanceTo(endVector)
-            endVector.y += this.capsuleHeight
-            const line = new THREE.Line3(startVector, endVector)
-            this.capsule = {
-                radius: bsphere.radius,
-                segment: line,
-                body: this.wireframe,
-                position: spawnPoint.position,
-                velocity: new THREE.Vector3()
-            }
-            this.wireframe.onPlayerLook = this.onPlayerLook.bind(this)
-            this.wireframe.onPlayerAction = this.onPlayerAction.bind(this)
+            this.colliderCapsule = generateCapsuleCollider(
+              this.capsuleBottom,
+              this.capsuleTop,
+              this.capsuleRadius
+            )
+            this.startWorldPos = new THREE.Vector3()
+            this.endWorldPos = new THREE.Vector3()
+        
+            gameObject.transform.add(this.colliderCapsule.body)
+            this.colliderCapsule.ring.visible=true
+            gameObject.transform.add(this.colliderCapsule.ring)
+            this.colliderCapsule.body.onPlayerLook = this.onPlayerLook.bind(this)
+            this.colliderCapsule.body.onPlayerAction = this.onPlayerAction.bind(this)
+
 
             // Anims
             this.mixer = new THREE.AnimationMixer( this.gltf.scene );
@@ -97,6 +76,20 @@ class Interaction extends GameplayComponent {
 
     update(delta) {
         if (this.mixer && Avern.State.worldUpdateLocked == false) this.mixer.update(delta);
+        if (this.colliderCapsule) {
+            this.capsuleBottom.getWorldPosition(this.startWorldPos)
+            this.capsuleTop.getWorldPosition(this.endWorldPos)
+      
+            this.colliderCapsule.segment.start.copy(this.startWorldPos)
+            this.colliderCapsule.segment.end.copy(this.endWorldPos)
+            
+            if (Avern.Player) {
+              const collision = checkCapsuleCollision({ segment: Avern.Player.getComponent(Body).tempSegment, radius: Avern.Player.getComponent(Body).radius}, this.colliderCapsule)
+              if (collision.isColliding) {
+                this.emitSignal("capsule_collide", {collision, capsule: this.colliderCapsule})
+              }
+            }
+          }
     }
 
     onPlayerLook() {
@@ -143,6 +136,7 @@ class Interaction extends GameplayComponent {
 
 
     attachObservers(parent) {
+        this.addObserver(Avern.Player.getComponent(Body))
         // this.addObserver(Avern.Interface.getComponent(InteractionOverlay))
     }
 }

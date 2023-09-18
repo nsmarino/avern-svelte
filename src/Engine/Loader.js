@@ -1,8 +1,7 @@
 import sanityClient from "../sanityClient"
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import npcGltf from "../../assets/npcs/fse--gatekeeper.gltf"
-import gearGltf from "../../assets/npcs/gear-interaction.gltf"
+import yoshuaHaystack from "../../assets/npcs/yoshua_haystack.gltf"
 import { Pathfinding, PathfindingHelper } from 'three-pathfinding';
 import { acceleratedRaycast } from 'three-mesh-bvh';
 THREE.Mesh.prototype.raycast = acceleratedRaycast;
@@ -61,7 +60,7 @@ class Loader {
         {
           label: "yoshua_haystack",
           index: 0,
-          model: gearGltf,
+          model: yoshuaHaystack,
           content: [
             {
               prompt: "Talk to the drowsy interloper",

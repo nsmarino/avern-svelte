@@ -114,12 +114,20 @@ function generateCapsuleCollider(start, end, radius) {
     tubeWireframe.material.wireframe = true
     tubeWireframe.visible = false
 
+    
+    const torusGeometry = new THREE.TorusGeometry( capsuleRadius, 0.02, 12, 40 ); 
+    const torusMaterial = new THREE.MeshBasicMaterial( { color: 0xFFFFFF } ); 
+    const capsuleRing = new THREE.Mesh( torusGeometry, torusMaterial );
+    capsuleRing.rotation.x = Math.PI / 2
+    capsuleRing.visible = false
+
     const capsule = {
         radius: capsuleRadius,
         segment: line,
         body: tubeWireframe,
         spine: lineMesh,
-        velocity: new THREE.Vector3()
+        velocity: new THREE.Vector3(),
+        ring: capsuleRing,
     }
     return capsule
 }
