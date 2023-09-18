@@ -1,41 +1,39 @@
 import * as THREE from 'three';
 import { writable } from 'svelte/store';
 
-// Globally available State tracking stuff like HP, target, worldUpdateLocked...
-const stateStore = writable({
-    flaskCount: 5
-})
-
-
 // sunday:
+// NIGHT: level design / enemy design / other thing in blender
+// gate / key / event !!!
+
+// monday:
 // pause menu []
 // world state and triggers []
 // modals []
 // save states
+// fountain menu []
+// take a pass at stage resets and loads
+// character menu incl action reassignment []
+
+
 // NIGHT: level design
 
-// monday:
-// character menu []
+// tuesday:
 // return to encounter design:
 // - deal damage w/o target?
 // - enemy projectiles
 // - can rearrange actions
 // - explosives kit and ceremonial dagger
 // - gain xp
-// NIGHT: level design
-
-// tuesday:
-// fountain menu []
-// stage resets and loads
 // enemy updates
 // NIGHT: level design
 
 // wednesday:
-// cleanup and create github template
-// connect to CMS
+// continue encounter design, this should be the day with less coding and more "game design"
 // NIGHT: level design
 
 // thursday:
+// cleanup and create github template
+// connect to CMS
 // blog posts and update personal website
 // NIGHT: level design
 
@@ -187,7 +185,7 @@ const Store = {
     })
 }
 
-export { stateStore, Store }
+export { Store }
 
 class State {
     constructor(){

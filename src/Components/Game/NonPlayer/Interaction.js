@@ -2,7 +2,6 @@ import * as THREE from 'three';
 
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import GameplayComponent from '../../_Component';
-import InteractionOverlay from '../../Interface/InteractionOverlay';
 
 class Interaction extends GameplayComponent {
     constructor(gameObject, spawnPoint, interactions) {
@@ -105,38 +104,43 @@ class Interaction extends GameplayComponent {
         Avern.Store.prompt.set(this.prompt)
     }
 
-    // set Store from here
-    // check Store from here
-    // trigger something here from UI
-
     onPlayerAction() {
         Avern.Sound.pageHandler.currentTime = 0
         Avern.Sound.pageHandler.play()
 
-        if (this.contentIndex === 0) {
-            Avern.Store.prompt.set("")
-            Avern.State.worldUpdateLocked = true
-            Avern.Store.interaction.set({active: true, node: this.content[0]})
-            this.contentIndex += 1
-        } else if (this.content[this.contentIndex] && this.contentIndex > 0) {
-            if(this.content[this.contentIndex].type==="trigger") {
-                console.log("TRIGGER !!!")
+        if (this.content[this.contentIndex]) {
+            if (this.contentIndex === 0) {
+                Avern.Store.prompt.set("")
+                Avern.State.worldUpdateLocked = true
             }
             Avern.Store.interaction.set({active: true, node: this.content[this.contentIndex]})
+            if (this.content[this.contentIndex].trigger) {
+                console.log("TRIGGER! Update worldEvents in store, emit signal?")
+            }
+            if (this.content[this.contentIndex].item) {
+                console.log("ITEM !!!! Update inventory in store, emit signal?")
+            }
+
             this.contentIndex += 1
         } else {
-            Avern.State.worldUpdateLocked = false
-            Avern.Store.interaction.set({active: false, node: {}})
-            this.contentIndex = 0
-            console.log(this.interactions, this.interactions.content[this.interactionsIndex], this.interactionsIndex+1)
-            if (this.interactions.content[this.interactionsIndex+1]) {
-                this.content= this.interactions.content[this.interactionsIndex+1].nodes
-                this.prompt= this.interactions.content[this.interactionsIndex+1].prompt
-                this.interactionsIndex+1
-            }
-            Avern.Store.prompt.set(this.prompt)
+            this.clearInteraction()
         }
     }
+
+    clearInteraction() {
+        Avern.State.worldUpdateLocked = false
+        Avern.Store.interaction.set({active: false, node: {}})
+        this.contentIndex = 0
+
+        // Set up next interaction. This could check world events
+        if (this.interactions.content[this.interactionsIndex+1]) {
+            this.content= this.interactions.content[this.interactionsIndex+1].nodes
+            this.prompt= this.interactions.content[this.interactionsIndex+1].prompt
+            this.interactionsIndex+1
+        }
+        Avern.Store.prompt.set(this.prompt)
+    }
+
 
     attachObservers(parent) {
         // this.addObserver(Avern.Interface.getComponent(InteractionOverlay))

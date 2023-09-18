@@ -4,7 +4,6 @@ import GameplayComponent from '../../_Component';
 import InteractionOverlay from '../../Interface/InteractionOverlay';
 import Inventory from '../Player/Inventory';
 import Notices from '../../Interface/Notices';
-import { stateStore } from "../../../Engine/State"
 
 class ItemOnMap extends GameplayComponent {
     constructor(gameObject, spawnPoint, content) {

@@ -105,10 +105,18 @@ class Loader {
                   text: "My sister...they still have her. In a palanquin, deep in the swamp. Would you help me, castrate? I am at your mercy.",
                   image: yoshuaSerious,
                   label: "Yoshua, fugitive",
+                  trigger: "help_yoshua"
               },
               {
-                  type: "trigger",
-                  label: "help_yoshua"
+                type: "dialogue",
+                text: "I have little I can offer you...I stole this dagger when I fled. Perhaps you are more skilled with it than I.",
+                image: yoshuaSerious,
+                label: "Yoshua, fugitive",
+              },
+              {
+                  type: "item",
+                  text: "You have received [Ceremonial Dagger].",
+                  item: "ceremonial_dagger"
               },
               ]
             },
