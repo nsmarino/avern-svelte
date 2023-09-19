@@ -2,7 +2,7 @@
   import { fade } from "svelte/transition";
 
   import { cubicIn, cubicOut } from "svelte/easing";
-  
+
   import forwardArrow from "../../assets/ui/forward.svg"
   import left from "../../assets/ui/left.svg"
   import right from "../../assets/ui/right.svg"
@@ -14,7 +14,7 @@
   import targetPrev from "../../assets/ui/target-prev.svg"
   import openMenu from "../../assets/ui/openMenu.svg"
   import spin from "../../assets/ui/strafe-toggle.svg"
-  import look from "../../assets/ui/camera-cursor.svg"
+  import look from "../../assets/ui/cursor-camera.svg"
 
     // @ts-ignore
     const config = Avern.Store.config
