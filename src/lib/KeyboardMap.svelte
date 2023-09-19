@@ -2,7 +2,19 @@
   import { fade } from "svelte/transition";
 
   import { cubicIn, cubicOut } from "svelte/easing";
+  
   import forwardArrow from "../../assets/ui/forward.svg"
+  import left from "../../assets/ui/left.svg"
+  import right from "../../assets/ui/right.svg"
+  import back from "../../assets/ui/back.svg"
+  import interact from "../../assets/ui/interact.svg"
+  import flask from "../../assets/ui/flask.svg"
+  import equipment from "../../assets/ui/equipment.svg"
+  import targetNext from "../../assets/ui/target-next.svg"
+  import targetPrev from "../../assets/ui/target-prev.svg"
+  import openMenu from "../../assets/ui/openMenu.svg"
+  import spin from "../../assets/ui/strafe-toggle.svg"
+  import look from "../../assets/ui/camera-cursor.svg"
 
     // @ts-ignore
     const config = Avern.Store.config
@@ -36,7 +48,7 @@
         <div id="flask" class="flask input-key">
           <div class="key-inner">
             <span>{$config.leftHanded ? "E" : "I"}</span>
-            <img class="svg" src="/assets/ui/flask.svg" alt="">
+            <img class="svg" src={flask} alt="">
           </div>
           <div class="action-active-indicator"></div>
           <div class="action-tooltip">
@@ -48,7 +60,7 @@
         <div id="characterMenu" class="equipment input-key">
           <div class="key-inner">
           <span>{$config.leftHanded ? "R" : "U"}</span>
-          <img class="svg" src="/assets/ui/equipment.svg" alt="">
+          <img class="svg" src={equipment} alt="">
           </div>
           <div class="action-active-indicator"></div>
           <div class="action-tooltip">
@@ -114,7 +126,7 @@
         <div id="setTarget" class="target-key input-key">   
           <div class="key-inner">     
             <span>{$config.leftHanded ? "G" : "H"}</span>
-            <img class="svg" src="/assets/ui/target-next.svg" alt="">
+            <img class="svg" src={targetNext} alt="">
           </div>
           <div class="action-active-indicator"></div>
           <div class="action-tooltip">
@@ -129,7 +141,7 @@
         <div id="prevTarget" class="target-key input-key">   
           <div class="key-inner">     
             <span>{$config.leftHanded ? "V" : "N"}</span>
-            <img class="svg" src="/assets/ui/target-prev.svg" alt="">
+            <img class="svg" src={targetPrev} alt="">
           </div>
           <div class="action-active-indicator"></div>
           <div class="action-tooltip">
@@ -146,7 +158,7 @@
           <div class="key-inner">
 
           <span>{$config.leftHanded ? "U" : "R"}</span>
-          <img class="svg" src="/assets/ui/openMenu.svg" alt="">
+          <img class="svg" src={openMenu} alt="">
         </div>
         <div class="action-active-indicator"></div>
         <div class="action-tooltip">
@@ -174,7 +186,7 @@
           <div class="key-inner">
       
           <span>{$config.leftHanded ? "H" : "G"}</span>
-          <img class="svg" src="/assets/ui/interact.svg" alt="">
+          <img class="svg" src={interact} alt="">
         </div>
         <div class="action-active-indicator"></div>
         <div class="action-tooltip">
@@ -186,7 +198,7 @@
         <div id="left" class="left input-key">
           <div class="key-inner">           
             <span>{$config.leftHanded ? "J" : "S"}</span>
-            <img class="svg" src="/assets/ui/left.svg" alt="">
+            <img class="svg" src={left} alt="">
           </div>
           <div class="action-active-indicator"></div>
           <div class="action-tooltip">
@@ -199,7 +211,7 @@
           <div class="key-inner">
 
           <span>{$config.leftHanded ? "K" : "D"}</span>
-          <img class="svg" src="/assets/ui/back.svg" alt="">
+          <img class="svg" src={back} alt="">
         </div>
         <div class="action-active-indicator"></div>
         <div class="action-tooltip">
@@ -211,7 +223,7 @@
           <div class="key-inner">
 
           <span>{$config.leftHanded ? "L" : "F"}</span>
-          <img class="svg" src="/assets/ui/right.svg" alt="">
+          <img class="svg" src={right} alt="">
         </div>
         <div class="action-active-indicator"></div>
         <div class="action-tooltip">
@@ -223,7 +235,7 @@
           <div class="key-inner">
 
           <span>{$config.leftHanded ? ";" : "A"}</span>
-          <img class="svg" src="/assets/ui/strafe-toggle.svg" alt="">
+          <img class="svg" src={spin} alt="">
         </div>
         <div class="action-active-indicator"></div>
         <div class="action-tooltip">
@@ -237,7 +249,7 @@
         <div id="look" class="target-key input-key">   
           <div class="key-inner">     
             <span>{$config.leftHanded ? "N" : "V"}</span>
-            <img class="svg" src="/assets/ui/cursor-camera.svg" alt="">
+            <img class="svg" src={look} alt="">
           </div>
           <div class="action-active-indicator"></div>
           <div class="action-tooltip">
