@@ -97,7 +97,7 @@
             <dd>10</dd>
             <dt>Bravado</dt>
             <dd>10</dd>
-            <dt>Serenity</dt>
+            <dt>Faith</dt>
             <dd>8</dd>
           </dl>
           <dl class="level-rel">

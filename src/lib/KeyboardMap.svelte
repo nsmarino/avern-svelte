@@ -1,7 +1,8 @@
 <script>  
   import { fade } from "svelte/transition";
 
-import { cubicIn, cubicOut } from "svelte/easing";
+  import { cubicIn, cubicOut } from "svelte/easing";
+  import forwardArrow from "../../assets/ui/forward.svg"
 
     // @ts-ignore
     const config = Avern.Store.config
@@ -158,7 +159,7 @@ import { cubicIn, cubicOut } from "svelte/easing";
           <div class="key-inner">
 
           <span>{$config.leftHanded ? "I" : "E"}</span>
-          <img class="svg" src="/assets/ui/forward.svg" alt="">
+          <img class="svg" src={forwardArrow} alt="">
         </div>
         <div class="action-active-indicator"></div>
         <div class="action-tooltip">
