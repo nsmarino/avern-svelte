@@ -45,7 +45,12 @@ class Sky extends GameplayComponent {
         // sky.material.side = THREE.BackSide;
         // gameObject.transform.parent.add(sky);
         // sky.position.y += 200
+
+        // EARLY MORNING FOG:
         gameObject.transform.parent.fog = new THREE.Fog( 0xFFFFFF, 40, 200 );
+
+        // CAVE FOG
+        // gameObject.transform.parent.fog = new THREE.Fog( 0x000000, 10, 100 );
     }
 
     update(deltaTime) {

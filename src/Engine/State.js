@@ -6,12 +6,12 @@ import { writable } from 'svelte/store';
     // can pick up key [x]
     // can show key in inventory [x]
     // can open gate with key [x]
-
-    // - break -
-
-
-
-    // - break -
+    
+    // result: In addition to a ton of groundwork for fully-functioning menus,
+    // I greatly expanded the Store feature and the way it is integrated into the engine. 
+    // I can now save and load Store, although I still need to implement reading 
+    // from saved Store on initialization. I think I've also better content structuring
+    // for the reintroduction of management via Sanity.
 
     // NIGHT: level design
 
@@ -20,40 +20,44 @@ import { writable } from 'svelte/store';
     // can save that gate was opened []
     // can update interaction progress []
     // can save yoshua_haystack event []
-// can go to another scene
-// can go back to previous scene
-
-// return to encounter design:
-// - deal damage w/o target?
-// - enemy projectiles
-// - can rearrange actions
-// - explosives kit and ceremonial dagger
-// - gain xp
-// can save xp from enemies []
-// can rest at fountain []
-// NIGHT: level design
-
-// wednesday:
+// - break -
+    // can go to another scene
+    // can go back to previous scene
+// - break -
+    // can rearrange actions and pick up weapons; can save that
 
 // - break -
-// structural improvements
-    // can save player position, health, flasks, current level state (which enemies are alive)
     // can show tutorial modal and change hand config
     // can save if tutorial was shown and save hand config preference
+// trigger for lighting change?
+
+// NIGHT: blender:
+// create new enemy models
+
+// wednesday:
+    // prototype various actions
+    // deal damage w/o target?
+    // enemy projectiles (arrows and slightly tracking magic)
     // break enemy into components
+    // --- collider....actions...body...mind...
+    // enemies should be slightly circling player as they get closer; enemies should move away from each other; enemies should pay attention to each others attacks
+    // gain xp
+    // can save xp from enemies []
+// - break -
 // NIGHT: encounter design
 
 // thursday:
-// Game Design Baby
-// NIGHT: More Game Design Baby
+    // can save player position, health, flasks, current level state (which enemies are alive)
+    // connect to cms
+    // cleanup
+    // NIGHT: more blender
 
 // friday: 
-// connect to CMS
-// cleanup and update github template for Avern Engine
+// cleanup and update github template for Avern Engine; blog posts and update personal website
 // NIGHT: level design
 
 // saturday:
-// blog posts and update personal website
+// job apps
 
 // const Store = {
 //     scene: "url",
