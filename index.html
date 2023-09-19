@@ -154,11 +154,14 @@
         .start-menu button {
           background: var(--avern-input-gradient);
           border: 1px solid var(--avern-grey);
-          border-radius: 2px;
+          border-radius: 6px;
           display: flex;
           padding: 2px;
           width: 100px;
           font-family: SourceSans;
+          color: var(--avern-tan);
+          margin-bottom: 20px;
+          justify-content: center;
         }
         h1 {
           font-family: Inria-Italic;
@@ -189,7 +192,7 @@
         .start-menu footer {
           justify-self: end;
           text-align: center;
-          margin-top: 20px;
+          margin-top: 100px;
         }
         .start-menu footer a {
           font-size: 12px;
@@ -277,41 +280,53 @@
   <div class="start-menu">
     <section class="start-menu-root">
       <div class="intro-prompt">
-        <svg viewBox="0 0 993 806" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 200px;">
+        <svg viewBox="0 0 993 806" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 100px; margin-bottom: 40px;">
           <path d="M176.673 472.5L1 805H992L951.654 730L825.152 596L780.183 429.5L717.143 354.5L609.133 102.5L519.195 1L424.213 247.5H338.898L244.337 429.5L176.673 472.5Z" fill="var(--avern-off-black)" stroke="var(--avern-dark-red)"/>
           </svg>
           
-        <h1>fortress shepherd eunuch</h1>
   
       <p>Click anywhere to start</p>
-      <footer><a href="https://www.avern.systems/"> <svg viewBox="0 0 35 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M15 28.9999C16.5087 25.1339 16.4712 24.5732 15 21.2631C14.3815 19.8713 13.5264 18.7749 13.5264 17.2105C13.5264 15.2281 14.0739 9.93673 15.7369 9.10522" stroke="var(--avern-blue)" stroke-linecap="round"/>
-        <path d="M15 23.1054C17.6666 20.3554 19.204 17.0219 20.731 13.6902C22.1036 10.6954 27.6457 10.5791 30.4737 10.5791" stroke="var(--avern-blue)" stroke-linecap="round"/>
-        <path d="M15 23.1052C19.4696 19.6134 21.8972 17.2925 27.1988 15.7778C28.236 15.4814 31.3767 15.1167 31.7836 14.0994C32.5451 12.1955 32.1349 9.04275 34.1579 8.36841" stroke="var(--avern-blue)" stroke-linecap="round"/>
-        <path d="M12.0526 12.7894C6.15117 9.41718 3.1066 8.05661 1 1.73682" stroke="var(--avern-blue)" stroke-linecap="round"/>
-        <path d="M10.5789 11.3158C9.62606 10.058 4.68421 5.97011 4.68421 4.31579C4.68421 2.76929 1.64622 2.29243 1 1" stroke="var(--avern-blue)" stroke-linecap="round"/>
-        </svg>
-        avern.systems</a></footer>    
+   
       </div>
+      <div class="menu-options"  style="display: none; opacity: 0; transform: translateY(20px); pointer-events: none;">
+        <h1>fortress shepherd eunuch</h1>
+
+        <button class="new-game">New Game</button>
+        <button class="load-game">Load Game</button>
+        <button class="show-credits">Credits</button>
+        <footer><a href="https://www.avern.systems/" target="_blank"> <svg viewBox="0 0 35 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M15 28.9999C16.5087 25.1339 16.4712 24.5732 15 21.2631C14.3815 19.8713 13.5264 18.7749 13.5264 17.2105C13.5264 15.2281 14.0739 9.93673 15.7369 9.10522" stroke="var(--avern-blue)" stroke-linecap="round"/>
+          <path d="M15 23.1054C17.6666 20.3554 19.204 17.0219 20.731 13.6902C22.1036 10.6954 27.6457 10.5791 30.4737 10.5791" stroke="var(--avern-blue)" stroke-linecap="round"/>
+          <path d="M15 23.1052C19.4696 19.6134 21.8972 17.2925 27.1988 15.7778C28.236 15.4814 31.3767 15.1167 31.7836 14.0994C32.5451 12.1955 32.1349 9.04275 34.1579 8.36841" stroke="var(--avern-blue)" stroke-linecap="round"/>
+          <path d="M12.0526 12.7894C6.15117 9.41718 3.1066 8.05661 1 1.73682" stroke="var(--avern-blue)" stroke-linecap="round"/>
+          <path d="M10.5789 11.3158C9.62606 10.058 4.68421 5.97011 4.68421 4.31579C4.68421 2.76929 1.64622 2.29243 1 1" stroke="var(--avern-blue)" stroke-linecap="round"/>
+          </svg>
+          avern.systems</a></footer> 
+      </div>
+
         <div class="intro" style="display: none; opacity: 0; transform: translateY(40px); pointer-events: none;">
-            <p>The Merchant's Road has long connected the empire's capital to the riches of the far east.</p>
-            <p>Each day caravans trudge through marsh and mountain, savannah and desert, bearing loads of precious metals and fine textiles.</p>
-            <p>The road is long and dangerous. Here and there the caravans seek refuge in heavily fortified settlements, knots of safety in this cord of commerce.</p>
-            <p>One such settlement is the fortress of Koker, high in the jagged mountains on the eastern frontier of the empire.</p>
-            <p>You have lived here almost all your life.</p>
+          <p>The Merchant's Road has long connected the empire's capital to the riches of the far east.</p>
+          <p>Each day caravans trudge through marsh and mountain, bearing loads of precious metals, pungent spices and fine textiles.</p>
+          <p>The road is long and dangerous. Here and there the caravans seek refuge in heavily fortified settlements, knots of safety in this cord of commerce.</p>
+          <p>One such settlement is the fortress of Koker, high in the jagged mountains on the eastern frontier of the empire.</p>
+          <p>You have lived here almost all your life.</p>
 
-            <br />
+          <br />
 
-            <p>You do not remember the earthquake that devastated your village, and you do not remember the merchants who found you amidst the wreckage.</p>
-            <p>You do not remember the clink of gold when they sold you into this fortress's service.</p>
-            <p>You do not remember the bite of the blade that castrated you and forever marked the degree of your servitude.</p>
-            <p>You will live for the fortress, and you will have no life beyond it.</p>
-            <p>You wear a wooden mask, as all the empire's eunuchs do, and you carry a bolt action rifle.</p>
-            <p>There are goats on the cliffs above the fortress, and you are their guardian.</p>
+          <p>You do not remember the earthquake that devastated your village, and you do not remember the merchants who found you amidst the wreckage.</p>
+          <p>You do not remember the clink of gold when they sold you into this fortress's service.</p>
+          <p>You do not remember the bite of the blade that forever marked the degree of your servitude.</p>
+          <p>You will live for the fortress, and you will have no life beyond it.</p>
+          <p>You wear a wooden mask, as all the empire's castrates do, and you carry a bolt action rifle.</p>
+          <p>There are goats on the cliffs above the fortress, and you are their guardian.</p>
 
-              <button class="start-btn"><span>Play</span></button>
+          <button class="start-btn"><span>Play</span></button>
         </div>
-
+        <div class="credits" style="display: none; opacity: 0; transform: translateY(40px); pointer-events: none;">
+        <p>Game Design, Programming, Story, and Art: Nicholas Marino</p>
+        <p>Music and Sound Design: Theodora Marsico</p>
+        <button class="hide-credits">Back</button>
+        </div>
     </section>
 
     <section class="load-menu" style="opacity: 0; pointer-events: none;">
@@ -355,8 +370,6 @@
       <div id="casting-bar-caption"></div>
     </div>
 
-    <!-- Bottom half of screen basically -->
-    <div class="interaction-prompt" style="display:none;"></div>
   </div>
 
   <div class="mask" style="opacity: 0; pointer-events: none;">

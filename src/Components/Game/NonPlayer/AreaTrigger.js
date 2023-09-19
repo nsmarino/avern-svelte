@@ -1,21 +1,22 @@
 import * as THREE from 'three';
-import gsap from "gsap"
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { generateCapsuleCollider, checkCapsuleCollision } from '../../../helpers';
 import gltf from '../../../../assets/environment/gateway.gltf'
 import {get} from 'svelte/store'
+import gsap from "gsap"
 
 import GameplayComponent from '../../_Component';
-import Notices from '../../Interface/Notices';
 import Body from '../Player/Body';
 
-class Gateway extends GameplayComponent {
-    constructor(gameObject, spawnPoint, content) {
+class AreaTrigger extends GameplayComponent {
+    constructor(gameObject, spawnPoint) {
         super(gameObject)
         this.gameObject = gameObject
-        this.content = content
-        this.prompt = content.prompt
         this.gameObject.transform.position.copy(spawnPoint.position)
+
+        this.triggerId = spawnPoint.userData.label
+
+        this.triggerSent = false
 
         const initFromGLTF = async () => {
             this.gltf = await new GLTFLoader().loadAsync(gltf)
@@ -27,45 +28,26 @@ class Gateway extends GameplayComponent {
                 this.gltf.scene.getObjectByName("capsule-top"),
                 this.gltf.scene.getObjectByName("capsule-radius")
             )
+            // this.gameObject.transform.visible = false
+
             gameObject.transform.add(this.colliderCapsule.body)
-            this.colliderCapsule.body.onPlayerLook = this.onPlayerLook.bind(this)
-            this.colliderCapsule.body.onPlayerAction = this.onPlayerAction.bind(this)
-            this.colliderIsActive=true
         }
         initFromGLTF()
     }
 
     update() {
-
-        if (Avern.Player && this.colliderCapsule && this.colliderIsActive) {
+        if (Avern.Player && this.colliderCapsule) {
             const collision = checkCapsuleCollision({ segment: Avern.Player.getComponent(Body).tempSegment, radius: Avern.Player.getComponent(Body).radius}, this.colliderCapsule)
-            if (collision.isColliding) {
-              this.emitSignal("capsule_collide", {collision, capsule: this.colliderCapsule})
+            if (collision.isColliding && !this.triggerSent) {
+                this.sendTrigger()
             }
         }
     }
 
-    onPlayerLook() {
-        if (this.colliderIsActive) Avern.Store.prompt.set(this.prompt)
-    }
-
-    onPlayerAction() {
-        const key = get(Avern.Store.items).find(i=>i.id===this.content.unlockedBy)
-        if (key) {
-            this.colliderIsActive = false
-            this.gameObject.transform.visible = false
-            Avern.Store.worldEvents.update(events => {
-                const updatedEvents = {
-                    ...events,
-                    gateUnlocked: true
-
-                }
-                return updatedEvents
-            })
-            this.emitSignal("show_notice", { notice: `Unlocked with ${key.name}`, color: "yellow", delay: 5000})
-        } else {
-            this.emitSignal("show_notice", { notice: `Locked`, color: "red", delay: 5000})
-        }
+    sendTrigger() {
+        this.triggerSent = true
+        console.log("Start transition to", this.destination)
+        this.emitSignal(this.triggerId, {})
     }
 
     onSignal(signalName, data={}) {
@@ -78,8 +60,7 @@ class Gateway extends GameplayComponent {
     
     attachObservers(parent) {
         this.addObserver(Avern.Player.getComponent(Body))
-        this.addObserver(Avern.Interface.getComponent(Notices))
     }
 }
 
-export default Gateway
+export default AreaTrigger

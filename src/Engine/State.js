@@ -16,10 +16,10 @@ import { writable } from 'svelte/store';
     // NIGHT: level design
 
 // tuesday:
-    // can save that picked up key []
-    // can save that gate was opened []
-    // can update interaction progress []
-    // can save yoshua_haystack event []
+// ive set up the init condition stuff but i now need
+    // can save that picked up key [x]
+    // can save that gate was opened [x]
+    // can update interaction progress [x]
 // - break -
     // can go to another scene
     // can go back to previous scene
@@ -27,20 +27,16 @@ import { writable } from 'svelte/store';
     // can rearrange actions and pick up weapons; can save that
 
 // - break -
+    // update main menu (new game, load game)
     // can show tutorial modal and change hand config
     // can save if tutorial was shown and save hand config preference
-// trigger for lighting change?
 
 // NIGHT: blender:
 // create new enemy models
 
 // wednesday:
     // prototype various actions
-    // deal damage w/o target?
-    // enemy projectiles (arrows and slightly tracking magic)
-    // break enemy into components
-    // --- collider....actions...body...mind...
-    // enemies should be slightly circling player as they get closer; enemies should move away from each other; enemies should pay attention to each others attacks
+    // deal damage w/o target???
     // gain xp
     // can save xp from enemies []
 // - break -
@@ -50,6 +46,7 @@ import { writable } from 'svelte/store';
     // can save player position, health, flasks, current level state (which enemies are alive)
     // connect to cms
     // cleanup
+    // trigger for lighting change?
     // NIGHT: more blender
 
 // friday: 
@@ -58,6 +55,14 @@ import { writable } from 'svelte/store';
 
 // saturday:
 // job apps
+
+
+// on hold:
+    // enemy projectiles (arrows and slightly tracking magic)
+    // break enemy into components
+    // --- collider....actions...body...mind...
+    // enemies should be slightly circling player as they get closer; enemies should move away from each other; enemies should pay attention to each others attacks
+
 
 // const Store = {
 //     scene: "url",

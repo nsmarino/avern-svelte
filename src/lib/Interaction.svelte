@@ -16,11 +16,9 @@
     ></div>
       <div class="interaction-container" in:fly={{ easing: cubicOut, y: 10, duration: 300 }}
       out:fly={{ easing: cubicIn, y: -10, duration: 300 }}
->
-        {#if $interaction.node.type==="dialogue" || $interaction.node.type==="narration"}
+      >
           <div 
             class="interaction-content" 
-
           >
             {#if $interaction.node.image}
               <img src="{$interaction.node.image}" alt="">
@@ -31,7 +29,7 @@
                   {$interaction.node.label}
                 </h2>
               {/if}
-              <div class="text-content" class:narration={$interaction.node.type==="narration"}>
+              <div class="text-content" class:narration={$interaction.node.type==="narration" || $interaction.node.type==="item"}>
                 {$interaction.node.text}
               </div>
               <div class="next-node-input-key">
@@ -39,7 +37,6 @@
               </div>           
             </div>
           </div>
-        {/if}
 
       </div>
     {/if}

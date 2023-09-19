@@ -97,6 +97,10 @@ class Sound {
             this.introHandler.pause()
             this.musicHandler.play()
         })
+        document.querySelector(".load-game").addEventListener("click", () => {
+            this.introHandler.pause()
+            this.musicHandler.play()
+        })
     }
 
     init() {

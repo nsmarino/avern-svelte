@@ -6,6 +6,8 @@ import {get} from "svelte/store"
 import yoshuaHaystack from "../../assets/npcs/yoshua_haystack.gltf"
 import { Pathfinding, PathfindingHelper } from 'three-pathfinding';
 import { acceleratedRaycast } from 'three-mesh-bvh';
+import gsap from "gsap"
+
 THREE.Mesh.prototype.raycast = acceleratedRaycast;
 
 import Enemy from "../Components/Game/NonPlayer/Enemy";
@@ -15,6 +17,7 @@ import Interaction from "../Components/Game/NonPlayer/Interaction";
 // import Fountain from "../Components/Game/NonPlayer/Fountain";
 import ItemOnMap from "../Components/Game/NonPlayer/ItemOnMap";
 import Gateway from "../Components/Game/NonPlayer/Gateway";
+import Connection from "../Components/Game/NonPlayer/Connection";
 
 import Collider from "../Components/World/Collider";
 import Sky from "../Components/World/Sky";
@@ -32,7 +35,7 @@ class Loader {
         this.collider = null
     }
 
-    async loadFromCMS(id=null) {
+    async loadFromCMS(useSavedGame) {
       const query = `*[_type == "settings"]{
         "mesh": mesh.asset->url,
       }`
@@ -64,7 +67,9 @@ class Loader {
           {
             label: "yoshua_haystack",
             index: 0,
-            // check when scene is loaded and update on world_condition signal
+
+            // check when scene is loaded; also check on world_state_changed signal
+            // if world conditions don't all match, destroy
             worldConditions: [
               {id:"gateUnlocked", value:true}
             ],
@@ -175,12 +180,14 @@ class Loader {
         characterMenu: false,
     
         worldEvents: {
-            gateUnlocked: true,
+          // these will be checked against for interactions etc
+            gateUnlocked: false,
             esthelSaved: false,
         },
     
-        ongoingInteractions: [
-        ],
+        ongoingInteractions: {},
+          // save index of various interactions
+          // "yoshua_haystack": 1
     
         prompt: "",
         
@@ -489,22 +496,11 @@ class Loader {
             },
         ]
       }
-      // WRITE OUT DEFAULT STORE
-      // SAVE FUNCTION WRITES TO LOCAL STORAGE
-      // LOAD FUNCTION LOADS FROM LOCAL STORAGE
-
-      // window.localStorage.setItem("AvernStore", JSON.stringify(myObject));
-      // Load from menu: getItem("file1")
-      console.log("localStorage as seen by loader", localStorage)
-      const store = JSON.parse(localStorage.getItem("AvernStore")) || this.newGameStore
-      console.log("Store that will be loaded:", store)
+      const store = useSavedGame ? JSON.parse(localStorage.getItem("AvernStore")) : this.newGameStore
       for (const [key, value] of Object.entries(store)) {
-        console.log(key, value);
         Avern.Store[key] = writable(value)
       }
-      console.log("This is now Avern.Store", Avern.Store)
-      // for entry in progress:
-      // Avern.Store[entry].set(progress[entry])
+      Avern.Store.pauseMenu.set(false)
     }
 
     async initScene(id=null) {
@@ -531,11 +527,11 @@ class Loader {
 
       if (Avern.Config.player.include) this.initPlayer(scene)
       if (Avern.Config.interface.include) this.initInterface(scene)
+      if(Avern.renderPaused) Avern.renderPaused=false
     }
 
     initNavmeshFromBaseFile(baseFile, scene) {
       const navmesh = baseFile.children.filter(child=> child.isMesh && child.userData.gltfExtensions.EXT_collections.collections[0]==="navmesh")[0]
-      console.log("Navmesh found")
       if (!navmesh) return;
       Avern.pathfindingZone = baseFile.name
       Avern.PATHFINDING.setZoneData(Avern.pathfindingZone, Pathfinding.createZone(navmesh.geometry));
@@ -553,6 +549,8 @@ class Loader {
     }
 
     initNonPlayerFromBaseFile(baseFile, scene) {
+      const currentWorldEvents = get(Avern.Store.worldEvents)
+
       baseFile.traverse(c => {
         if (c.userData.gltfExtensions?.EXT_collections?.collections) {
           switch(c.userData.gltfExtensions.EXT_collections.collections[0]) {
@@ -565,24 +563,31 @@ class Loader {
               enemy.addComponent(Enemy, c)
               break;
 
-            // case "sword":
-            //   const zombieSword = Avern.GameObjects.createGameObject(scene, c.name)                        
-            //   zombieSword.addComponent(Enemy, c, "zombie-sword")
-            //   break;
-
             case "fountains":
               // const fountain = Avern.GameObjects.createGameObject(scene, c.name)                        
               // fountain.addComponent(Fountain, c)
               break;
 
+            case "to":
+              const connection = Avern.GameObjects.createGameObject(scene, c.name)                        
+              connection.addComponent(Connection, c)
+              break;
+
             case "interactions":
               // get content
               const interactionContent = Avern.Content.interactions.find(int => int.label === c.userData.label)
-              // check store
-              // if interaction's conditions are not met, return
+              if (interactionContent) {
+                // check store. if interaction's conditions are not met, return
+                let shouldSpawnInteraction = true
+                for (const condition of interactionContent.worldConditions) {
+                  if(currentWorldEvents[condition.id]!==condition.value) shouldSpawnInteraction = false
+                }
 
-              const interaction = Avern.GameObjects.createGameObject(scene, c.name)
-              interaction.addComponent(Interaction, c, interactionContent)
+                if (shouldSpawnInteraction) {
+                  const interaction = Avern.GameObjects.createGameObject(scene, c.name)
+                  interaction.addComponent(Interaction, c, interactionContent)
+                }                
+              }
               break;
 
             case "items":
@@ -590,9 +595,18 @@ class Loader {
               const itemContent = Avern.Content.items.find(i => i.label === c.userData.label)
               // check store
               // if item is already in Store.items, return
+              const currentItems = get(Avern.Store.items)
 
-              const itemOnMap = Avern.GameObjects.createGameObject(scene, c.name)
-              itemOnMap.addComponent(ItemOnMap, c, itemContent)
+              if (itemContent) {
+                let shouldSpawnItem = true
+                if (currentItems.find(i => i.id===itemContent.label)) shouldSpawnItem = false
+
+                if (shouldSpawnItem) {
+                  const itemOnMap = Avern.GameObjects.createGameObject(scene, c.name)
+                  itemOnMap.addComponent(ItemOnMap, c, itemContent)
+                }                
+              }
+
               break;
 
             case "doors":
@@ -600,9 +614,10 @@ class Loader {
               const gateContent = Avern.Content.gates.find(g => g.label === c.userData.label)
               // check store
               // if worldEvent[this gate was unlocked], spawn in unlocked state
-              
-              const gateway = Avern.GameObjects.createGameObject(scene, c.name)
-              gateway.addComponent(Gateway, c, gateContent)
+              if (!currentWorldEvents.gateUnlocked) {
+                const gateway = Avern.GameObjects.createGameObject(scene, c.name)
+                gateway.addComponent(Gateway, c, gateContent)
+              }
               break;
 
             default:
@@ -629,7 +644,19 @@ class Loader {
     }
 
     clearScene() {
-      Avern.GameObjects.removeAllGameObjectsExceptPlayer()
+
+    }
+
+    async switchScene(url){
+      gsap.to(".mask", { opacity: 0, duration: 2})
+      gsap.to(".mask svg", { opacity: 0, duration: 2})
+      gsap.to(".mask p", { opacity: 0, duration: 2})
+      Avern.GameObjects.removeAllGameObjects()
+      Avern.Content.baseFile=url
+
+      await this.initScene()
+      Avern.GameObjects.attachObservers() // Listen for signals from other gameObjects' components.
+
     }
 
     // add interaction to scene if condition has been met.

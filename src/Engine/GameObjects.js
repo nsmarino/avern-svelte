@@ -71,16 +71,9 @@ class GameObjects {
       return this.gameObjects.findByName(name);
     }
 
-    // might be useful to have both of these for now, going to keep everything non-player 
-    // that should normally be preserved between scenes as components on the manager gameObject
-    removeAllGameObjectsExceptPlayer() {
+    removeAllGameObjects() {
       this.gameObjects.forEach(gameObject => {
-        if (gameObject.name !== "player") this.removeGameObject(gameObject)
-      })
-    }
-    removeAllGameObjectsExceptPlayerAndManager() {
-      this.gameObjects.forEach(gameObject => {
-        if (gameObject.name !== "player" && gameObject.name !== "manager") this.removeGameObject(gameObject)
+        this.removeGameObject(gameObject)
       })
     }
 

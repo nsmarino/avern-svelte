@@ -9,6 +9,7 @@ import Config from "./Config"
 import { Pathfinding, PathfindingHelper } from "three-pathfinding"
 
 const Engine = {
+    renderPaused: false,
     Core: new Core(),    
     GameObjects: new GameObjects(),
     Inputs: new Inputs(),

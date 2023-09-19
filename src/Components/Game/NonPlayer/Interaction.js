@@ -3,6 +3,7 @@ import { generateCapsuleCollider, checkCapsuleCollision } from '../../../helpers
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import GameplayComponent from '../../_Component';
 import Body from '../Player/Body';
+import {get} from "svelte/store"
 
 class Interaction extends GameplayComponent {
     constructor(gameObject, spawnPoint, interactions) {
@@ -12,8 +13,14 @@ class Interaction extends GameplayComponent {
         this.gameObject.transform.rotation.copy(spawnPoint.rotation)
 
         // Interaction content:
-        this.interactions=interactions
+        this.interactions = interactions
         this.interactionsIndex = interactions.index
+        // if in store.ongoing, update index
+        const currentOngoingInteractions = get(Avern.Store.ongoingInteractions)
+        if (currentOngoingInteractions[this.interactions.label] !== undefined) {
+            this.interactionsIndex = currentOngoingInteractions[this.interactions.label]
+            console.log("This is the index that will be used", this.interactionsIndex)
+        }
 
         this.prompt = this.interactions.content[this.interactionsIndex].prompt
         this.content = this.interactions.content[this.interactionsIndex].nodes
@@ -127,8 +134,13 @@ class Interaction extends GameplayComponent {
         if (this.interactions.content[this.interactionsIndex+1]) {
             this.content= this.interactions.content[this.interactionsIndex+1].nodes
             this.prompt= this.interactions.content[this.interactionsIndex+1].prompt
+            Avern.Store.ongoingInteractions.update(ong => {
+                ong[this.interactions.label] = this.interactionsIndex+1
+                return ong
+            })
             this.interactionsIndex+1
         }
+
         Avern.Store.prompt.set(this.prompt)
     }
 

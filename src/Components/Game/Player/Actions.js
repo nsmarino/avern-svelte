@@ -18,6 +18,12 @@ class Actions extends GameplayComponent {
         this.actionData = get(Avern.Store.actions)
         console.log(this.actionData)
 
+        // store unsubscribe fn for if component is destroyed:
+        this.unsubscribeFromWeapons = Avern.Store.weapons.subscribe(()=>{
+            // every time the weapons change, update this.actionData
+            console.log("Weapons has changed. Create new this.actionData for internal use.")
+        })
+
         this.casting = false
         this.castingProgress = 0
 
