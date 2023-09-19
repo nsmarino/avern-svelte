@@ -1,6 +1,8 @@
 import sanityClient from "../sanityClient"
+import {writable} from "svelte/store"
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import {get} from "svelte/store"
 import yoshuaHaystack from "../../assets/npcs/yoshua_haystack.gltf"
 import { Pathfinding, PathfindingHelper } from 'three-pathfinding';
 import { acceleratedRaycast } from 'three-mesh-bvh';
@@ -22,6 +24,8 @@ import yoshuaAlert from "../../assets/portraits/yoshua/alert.svg"
 import yoshuaHappy from "../../assets/portraits/yoshua/happy.svg"
 import yoshuaSerious from "../../assets/portraits/yoshua/serious.svg"
 
+
+
 class Loader {
     constructor() {
         this.scene = null
@@ -35,105 +39,472 @@ class Loader {
       const response = await sanityClient.fetch(query)
       Avern.Content.baseFile = response[0].mesh
 
-      Avern.Content.itemsOnMap = [
-        {
-          label: "key",
-          item: {
-            name: "Key to the Gatehouse",
-            category: "key",
+      // 'content' should only be interested in what's present the actual scene file. the Store is used to determine what actually spawns in the game
+      Avern.Content = {
+        baseFile: response[0].mesh,
+        items:[
+          {
+            label: "gatehouse-key",
+            item: {
+              name: "Key to the Gatehouse",
+              img: "",
+              id: "gatehouse-key",
+              category: "key",
+            }
+          },
+          {
+            label: "healing-flask",
+            item: {
+              name: "Healing Flask",
+              category: "flask"
+            }
           }
-        },
-        {
-          label: "healing-flask",
-          item: {
-            name: "Healing Flask",
-            category: "flask"
-          }
-        }
-      ]
-
-      Avern.Content.testGate = {
-        prompt: "Open",
-        unlockedBy: "Key"
-      }
-      Avern.Content.interactions = [
-        {
-          label: "yoshua_haystack",
-          index: 0,
-          model: yoshuaHaystack,
-          content: [
-            {
-              prompt: "Talk to the drowsy interloper",
-              nodes:[
-                {
-                type: "dialogue",
-                text: "Ah...is this your haystack? I couldn't resist...I have been running all night.",
-                image: yoshuaAlert,
-                label: "Drowsy interloper",
-              },
+        ],
+        interactions:[
+          {
+            label: "yoshua_haystack",
+            index: 0,
+            // check when scene is loaded and update on world_condition signal
+            worldConditions: [
+              {id:"gateUnlocked", value:true}
+            ],
+            model: yoshuaHaystack,
+            content: [
               {
-                type: "narration",
-                image: yoshuaAlert,
-                text: "He is a curly haired and delicate adolescent, about your age. His cheeks are flushed with the cold morning air and there is a stalk of hay sticking out of his ear.",
-              },
-              {
+                prompt: "Talk to the drowsy interloper",
+                trigger: null,
+                next: "readyForSwamp",
+                nodes:[
+                  {
                   type: "dialogue",
-                  text: "I am in your debt...are you a castrate? That mask...it is so hard to know if you are angry!",
+                  text: "Ah...is this your haystack? I couldn't resist...I have been running all night.",
                   image: yoshuaAlert,
                   label: "Drowsy interloper",
+                  },
+                  {
+                    type: "narration",
+                    image: yoshuaAlert,
+                    text: "He is a curly haired and delicate adolescent, about your age. His cheeks are flushed with the cold morning air and there is a stalk of hay sticking out of his ear.",
+                  },
+                  {
+                      type: "dialogue",
+                      text: "I am in your debt...are you a castrate? That mask...it is so hard to know if you are angry!",
+                      image: yoshuaAlert,
+                      label: "Drowsy interloper",
+                  },
+                  {
+                      type: "dialogue",
+                      text: "Forgive me! I mean no offense. I am very tired. I was captured by slavers...",
+                      image: yoshuaHappy,
+                      label: "Drowsy interloper",
+                  },
+                  {
+                      type: "dialogue",
+                      text: "I am Yoshua. I come from the capital. I was taken there -- along with my sister.",
+                      image: yoshuaHappy,
+                      label: "Yoshua, fugitive",
+                  },
+                  {
+                    type: "narration",
+                    text: "He frowns and glances downward. His strange cheeriness melts away.",
+                    image: yoshuaSerious,
+                  },
+                  {
+                      type: "dialogue",
+                      text: "My sister...they still have her. In a palanquin, deep in the swamp. Would you help me, castrate? I am at your mercy.",
+                      image: yoshuaSerious,
+                      label: "Yoshua, fugitive",
+                      trigger: "help_yoshua"
+                  },
+                  {
+                    type: "dialogue",
+                    text: "I have little I can offer you...I stole this dagger when I fled. Perhaps you are more skilled with it than I.",
+                    image: yoshuaSerious,
+                    label: "Yoshua, fugitive",
+                  },
+                  {
+                      type: "item",
+                      text: "You have received [Ceremonial Dagger].",
+                      item: "ceremonial_dagger"
+                  },
+                ]
               },
               {
-                  type: "dialogue",
-                  text: "Forgive me! I mean no offense. I am very tired. I was captured by slavers...",
-                  image: yoshuaHappy,
-                  label: "Drowsy interloper",
+                prompt: "Talk to Yoshua",
+                trigger: null,
+                next: null,
+                nodes: [
+                  {
+                    type: "dialogue",
+                    text: "I'm so happy you will help me! Let's make for the swamp...the slavers have their camp there. That is where my sister is imprisoned.",
+                    image: yoshuaHappy,
+                    label: "Yoshua, fugitive",
+                  }
+                ]
               },
-              {
-                  type: "dialogue",
-                  text: "I am Yoshua. I come from the capital. I was taken there -- along with my sister.",
-                  image: yoshuaHappy,
-                  label: "Yoshua, fugitive",
-              },
-              {
-                type: "narration",
-                text: "He frowns and glances downward. His strange cheeriness melts away.",
-                image: yoshuaSerious,
-              },
-              {
-                  type: "dialogue",
-                  text: "My sister...they still have her. In a palanquin, deep in the swamp. Would you help me, castrate? I am at your mercy.",
-                  image: yoshuaSerious,
-                  label: "Yoshua, fugitive",
-                  trigger: "help_yoshua"
-              },
-              {
-                type: "dialogue",
-                text: "I have little I can offer you...I stole this dagger when I fled. Perhaps you are more skilled with it than I.",
-                image: yoshuaSerious,
-                label: "Yoshua, fugitive",
-              },
-              {
-                  type: "item",
-                  text: "You have received [Ceremonial Dagger].",
-                  item: "ceremonial_dagger"
-              },
-              ]
+            ],
+          }
+        ],
+        enemies:[
+
+        ],
+        gates:[
+          {
+            label: "gatehouse-door",
+            prompt: "Open rear door of gatehouse",
+            unlockedBy: "gatehouse-key"
+          }
+        ],
+      }
+
+      this.newGameStore = {
+        scene: "url",
+
+        // just an array of IDs so the engine knows not to load them; cleared every time a scene is changed
+        killedEnemies:[],
+    
+        player: { 
+            flasks: 5,
+            hp: 100,
+            level: 10,
+            xp: 0,
+            location: null,
+        },
+    
+        pauseMenu: false,
+        characterMenu: false,
+    
+        worldEvents: {
+            gateUnlocked: true,
+            esthelSaved: false,
+        },
+    
+        ongoingInteractions: [
+        ],
+    
+        prompt: "",
+        
+        interaction: {
+            active: false,
+            node: {}
+        },
+    
+        config: {
+            leftHanded: true,
+        },
+    
+        weapons: [
+            {
+                name: "Goatherd's Rifle",
+                img: "",
+                description: "",
+                primary: "",
+                actions: [
+                  {
+                    id: "shoot_from_distance",
+                    label: "Shoot from a distance",
+                    caption: "Loading rifle",
+                    description: ".",
+                    primeLength: 1,
+                    baseDamage: 25,
+                    range: 15,
+                    primed: false,
+                    input: "KeyF",
+                    indicator: "F",
+                    requiresTarget: true,
+                    primeAnimation: "load",
+                    animation: "shoot",
+                  },
+                  {
+                    id: "bayonet_slash",
+                    label: "Slash with bayonet",
+                    description: "",
+                    caption: "Affixing bayonet",
+                    primeLength: 0.6,
+                    cooldown: 0,
+                    baseDamage: 10,
+                    range: 5,
+                    primed: false,
+                    input: "KeyD",
+                    indicator: "D",
+                    requiresTarget: false,
+                    primeAnimation: "load",
+                    animation: "slash"
+                  },
+                  {
+                    id: "shoot_from_distance",
+                    label: "Shoot from a distance",
+                    caption: "Loading rifle",
+                    description: ".",
+                    primeLength: 1,
+                    baseDamage: 25,
+                    range: 15,
+                    primed: false,
+                    input: "KeyF",
+                    indicator: "F",
+                    requiresTarget: true,
+                    primeAnimation: "load",
+                    animation: "shoot",
+                  },
+                  {
+                    id: "bayonet_slash",
+                    label: "Slash with bayonet",
+                    description: "",
+                    caption: "Affixing bayonet",
+                    primeLength: 0.6,
+                    cooldown: 0,
+                    baseDamage: 10,
+                    range: 5,
+                    primed: false,
+                    input: "KeyD",
+                    indicator: "D",
+                    requiresTarget: false,
+                    primeAnimation: "load",
+                    animation: "slash"
+                  },
+                ]
             },
             {
-              prompt: "Talk to Yoshua",
-              nodes: [
-                {
-                  type: "dialogue",
-                  text: "I'm so happy you will help me! Let's make for the swamp...the slavers have their camp there. That is where my sister is imprisoned.",
-                  image: yoshuaHappy,
-                  label: "Yoshua, fugitive",
-                }
-              ]
-            }
+                name: "Explosives Kit",
+                img: "",
+                description: "",
+                primary: "",
+                actions: [
+                  {
+                    id: "shoot_from_distance",
+                    label: "Shoot from a distance",
+                    caption: "Loading rifle",
+                    description: ".",
+                    primeLength: 1,
+                    baseDamage: 25,
+                    range: 15,
+                    primed: false,
+                    input: "KeyF",
+                    indicator: "F",
+                    requiresTarget: true,
+                    primeAnimation: "load",
+                    animation: "shoot",
+                  },
+                  {
+                    id: "bayonet_slash",
+                    label: "Slash with bayonet",
+                    description: "",
+                    caption: "Affixing bayonet",
+                    primeLength: 0.6,
+                    cooldown: 0,
+                    baseDamage: 10,
+                    range: 5,
+                    primed: false,
+                    input: "KeyD",
+                    indicator: "D",
+                    requiresTarget: false,
+                    primeAnimation: "load",
+                    animation: "slash"
+                  },
+                  {
+                    id: "shoot_from_distance",
+                    label: "Shoot from a distance",
+                    caption: "Loading rifle",
+                    description: ".",
+                    primeLength: 1,
+                    baseDamage: 25,
+                    range: 15,
+                    primed: false,
+                    input: "KeyF",
+                    indicator: "F",
+                    requiresTarget: true,
+                    primeAnimation: "load",
+                    animation: "shoot",
+                  },
+                  {
+                    id: "bayonet_slash",
+                    label: "Slash with bayonet",
+                    description: "",
+                    caption: "Affixing bayonet",
+                    primeLength: 0.6,
+                    cooldown: 0,
+                    baseDamage: 10,
+                    range: 5,
+                    primed: false,
+                    input: "KeyD",
+                    indicator: "D",
+                    requiresTarget: false,
+                    primeAnimation: "load",
+                    animation: "slash"
+                  },
+                ]
+            },
+            {
+                name: "Ceremonial Dagger",
+                img: "",
+                description: "",
+                primary: "",
+                actions: [
+                  {
+                    id: "shoot_from_distance",
+                    label: "Shoot from a distance",
+                    caption: "Loading rifle",
+                    description: ".",
+                    primeLength: 1,
+                    baseDamage: 25,
+                    range: 15,
+                    primed: false,
+                    input: "KeyF",
+                    indicator: "F",
+                    requiresTarget: true,
+                    primeAnimation: "load",
+                    animation: "shoot",
+                  },
+                  {
+                    id: "bayonet_slash",
+                    label: "Slash with bayonet",
+                    description: "",
+                    caption: "Affixing bayonet",
+                    primeLength: 0.6,
+                    cooldown: 0,
+                    baseDamage: 10,
+                    range: 5,
+                    primed: false,
+                    input: "KeyD",
+                    indicator: "D",
+                    requiresTarget: false,
+                    primeAnimation: "load",
+                    animation: "slash"
+                  },
+                  {
+                    id: "shoot_from_distance",
+                    label: "Shoot from a distance",
+                    caption: "Loading rifle",
+                    description: ".",
+                    primeLength: 1,
+                    baseDamage: 25,
+                    range: 15,
+                    primed: false,
+                    input: "KeyF",
+                    indicator: "F",
+                    requiresTarget: true,
+                    primeAnimation: "load",
+                    animation: "shoot",
+                  },
+                  {
+                    id: "bayonet_slash",
+                    label: "Slash with bayonet",
+                    description: "",
+                    caption: "Affixing bayonet",
+                    primeLength: 0.6,
+                    cooldown: 0,
+                    baseDamage: 10,
+                    range: 5,
+                    primed: false,
+                    input: "KeyD",
+                    indicator: "D",
+                    requiresTarget: false,
+                    primeAnimation: "load",
+                    animation: "slash"
+                  },
+                ]
+            },
+        ],
+    
+        items: [
+    
+        ],
+    
+        actions: [
+            {
+                id: "shoot_from_distance",
+                label: "Shoot from a distance",
+                caption: "Loading rifle",
+                description: ".",
+                primeLength: 1,
+                baseDamage: 25,
+                range: 15,
+                primed: false,
+                input: "KeyF",
+                indicator: "F",
+                requiresTarget: true,
+                primeAnimation: "load",
+                animation: "shoot",
+            },
+            {
+                id: "bayonet_slash",
+                label: "Slash with bayonet",
+                description: "",
+                caption: "Affixing bayonet",
+                primeLength: 0.6,
+                cooldown: 0,
+                baseDamage: 10,
+                range: 5,
+                primed: false,
+                input: "KeyD",
+                indicator: "D",
+                requiresTarget: false,
+                primeAnimation: "load",
+                animation: "slash"
+            },
+            {
+                id: "set_land_mine",
+                label: "Set Landmine",
+                locked: true,
+                primeLength: 3,
+                cooldown: 0,
+                baseDamage: 40,
+                range: 3,
+                primed: false,
+                input: "KeyS",
+                indicator: "S",
+                requiresTarget: false,
+                primeAnimation: "plant",
+                animation: "detonate",
+            },
+            {
+                id: "blast_at_close_range",
+                label: "Blast at close range",
+                description: ".",
+                primeLength: 2.5,
+                baseDamage: 2,
+                locked: true,
+                range: 20,
+                primed: false,
+                input: "KeyA",
+                indicator: "A",
+                requiresTarget: true,
+                primeAnimation: "loadShotgun",
+                animation: "shotgun",
+            },
+            ]
+        ,
+    
+        // simple array of interactions and notices
+        log: [],
+    
+        tutorials: [
+            {
+                label: "openingRemarks",
+                shown: false,
+            },
+            {
+                label: "weapons",
+                shown: false,
+            },
+        ]
+      }
+      // WRITE OUT DEFAULT STORE
+      // SAVE FUNCTION WRITES TO LOCAL STORAGE
+      // LOAD FUNCTION LOADS FROM LOCAL STORAGE
 
-          ],
-        }
-      ]
+      // window.localStorage.setItem("AvernStore", JSON.stringify(myObject));
+      // Load from menu: getItem("file1")
+      console.log("localStorage as seen by loader", localStorage)
+      const store = JSON.parse(localStorage.getItem("AvernStore")) || this.newGameStore
+      console.log("Store that will be loaded:", store)
+      for (const [key, value] of Object.entries(store)) {
+        console.log(key, value);
+        Avern.Store[key] = writable(value)
+      }
+      console.log("This is now Avern.Store", Avern.Store)
+      // for entry in progress:
+      // Avern.Store[entry].set(progress[entry])
     }
 
     async initScene(id=null) {
@@ -183,10 +554,13 @@ class Loader {
 
     initNonPlayerFromBaseFile(baseFile, scene) {
       baseFile.traverse(c => {
-        console.log(c.userData)
         if (c.userData.gltfExtensions?.EXT_collections?.collections) {
           switch(c.userData.gltfExtensions.EXT_collections.collections[0]) {
             case "enemies":
+              // get content
+              // check store
+              // if enemy killed (this array is emptied on every rest and scene swap) or worldEventX, return
+
               const enemy = Avern.GameObjects.createGameObject(scene, c.name)                        
               enemy.addComponent(Enemy, c)
               break;
@@ -202,20 +576,33 @@ class Loader {
               break;
 
             case "interactions":
-              const interaction = Avern.GameObjects.createGameObject(scene, c.name)
+              // get content
               const interactionContent = Avern.Content.interactions.find(int => int.label === c.userData.label)
+              // check store
+              // if interaction's conditions are not met, return
+
+              const interaction = Avern.GameObjects.createGameObject(scene, c.name)
               interaction.addComponent(Interaction, c, interactionContent)
               break;
 
             case "items":
+              // get content
+              const itemContent = Avern.Content.items.find(i => i.label === c.userData.label)
+              // check store
+              // if item is already in Store.items, return
+
               const itemOnMap = Avern.GameObjects.createGameObject(scene, c.name)
-              const itemContent = Avern.Content.itemsOnMap.find(i => i.label === c.userData.label)
               itemOnMap.addComponent(ItemOnMap, c, itemContent)
               break;
 
             case "doors":
-              const gateway = Avern.GameObjects.createGameObject(scene, c.name)                        
-              gateway.addComponent(Gateway, c, Avern.Content.testGate)
+              // get content
+              const gateContent = Avern.Content.gates.find(g => g.label === c.userData.label)
+              // check store
+              // if worldEvent[this gate was unlocked], spawn in unlocked state
+              
+              const gateway = Avern.GameObjects.createGameObject(scene, c.name)
+              gateway.addComponent(Gateway, c, gateContent)
               break;
 
             default:
@@ -244,6 +631,9 @@ class Loader {
     clearScene() {
       Avern.GameObjects.removeAllGameObjectsExceptPlayer()
     }
+
+    // add interaction to scene if condition has been met.
+    addToScene(){}
 }
 
 export default Loader

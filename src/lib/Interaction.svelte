@@ -1,16 +1,27 @@
 <script>
   // @ts-ignore
   const interaction = Avern.Store.interaction
+  import { fly } from "svelte/transition";
+  import { cubicIn, cubicOut } from "svelte/easing";
   // @ts-ignore
   const config = Avern.Store.config
 
 </script>
 
     {#if $interaction.active}
-      <div class="interaction-bg"></div>
-      <div class="interaction-container">
+      <div class="interaction-bg"
+      in:fly={{ easing: cubicOut, y: 10, duration: 200 }}
+      out:fly={{ easing: cubicIn, y: -10, duration: 300 }}
+
+    ></div>
+      <div class="interaction-container" in:fly={{ easing: cubicOut, y: 10, duration: 300 }}
+      out:fly={{ easing: cubicIn, y: -10, duration: 300 }}
+>
         {#if $interaction.node.type==="dialogue" || $interaction.node.type==="narration"}
-          <div class="interaction-content">
+          <div 
+            class="interaction-content" 
+
+          >
             {#if $interaction.node.image}
               <img src="{$interaction.node.image}" alt="">
             {/if}

@@ -3,9 +3,10 @@ import gsap from "gsap"
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { generateCapsuleCollider, checkCapsuleCollision } from '../../../helpers';
 import gltf from '../../../../assets/environment/gateway.gltf'
+import {get} from 'svelte/store'
 
 import GameplayComponent from '../../_Component';
-import InteractionOverlay from '../../Interface/InteractionOverlay';
+import Notices from '../../Interface/Notices';
 import Body from '../Player/Body';
 
 class Gateway extends GameplayComponent {
@@ -13,6 +14,7 @@ class Gateway extends GameplayComponent {
         super(gameObject)
         this.gameObject = gameObject
         this.content = content
+        this.prompt = content.prompt
         this.gameObject.transform.position.copy(spawnPoint.position)
 
         const initFromGLTF = async () => {
@@ -34,6 +36,7 @@ class Gateway extends GameplayComponent {
     }
 
     update() {
+
         if (Avern.Player && this.colliderCapsule && this.colliderIsActive) {
             const collision = checkCapsuleCollision({ segment: Avern.Player.getComponent(Body).tempSegment, radius: Avern.Player.getComponent(Body).radius}, this.colliderCapsule)
             if (collision.isColliding) {
@@ -43,14 +46,17 @@ class Gateway extends GameplayComponent {
     }
 
     onPlayerLook() {
-        if (this.colliderIsActive) this.emitSignal("player_look", { prompt: this.content.prompt })
+        if (this.colliderIsActive) Avern.Store.prompt.set(this.prompt)
     }
 
     onPlayerAction() {
-        if (Avern.State.inventory.find(item=>item.name===this.content.unlockedBy) && this.colliderIsActive) {
-            this.colliderIsActive=false
+        const key = get(Avern.Store.items).find(i=>i.id===this.content.unlockedBy)
+        if (key) {
+            this.colliderIsActive = false
+            this.gameObject.transform.visible = false
+            this.emitSignal("show_notice", { notice: `Unlocked with ${key.name}`, color: "yellow", delay: 5000})
         } else {
-            console.log("Locked")
+            this.emitSignal("show_notice", { notice: `Locked`, color: "red", delay: 5000})
         }
     }
 
@@ -64,7 +70,7 @@ class Gateway extends GameplayComponent {
     
     attachObservers(parent) {
         this.addObserver(Avern.Player.getComponent(Body))
-        this.addObserver(Avern.Interface.getComponent(InteractionOverlay))
+        this.addObserver(Avern.Interface.getComponent(Notices))
     }
 }
 

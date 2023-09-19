@@ -182,7 +182,7 @@
             "extensions" : {
                 "EXT_collections" : {
                     "collections" : [
-                        "detail"
+                        "geometry"
                     ]
                 }
             },
@@ -203,7 +203,7 @@
             "extensions" : {
                 "EXT_collections" : {
                     "collections" : [
-                        "detail"
+                        "geometry"
                     ]
                 }
             },
@@ -341,7 +341,8 @@
                 }
             },
             "extras" : {
-                "label" : "gatehouse-door"
+                "label" : "gatehouse-door",
+                "key" : "gatehouse-key"
             },
             "mesh" : 13,
             "name" : "Cube.002",

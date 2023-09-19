@@ -9,6 +9,7 @@ class ItemOnMap extends GameplayComponent {
     constructor(gameObject, spawnPoint, content) {
         super(gameObject)
         this.gameObject=gameObject
+        this.prompt = "Pick up item"
 
         this.content=content
         gameObject.transform.position.copy(spawnPoint.position)
@@ -80,7 +81,6 @@ class ItemOnMap extends GameplayComponent {
         gameObject.transform.add(tubeWireframe)
         tubeWireframe.onPlayerLook = this.onPlayerLook.bind(this)
         tubeWireframe.onPlayerAction = this.onPlayerAction.bind(this)
-        console.log("Item on enemy death", this)
     }
 
     update(deltaTime) {
@@ -129,8 +129,7 @@ class ItemOnMap extends GameplayComponent {
     }
 
     onPlayerLook() {
-        console.log("PLayer is looking")
-        this.emitSignal("player_look", { prompt: "Pick up item" })
+        Avern.Store.prompt.set(this.prompt)
     }
 
     onPlayerAction() {

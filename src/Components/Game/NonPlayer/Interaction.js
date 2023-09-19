@@ -19,7 +19,6 @@ class Interaction extends GameplayComponent {
         this.content = this.interactions.content[this.interactionsIndex].nodes
         this.contentIndex = 0
 
-        console.log("Content", this.content)
         // In world:
         const initFromGLTF = async () => {
             this.gltf = await new GLTFLoader().loadAsync(this.interactions.model)
@@ -93,7 +92,6 @@ class Interaction extends GameplayComponent {
     }
 
     onPlayerLook() {
-        console.log("Player look")
         Avern.Store.prompt.set(this.prompt)
     }
 

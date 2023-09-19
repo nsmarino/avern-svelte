@@ -12,11 +12,16 @@ class Inventory extends GameplayComponent {
     onSignal(signalName, data={}) {
         switch(signalName) {
           case "item_pickup":
-            Avern.State.inventory.push(data.item)
+            console.log("Item pickup", data)
+            Avern.Store.items.update((items)=>{
+              items.push(data.item)
+              return items
+            })
+            // Avern.State.inventory.push(data.item)
 
             // temp:
-            Avern.State.flaskCount += 1
-            document.querySelectorAll('[data-flask]').forEach(el => el.innerHTML = Avern.State.flaskCount)
+            // Avern.State.flaskCount += 1
+            // document.querySelectorAll('[data-flask]').forEach(el => el.innerHTML = Avern.State.flaskCount)
             // stateStore.update(st => {
             //     const updatedSt = {
             //         ...st,
@@ -25,9 +30,9 @@ class Inventory extends GameplayComponent {
             //     return updatedSt
             // })
             break;
-          case "player_heal":
-            if (Avern.State.flaskCount > 0) Avern.State.flaskCount -= 1
-            document.querySelectorAll('[data-flask]').forEach(el => el.innerHTML = Avern.State.flaskCount)
+          // case "player_heal":
+          //   if (Avern.State.flaskCount > 0) Avern.State.flaskCount -= 1
+          //   document.querySelectorAll('[data-flask]').forEach(el => el.innerHTML = Avern.State.flaskCount)
             // stateStore.update(st => {
             //     const updatedSt = {
             //         ...st,
@@ -35,7 +40,7 @@ class Inventory extends GameplayComponent {
             //     }
             //     return updatedSt
             // })
-            break;
+            // break;
         }
     }
     

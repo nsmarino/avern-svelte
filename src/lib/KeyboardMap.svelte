@@ -1,4 +1,8 @@
-<script>
+<script>  
+  import { fade } from "svelte/transition";
+
+import { cubicIn, cubicOut } from "svelte/easing";
+
     // @ts-ignore
     const config = Avern.Store.config
     // @ts-ignore
@@ -11,8 +15,8 @@
     const interaction = Avern.Store.interaction
 
   </script>
-  
-  <div class="player-input" class:rightHanded={!$config.leftHanded} class:interactionActive={$interaction.active}>
+  {#if !$interaction.active}
+  <div class="player-input" class:rightHanded={!$config.leftHanded} in:fade={{ duration: 250, delay: 300 }}>
 
     <div class="equipped">
 
@@ -246,6 +250,7 @@
     </div>
 
   </div>
+  {/if}
   <style>
 
   </style>

@@ -22,6 +22,24 @@
     .stats {
       display: flex;
       justify-content: space-between;
+    }
 
+    .all-actions, .currently-equipped {
+      display: flex;
+      max-width:500px;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .action-tile {
+      width: 80px;
+      height: 80px;
+      border: 1px solid white;
+      &.active {
+        margin-bottom: 20px;
+        border-width: 2px;
+        border-color: var(--avern-yellow);
+      }
     }
   }

@@ -256,10 +256,11 @@ class Enemy extends GameplayComponent {
       // chance of dropping item
       const randomInt = randomIntFromInterval(1,4)
       if (randomInt===1) {
-        const itemOnMap = Avern.GameObjects.createGameObject(Avern.State.scene, `${this.gameObject.name}-item`)
-        const itemContent = Avern.Content.itemsOnMap.find(i => i.label === "healing-flask")
-        itemOnMap.addComponent(ItemOnMap, this.gameObject.transform, itemContent)
-        itemOnMap.getComponent(ItemOnMap).attachObservers()
+        // OUTDATED:
+        // const itemOnMap = Avern.GameObjects.createGameObject(Avern.State.scene, `${this.gameObject.name}-item`)
+        // const itemContent = Avern.Content.itemsOnMap.find(i => i.label === "healing-flask")
+        // itemOnMap.addComponent(ItemOnMap, this.gameObject.transform, itemContent)
+        // itemOnMap.getComponent(ItemOnMap).attachObservers()
       }
 
       setTimeout(() => {

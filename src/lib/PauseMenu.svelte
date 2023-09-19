@@ -1,19 +1,26 @@
 <script>
-  import { writable } from 'svelte/store'
-  import { fade, fly } from 'svelte/transition';
+  import { writable, get} from 'svelte/store'
+  import { fly } from "svelte/transition";
+    import { cubicIn, cubicOut } from "svelte/easing";
 
   import GameMenu from "../Components/Interface/GameMenu";
   import { onDestroy } from 'svelte';
 
   // @ts-ignore
   const GameplayComponent = Avern.GameObjects.getGameObjectByName("interface").getComponent(GameMenu)
-  console.log(GameplayComponent)
 
   function handleClick() {
     console.log("Just testing things out")
   }
   function saveGame() {
     console.log("SAVE GAME")
+    const copyOfStore = {}
+    for (const entry in Avern.Store) {
+      copyOfStore[entry] = get(Avern.Store[entry])
+    }
+    console.log(copyOfStore)
+    localStorage.setItem("AvernStore", JSON.stringify(copyOfStore))
+    console.log("localStorage", localStorage)
   }
   function loadGame() {
     console.log("LOAD GAME", localStorage)
@@ -32,7 +39,7 @@
 
 </script>
 
-<div id="game-menu">
+<div id="game-menu" in:fly={{ easing: cubicOut, y: 10, duration: 200 }} out:fly={{ easing: cubicIn, y: -10, duration: 300 }}>
   <!-- <button on:click={handleClick} class="status">Game Paused</button> -->
 
   <div class="menu-pane info-pane">
@@ -62,7 +69,7 @@
       {:else if $filesTab==="save"}
         <div class="files-save">
           <button on:click={()=>setFilesTab("root")}>back</button>
-          save
+          <button on:click={saveGame}>SAVE GAME</button>
         </div>
       {:else if $filesTab==="load"}
         <div class="files-load">
