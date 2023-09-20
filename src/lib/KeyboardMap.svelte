@@ -19,7 +19,7 @@
     // @ts-ignore
     const config = Avern.Store.config
     // @ts-ignore
-    const actions = Avern.Store.actions
+    const weapons = Avern.Store.weapons
 
     // @ts-ignore
     const player = Avern.Store.player
@@ -65,13 +65,15 @@
           <div class="action-active-indicator"></div>
           <div class="action-tooltip">
             <h3>Character Menu</h3>
-            <p>Select actions, change ammo type, view stats and examine items.</p>
+            <p>Select actions, view stats and examine items and weapons.</p>
           </div>
         </div>
       </div>
 
       <div class="main-row">
-        <div id="action4" data-linked-action="3" class="equipment-action input-key action4 locked">
+
+        <!-- Start actions... -->
+        <!-- <div id="action4" data-linked-action="3" class="equipment-action input-key action4 locked">
           <div class="key-inner">
             <span>{$config.leftHanded ? "A" : ";"}</span>
             <img class="svg" src="/assets/ui/aimed-shot.svg" alt="">
@@ -82,9 +84,9 @@
             <p>You stuff the barrel of the rifle with dozens of razor sharp projectiles. The closer an enemy, the more savagely will their flesh be torn.</p>
             <p style="font-family: var(--serif-italic);">[Bravado]</p>
           </div>
-        </div>
+        </div> -->
 
-        <div id="action3" data-linked-action="2" class="equipment-action input-key action3 locked">
+        <!-- <div id="action3" data-linked-action="2" class="equipment-action input-key action3 locked">
           <div class="key-inner">
             <span>{$config.leftHanded ? "S" : "L"}</span>
             <img class="svg" src="/assets/ui/land-mine.svg" alt="">
@@ -95,8 +97,8 @@
             <p>You produce an oily iron capsule from the pouch at your waist. Once planted in the earth, it can be detonated from a distance. Be careful, as the blast can harm you as well.</p>
             <p  style="font-family: var(--serif-italic);">[Guile]</p>
           </div>
-        </div>
-
+        </div> -->
+<!-- 
         <div id="action2" data-linked-action="1" class="equipment-action input-key action2">
           <div class="key-inner">
             <span>{$config.leftHanded ? "D" : "K"}</span>
@@ -108,9 +110,9 @@
             <p>A quick slash with the blade attachment on the rifle. Does little damage.</p>
             <p  style="font-family: var(--serif-italic);">[Bravado]</p>
           </div>
-        </div>
+        </div> -->
 
-        <div id="action1" data-linked-action="0" class="equipment-action input-key action1">
+        <!-- <div id="action1" data-linked-action="0" class="equipment-action input-key action1">
           <div class="key-inner">
             <span>{$config.leftHanded ? "F" : "J"}</span>
             <img class="svg" src="/assets/ui/muzzle-blast.svg" alt="">
@@ -121,7 +123,28 @@
             <p>You ready the rifle and take careful aim. Your eyes narrow and time seems to stop.</p>
             <p style="font-family: var(--serif-italic);">[Cruelty]</p>
           </div>
-        </div>
+        </div> -->
+        <!-- End actions... -->
+        {#each $weapons as weapon}
+          {#each weapon.actions as weaponAction (weaponAction)}
+            {#if weaponAction.assignment}
+            <div id={weaponAction.assignment} class="equipment-action input-key {weaponAction.assignment}">
+              <div class="key-inner">
+                <span>{$config.leftHanded ? "F" : "J"}</span>
+                <img class="svg" src={weaponAction.image} alt="">
+              </div>
+              <div class="action-active-indicator is-prepared"></div>
+              <div class="action-tooltip">
+                <h3>{weaponAction.label}</h3>
+                <p>{weaponAction.description}</p>
+                <p style="font-family: var(--serif-italic);">[{weaponAction.primaryModifier}]</p>
+                <p style="font-family: var(--serif-italic);">[{weaponAction.secondaryModifier}]</p>
+              </div>
+            </div>
+            {/if}
+          {/each}
+          
+        {/each}
 
         <div id="setTarget" class="target-key input-key">   
           <div class="key-inner">     
@@ -163,7 +186,7 @@
         <div class="action-active-indicator"></div>
         <div class="action-tooltip">
           <h3>Game Menu</h3>
-          <p>Save your game, change settings, or review recent dialogue.</p>
+          <p>Save your game, change settings, or review tutorials and recent interactions.</p>
         </div>
         </div>
 
@@ -191,7 +214,7 @@
         <div class="action-active-indicator"></div>
         <div class="action-tooltip">
           <h3>Interact</h3>
-          <p>Talk to people, open doors and treasure chests, make the world your oyster.</p>
+          <p>Have conversations, pick up items, unlock gates and more.</p>
         </div>
         </div>
 

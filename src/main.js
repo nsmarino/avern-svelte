@@ -42,6 +42,8 @@ function startMenu() {
 		gsap.set(".intro-prompt", { display: "none"})
 		gsap.set(".menu-options", { display: 'block'})
 		gsap.to(".menu-options", { opacity: 1, duration: 1, y: 0, pointerEvents: "auto"  })
+		gsap.set(".fse-bg", { display: 'block'})
+		gsap.to(".fse-bg", { opacity: 1, duration: 1, y: 0, pointerEvents: "auto"  })
 		document.removeEventListener("click", showMenu)
 	}
 	document.addEventListener("click", showMenu)

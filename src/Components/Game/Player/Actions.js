@@ -15,13 +15,18 @@ class Actions extends GameplayComponent {
     constructor(gameObject) {
         super(gameObject)
 
-        this.actionData = get(Avern.Store.actions)
-        console.log(this.actionData)
+        this.actionData = {}
+        console.log("Action data as fed to this component", this.actionData)
 
         // store unsubscribe fn for if component is destroyed:
-        this.unsubscribeFromWeapons = Avern.Store.weapons.subscribe(()=>{
+        this.unsubscribeFromWeapons = Avern.Store.weapons.subscribe((weapons)=>{
             // every time the weapons change, update this.actionData
-            console.log("Weapons has changed. Create new this.actionData for internal use.")
+            console.log("Weapons has changed. Create new this.actionData for internal use.", weapons)
+            weapons.forEach(weapon => {
+                weapon.actions.forEach(action => {
+                    if (action.assignment) this.actionData[action.assignment] = action
+                })
+            })
         })
 
         this.casting = false
@@ -41,16 +46,16 @@ class Actions extends GameplayComponent {
         const inputs = Avern.Inputs.getInputs()
         
         if ( inputs.action1 ) {
-            this.handleAction(this.actionData[0],inputs)
+            this.handleAction(this.actionData.action1,inputs)
         }
         if ( inputs.action2 ) {
-            this.handleAction(this.actionData[1],inputs)
+            this.handleAction(this.actionData.action2,inputs)
         }
         if ( inputs.action3 ) {
-            this.handleAction(this.actionData[2],inputs)
+            this.handleAction(this.actionData.action3,inputs)
         }
         if ( inputs.action4 ) {
-            this.handleAction(this.actionData[3],inputs)
+            this.handleAction(this.actionData.action4,inputs)
         }
     }
 
@@ -82,7 +87,8 @@ class Actions extends GameplayComponent {
     
     handleActionResult(animation){
         gsap.to(this.actionIndicator, { opacity: 0, duration: 0.1 })
-        const action = this.actionData.find(act => act.animation===animation)
+        const action = Object.values(this.actionData).find(act => act.animation===animation)
+        console.log(action)
         let flashPosition
         switch (action.id) {
             case "shoot_from_distance":
@@ -183,11 +189,11 @@ class Actions extends GameplayComponent {
         this.casting = false
         this.castingProgress = 0
         this.activeCast = null
-        this.actionData.forEach(act=>act.primed=false)
+        Object.values(this.actionData).forEach(act=>act.primed=false)
         action.primed = true
         this.emitSignal("casting_finish", { action })
 
-        this.actionIndicator.innerHTML = `<span>${action.indicator}</span>`
+        this.actionIndicator.innerHTML = `<span>TKTK</span>`
 
         gsap.to(this.actionIndicator, { opacity: 1, duration: 0.1 })
         Avern.Sound.readyHandler.currentTime = 0
