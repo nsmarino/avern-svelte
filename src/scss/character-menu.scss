@@ -24,22 +24,70 @@
       justify-content: space-between;
     }
 
-    .all-actions, .currently-equipped {
-      display: flex;
-      max-width:500px;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 20px;
-    }
+.actions {
+  display: flex;
+  width: 440px;
+  align-self: stretch;
+  flex-wrap: wrap;
+  position: relative;
+  height: min-content;
+  padding-top: 120px;
+  margin: 10px;
+  gap: 10px;
+}
 
     .action-tile {
-      width: 80px;
-      height: 80px;
+      width: 100px;
+      height: 100px;
       border: 1px solid white;
-      &.active {
-        margin-bottom: 20px;
-        border-width: 2px;
-        border-color: var(--avern-yellow);
+      background: black;
+      border-radius: 6px;
+      span {
+        position: absolute;
+        top: 2px;
+        right: 2px;
+        color: white;
       }
+
+      &.action1 {
+        border: 1px solid blue;
+        position: absolute;
+        top: 0;
+        right: 1px;
+      }
+      &.action2 {
+        border: 1px solid blue;
+        position: absolute;
+        top: 0;
+        right: 112px;
+
+      }
+      &.action3 {
+        border: 1px solid blue;
+        position: absolute;
+        top: 0;
+        right: 223px;
+
+      }
+      &.action4 {
+        border: 1px solid blue;
+        position: absolute;
+        top: 0;
+        right: 334px;
+
+      }
+    }
+    &.rightHanded .action-tile.action1{
+      right: 336px;
+
+    }
+    &.rightHanded .action-tile.action2{
+      right: 224px;
+    }
+    &.rightHanded .action-tile.action3{
+      right: 113px;
+    }
+    &.rightHanded .action-tile.action4{
+      right: 2px;
     }
   }

@@ -46,11 +46,11 @@ class Actions extends GameplayComponent {
     }
 
     handleAction(action,inputs) {
+        if (!action) return
         if (action.locked) {
             this.emitSignal("show_notice", {notice: "Action locked", color: "yellow", delay: 2000})
             return;
         }
-        console.log("THIS IS THE ACTION BEING HANDLED.", action)
         if (action.primed) {
             this.doAction(action)
         } else if (this.casting && this.activeCast.id !== action.id) {
@@ -200,7 +200,7 @@ class Actions extends GameplayComponent {
         this.emitSignal("casting_finish", { action })
 
         // Need to set input keys on assignment via CharacterMenu
-        this.actionIndicator.innerHTML = `<span>${action.label}</span>`
+        this.actionIndicator.innerHTML = `<span>${get(Avern.Store.config).leftHanded ? action.inputKeyLeft : action.inputKeyRight}</span>`
 
         gsap.to(this.actionIndicator, { opacity: 1, duration: 0.1 })
         Avern.Sound.readyHandler.currentTime = 0

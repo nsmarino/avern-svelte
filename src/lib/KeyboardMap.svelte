@@ -74,20 +74,22 @@
 
         <div class="main-row">
           {#each $actions as action}
-          <div id="action{action.assignment}" class="equipment-action input-key {action.assignment}" class:primed={action.primed}>
-            <div class="key-inner">
-              <span>{action.assignment}</span>
-              <!-- <span>{$config.leftHanded ? "F" : "J"}</span> -->
-              <img class="svg" src={action.image} alt="">
-            </div>
-            <div class="action-active-indicator"></div>
-            <div class="action-tooltip">
-              <h3>{action.label}</h3>
-              <p>{action.description}</p>
-              <p style="font-family: var(--serif-italic);">[{action.primaryModifier}]</p>
-              <p style="font-family: var(--serif-italic);">[{action.secondaryModifier}]</p>
-            </div>
-          </div>
+          {#if action.assignment <= 4 && action.assignment !== null}
+            <div id="action{action.assignment}" class="equipment-action input-key {action.assignment}" class:primed={action.primed}>
+              <div class="key-inner">
+                <span>{$config.leftHanded ? action.inputKeyLeft : action.inputKeyRight}</span>
+                <img class="svg" src={action.image} alt="">
+              </div>
+              <div class="action-active-indicator"></div>
+              <div class="action-tooltip">
+                <h3>{action.label}</h3>
+                <p>{action.description}</p>
+                <p style="font-family: var(--serif-italic);">[{action.primaryModifier}]</p>
+                <p style="font-family: var(--serif-italic);">[{action.secondaryModifier}]</p>
+              </div>
+            </div>            
+          {/if}
+
           {/each}
 
           <div id="setTarget" class="target-key input-key">   

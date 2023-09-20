@@ -29,31 +29,33 @@ import { writable } from 'svelte/store';
     // update main menu (new game, load game)
 
 // NIGHT: blender:
-// create new enemy models
 
 // wednesday:
     // can rearrange actions and pick up weapons; can save that
     // can show tutorial modal and change hand config
     // can save if tutorial was shown and save hand config preference
+    // show weapon tutorial
+// - break -
+// NIGHT: enemies!
 
+// thursday:
     // prototype various actions
     // deal damage w/o target???
     // gain xp
     // can save xp from enemies []
-// - break -
-// NIGHT: encounter design
-
-// thursday:
     // can save player position, health, flasks, current level state (which enemies are alive)
-    // connect to cms
     // cleanup
     // NIGHT: more blender
 
 // friday: 
-// cleanup and update github template for Avern Engine; blog posts and update personal website
+// connect to cms
+// cleanup and update github template for Avern Engine; 
 // NIGHT: level design
 
 // saturday:
+// blog posts and update personal website
+
+// sunday:
 // job apps
 
 

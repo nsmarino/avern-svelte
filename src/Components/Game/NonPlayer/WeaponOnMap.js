@@ -5,12 +5,12 @@ import InteractionOverlay from '../../Interface/InteractionOverlay';
 import Inventory from '../Player/Inventory';
 import Notices from '../../Interface/Notices';
 
-class ItemOnMap extends GameplayComponent {
+class WeaponOnMap extends GameplayComponent {
     constructor(gameObject, spawnPoint, content) {
         console.log(spawnPoint, content)
         super(gameObject)
         this.gameObject=gameObject
-        this.prompt = "Pick up item"
+        this.prompt = "Pick up weapon"
 
         this.content=content
         gameObject.transform.position.copy(spawnPoint.position)
@@ -47,9 +47,9 @@ class ItemOnMap extends GameplayComponent {
 
         // Create a material for the particles
         var particleMaterial = new THREE.PointsMaterial({
-            color: 0x0096FF,
+            color: 0xFF0000,
             transparent:true,
-            size: 0.11
+            size: 0.14
         });
         var particleMaterialTwo = new THREE.PointsMaterial({
             color: 0xFFFFFF,
@@ -136,8 +136,11 @@ class ItemOnMap extends GameplayComponent {
     onPlayerAction() {
         Avern.Sound.itemHandler.currentTime=0
         Avern.Sound.itemHandler.play()
-        this.emitSignal("item_pickup", { item: this.content.item })
-        this.emitSignal("show_notice", { notice: `Picked up ${this.content.item.name}`, color: "yellow", delay: 5000})
+        Avern.Store.weapons.update((weapons)=>{
+            weapons.push(this.content)
+            return weapons
+          })
+        this.emitSignal("show_notice", { notice: `Picked up ${this.content.name}`, color: "yellow", delay: 5000})
         this.gameObject.removeFromScene()
     }
     
@@ -148,5 +151,5 @@ class ItemOnMap extends GameplayComponent {
     }
 }
 
-export default ItemOnMap
+export default WeaponOnMap
   

@@ -16,6 +16,7 @@ import Interaction from "../Components/Game/NonPlayer/Interaction";
 
 // import Fountain from "../Components/Game/NonPlayer/Fountain";
 import ItemOnMap from "../Components/Game/NonPlayer/ItemOnMap";
+import WeaponOnMap from "../Components/Game/NonPlayer/WeaponOnMap";
 import Gateway from "../Components/Game/NonPlayer/Gateway";
 import Connection from "../Components/Game/NonPlayer/Connection";
 
@@ -149,6 +150,93 @@ class Loader {
             ],
           }
         ],
+
+        // this will be where i put explosives kit and ceremonial dagger.
+        // you pick up explosives kit on the map
+        // you receive ceremonial dagger from yoshua.
+        // you would also get the rifle from the gatekeeper w weapon tutorial popup
+        weapons: [
+          {
+            label: "goatherd-rifle",
+            name: "Goatherd's Rifle",
+            image: weaponImg,
+            description: "Given to you by the Smithmaster for fending off antwolves in the hills",
+            actions: [
+              {
+                id: "shoot_from_distance",
+                label: "Shoot from a distance",
+                caption: "Loading rifle",
+                image: weaponImg,
+                description: ".",
+                primeLength: 1,
+                baseDamage: 25,
+                range: 15,
+                primed: false,
+                assignment: null,
+                primeAnimation: "load",
+                animation: "shoot",
+                primaryModifier: "Faith",
+                secondaryModifier: "Bravado",
+
+              },
+              {
+                id: "bayonet_slash",
+                label: "Slash with bayonet",
+                description: "",
+                image: weaponImg,
+                caption: "Affixing bayonet",
+                primeLength: 0.6,
+                cooldown: 0,
+                baseDamage: 10,
+                range: 5,
+                primed: false,
+                assignment: null,
+                primeAnimation: "load",
+                animation: "slash",
+                primaryModifier: "Faith",
+                secondaryModifier: "Bravado",
+              },
+              {
+                id: "rifle_club",
+                label: "Club with butt of rifle",
+                description: "",
+                caption: "Shifting weight",
+                primeLength: 0.6,
+                image: weaponImg,
+                cooldown: 0,
+                baseDamage: 10,
+                range: 5,
+                primed: false,
+                assignment: null,
+                primeAnimation: "load",
+                locked: true,
+                animation: "slash",
+                primaryModifier: "Faith",
+                secondaryModifier: "Bravado",
+              },
+              {
+                id: "rapid_fire",
+                label: "Rapid fire shots",
+                caption: "Loading rifle",
+                description: ".",
+                primeLength: 1,
+                baseDamage: 25,
+                image: weaponImg,
+                range: 15,
+                primed: false,
+                assignment: null,
+                primeAnimation: "load",
+                locked: true,
+                animation: "shoot",
+                primaryModifier: "Faith",
+                secondaryModifier: "Bravado",
+
+              },
+            ]
+          },
+
+        ],
+
         enemies:[
         ],
         gates:[
@@ -199,235 +287,235 @@ class Loader {
         },
     
         weapons: [
-            {
-                name: "Goatherd's Rifle",
-                image: weaponImg,
-                description: "Given to you by the Smithmaster for fending off antwolves in the hills",
-                actions: [
-                  {
-                    id: "shoot_from_distance",
-                    label: "Shoot from a distance",
-                    caption: "Loading rifle",
-                    image: weaponImg,
-                    description: ".",
-                    primeLength: 1,
-                    baseDamage: 25,
-                    range: 15,
-                    primed: false,
-                    assignment: 1,
-                    primeAnimation: "load",
-                    animation: "shoot",
-                    primaryModifier: "Faith",
-                    secondaryModifier: "Bravado",
+            // {
+            //     name: "Goatherd's Rifle",
+            //     image: weaponImg,
+            //     description: "Given to you by the Smithmaster for fending off antwolves in the hills",
+            //     actions: [
+            //       {
+            //         id: "shoot_from_distance",
+            //         label: "Shoot from a distance",
+            //         caption: "Loading rifle",
+            //         image: weaponImg,
+            //         description: ".",
+            //         primeLength: 1,
+            //         baseDamage: 25,
+            //         range: 15,
+            //         primed: false,
+            //         assignment: null,
+            //         primeAnimation: "load",
+            //         animation: "shoot",
+            //         primaryModifier: "Faith",
+            //         secondaryModifier: "Bravado",
 
-                  },
-                  {
-                    id: "bayonet_slash",
-                    label: "Slash with bayonet",
-                    description: "",
-                    image: weaponImg,
-                    caption: "Affixing bayonet",
-                    primeLength: 0.6,
-                    cooldown: 0,
-                    baseDamage: 10,
-                    range: 5,
-                    primed: false,
-                    assignment: 2,
-                    primeAnimation: "load",
-                    animation: "slash",
-                    primaryModifier: "Faith",
-                    secondaryModifier: "Bravado",
-                  },
-                  {
-                    id: "rifle_club",
-                    label: "Club with butt of rifle",
-                    description: "",
-                    caption: "Shifting weight",
-                    primeLength: 0.6,
-                    image: weaponImg,
-                    cooldown: 0,
-                    baseDamage: 10,
-                    range: 5,
-                    primed: false,
-                    assignment: 3,
-                    primeAnimation: "load",
-                    locked: true,
-                    animation: "slash",
-                    primaryModifier: "Faith",
-                    secondaryModifier: "Bravado",
-                  },
-                  {
-                    id: "rapid_fire",
-                    label: "Rapid fire shots",
-                    caption: "Loading rifle",
-                    description: ".",
-                    primeLength: 1,
-                    baseDamage: 25,
-                    image: weaponImg,
-                    range: 15,
-                    primed: false,
-                    assignment: 4,
-                    primeAnimation: "load",
-                    locked: true,
-                    animation: "shoot",
-                    primaryModifier: "Faith",
-                    secondaryModifier: "Bravado",
+            //       },
+            //       {
+            //         id: "bayonet_slash",
+            //         label: "Slash with bayonet",
+            //         description: "",
+            //         image: weaponImg,
+            //         caption: "Affixing bayonet",
+            //         primeLength: 0.6,
+            //         cooldown: 0,
+            //         baseDamage: 10,
+            //         range: 5,
+            //         primed: false,
+            //         assignment: null,
+            //         primeAnimation: "load",
+            //         animation: "slash",
+            //         primaryModifier: "Faith",
+            //         secondaryModifier: "Bravado",
+            //       },
+            //       {
+            //         id: "rifle_club",
+            //         label: "Club with butt of rifle",
+            //         description: "",
+            //         caption: "Shifting weight",
+            //         primeLength: 0.6,
+            //         image: weaponImg,
+            //         cooldown: 0,
+            //         baseDamage: 10,
+            //         range: 5,
+            //         primed: false,
+            //         assignment: null,
+            //         primeAnimation: "load",
+            //         locked: true,
+            //         animation: "slash",
+            //         primaryModifier: "Faith",
+            //         secondaryModifier: "Bravado",
+            //       },
+            //       {
+            //         id: "rapid_fire",
+            //         label: "Rapid fire shots",
+            //         caption: "Loading rifle",
+            //         description: ".",
+            //         primeLength: 1,
+            //         baseDamage: 25,
+            //         image: weaponImg,
+            //         range: 15,
+            //         primed: false,
+            //         assignment: null,
+            //         primeAnimation: "load",
+            //         locked: true,
+            //         animation: "shoot",
+            //         primaryModifier: "Faith",
+            //         secondaryModifier: "Bravado",
 
-                  },
-                ]
-            },
-            {
-                name: "Explosives Kit",
-                image: weaponImg,
-                description: "A roughly woven bag containing metal capsules, bundles of string and a pouch of gritty yellow powder.",
-                primary: "Guile",
-                actions: [
-                  {
-                    id: "remote_landmine",
-                    label: "Plant landmine for remote detonation",
-                    caption: "Planting landmine",
-                    description: ".",
-                    image: weaponImg,
-                    secondary: "",
-                    primeLength: 1,
-                    baseDamage: 25,
-                    range: 5,
-                    primed: false,
-                    assignment: null,
-                    primeAnimation: "load",
-                    animation: "shoot",
-                    primaryModifier: "Faith",
-                    secondaryModifier: "Bravado",
-                  },
-                  {
-                    id: "timed_landmine",
-                    label: "Plant landmine and set timer",
-                    caption: "Planting landmine",
-                    description: ".",
-                    image: weaponImg,
-                    secondary: "",
-                    primeLength: 1,
-                    baseDamage: 25,
-                    range: 5,
-                    primed: false,
-                    assignment: null,
-                    primeAnimation: "load",
-                    animation: "shoot",
-                    primaryModifier: "Faith",
-                    secondaryModifier: "Bravado",
-                  },
-                  {
-                    id: "throw_grenade",
-                    label: "Throw grenade",
-                    caption: "Packing grenade",
-                    description: ".",
-                    image: weaponImg,
-                    secondary: "",
-                    primeLength: 1,
-                    baseDamage: 25,
-                    range: 5,
-                    primed: false,
-                    assignment: null,
-                    primeAnimation: "load",
-                    animation: "shoot",
-                    primaryModifier: "Faith",
-                    secondaryModifier: "Bravado",
+            //       },
+            //     ]
+            // },
+            // {
+            //     name: "Explosives Kit",
+            //     image: weaponImg,
+            //     description: "A roughly woven bag containing metal capsules, bundles of string and a pouch of gritty yellow powder.",
+            //     primary: "Guile",
+            //     actions: [
+            //       {
+            //         id: "remote_landmine",
+            //         label: "Plant landmine for remote detonation",
+            //         caption: "Planting landmine",
+            //         description: ".",
+            //         image: weaponImg,
+            //         secondary: "",
+            //         primeLength: 1,
+            //         baseDamage: 25,
+            //         range: 5,
+            //         primed: false,
+            //         assignment: null,
+            //         primeAnimation: "load",
+            //         animation: "shoot",
+            //         primaryModifier: "Faith",
+            //         secondaryModifier: "Bravado",
+            //       },
+            //       {
+            //         id: "timed_landmine",
+            //         label: "Plant landmine and set timer",
+            //         caption: "Planting landmine",
+            //         description: ".",
+            //         image: weaponImg,
+            //         secondary: "",
+            //         primeLength: 1,
+            //         baseDamage: 25,
+            //         range: 5,
+            //         primed: false,
+            //         assignment: null,
+            //         primeAnimation: "load",
+            //         animation: "shoot",
+            //         primaryModifier: "Faith",
+            //         secondaryModifier: "Bravado",
+            //       },
+            //       {
+            //         id: "throw_grenade",
+            //         label: "Throw grenade",
+            //         caption: "Packing grenade",
+            //         description: ".",
+            //         image: weaponImg,
+            //         secondary: "",
+            //         primeLength: 1,
+            //         baseDamage: 25,
+            //         range: 5,
+            //         primed: false,
+            //         assignment: null,
+            //         primeAnimation: "load",
+            //         animation: "shoot",
+            //         primaryModifier: "Faith",
+            //         secondaryModifier: "Bravado",
 
-                  },
-                  {
-                    id: "detonate_smoke_bomb",
-                    label: "Detonate smoke bomb",
-                    caption: "Packing smoke bomb",
-                    description: ".",
-                    image: weaponImg,
-                    secondary: "",
-                    primeLength: 1,
-                    baseDamage: 25,
-                    range: 5,
-                    primed: false,
-                    assignment: null,
-                    primeAnimation: "load",
-                    animation: "shoot",
-                    primaryModifier: "Faith",
-                    secondaryModifier: "Bravado",
-                  },
-                ]
-            },
-            {
-                name: "Ceremonial Dagger",
-                image: weaponImg,
-                description: "A simple copper blade.",
-                primary: "Cruelty",
-                actions: [
-                  {
-                    id: "brandish_for_intimidation",
-                    label: "Brandish for intimidation purposes",
-                    caption: "Summoning courage",
-                    description: "Reduce enemy attack and defense",
-                    image: weaponImg,
-                    primeLength: 1,
-                    baseDamage: 25,
-                    range: 5,
-                    primed: false,
-                    assignment: null,
-                    primeAnimation: "load",
-                    animation: "shoot",
-                    primaryModifier: "Faith",
-                    secondaryModifier: "Bravado",
-                  },
-                  {
-                    id: "open_artery",
-                    label: "Open artery",
-                    caption: "Honing blade",
-                    description: "Damage over time",
-                    image: weaponImg,
-                    primeLength: 1,
-                    baseDamage: 25,
-                    range: 5,
-                    primed: false,
-                    assignment: null,
-                    primeAnimation: "load",
-                    animation: "shoot",
-                    primaryModifier: "Faith",
-                    secondaryModifier: "Bravado",
+            //       },
+            //       {
+            //         id: "detonate_smoke_bomb",
+            //         label: "Detonate smoke bomb",
+            //         caption: "Packing smoke bomb",
+            //         description: ".",
+            //         image: weaponImg,
+            //         secondary: "",
+            //         primeLength: 1,
+            //         baseDamage: 25,
+            //         range: 5,
+            //         primed: false,
+            //         assignment: null,
+            //         primeAnimation: "load",
+            //         animation: "shoot",
+            //         primaryModifier: "Faith",
+            //         secondaryModifier: "Bravado",
+            //       },
+            //     ]
+            // },
+            // {
+            //     name: "Ceremonial Dagger",
+            //     image: weaponImg,
+            //     description: "A simple copper blade.",
+            //     primary: "Cruelty",
+            //     actions: [
+            //       {
+            //         id: "brandish_for_intimidation",
+            //         label: "Brandish for intimidation purposes",
+            //         caption: "Summoning courage",
+            //         description: "Reduce enemy attack and defense",
+            //         image: weaponImg,
+            //         primeLength: 1,
+            //         baseDamage: 25,
+            //         range: 5,
+            //         primed: false,
+            //         assignment: null,
+            //         primeAnimation: "load",
+            //         animation: "shoot",
+            //         primaryModifier: "Faith",
+            //         secondaryModifier: "Bravado",
+            //       },
+            //       {
+            //         id: "open_artery",
+            //         label: "Open artery",
+            //         caption: "Honing blade",
+            //         description: "Damage over time",
+            //         image: weaponImg,
+            //         primeLength: 1,
+            //         baseDamage: 25,
+            //         range: 5,
+            //         primed: false,
+            //         assignment: null,
+            //         primeAnimation: "load",
+            //         animation: "shoot",
+            //         primaryModifier: "Faith",
+            //         secondaryModifier: "Bravado",
 
-                  },
-                  {
-                    id: "Stun with pommel",
-                    label: "Stun with pommel",
-                    caption: "Gathering strength",
-                    description: "Slow windup but dazes an enemy for 30 seconds or until they are damaged",
-                    image: weaponImg,
-                    primeLength: 1,
-                    baseDamage: 25,
-                    range: 5,
-                    primed: false,
-                    assignment: null,
-                    primeAnimation: "load",
-                    animation: "shoot",
-                    primaryModifier: "Faith",
-                    secondaryModifier: "Bravado",
-                  },
-                  {
-                    id: "detonate_smoke_bomb",
-                    label: "Stab in a frenzy",
-                    caption: "Three strikes, high chance of critical hit but reduces defense during performance of action",
-                    description: ".",
-                    image: weaponImg,
-                    secondary: "",
-                    primeLength: 1,
-                    baseDamage: 25,
-                    range: 5,
-                    primed: false,
-                    assignment: null,
-                    primeAnimation: "load",
-                    animation: "shoot",
-                    primaryModifier: "Faith",
-                    secondaryModifier: "Bravado",
+            //       },
+            //       {
+            //         id: "Stun with pommel",
+            //         label: "Stun with pommel",
+            //         caption: "Gathering strength",
+            //         description: "Slow windup but dazes an enemy for 30 seconds or until they are damaged",
+            //         image: weaponImg,
+            //         primeLength: 1,
+            //         baseDamage: 25,
+            //         range: 5,
+            //         primed: false,
+            //         assignment: null,
+            //         primeAnimation: "load",
+            //         animation: "shoot",
+            //         primaryModifier: "Faith",
+            //         secondaryModifier: "Bravado",
+            //       },
+            //       {
+            //         id: "stab_in_frenzy",
+            //         label: "Stab in a frenzy",
+            //         caption: "Three strikes, high chance of critical hit but reduces defense during performance of action",
+            //         description: ".",
+            //         image: weaponImg,
+            //         secondary: "",
+            //         primeLength: 1,
+            //         baseDamage: 25,
+            //         range: 5,
+            //         primed: false,
+            //         assignment: null,
+            //         primeAnimation: "load",
+            //         animation: "shoot",
+            //         primaryModifier: "Faith",
+            //         secondaryModifier: "Bravado",
 
-                  },
-                ]
-            },
+            //       },
+            //     ]
+            // },
         ],
     
         items: [],
@@ -456,11 +544,37 @@ class Loader {
             const actions = []
             weapons.forEach(weapon => {
               weapon.actions.forEach(action => {
-                  if (action.assignment) actions.push(action)
+                  actions.push(action)
+                  if (!action.assignment) action.assignment = actions.indexOf(action)+1
+                  action.inputKey = action.assignment <= 4 ? "l" : "r"
+                  if (action.assignment <= 4) {
+                    switch (action.assignment) {
+                      case 1:
+                        action.inputKeyLeft = "F"
+                        action.inputKeyRight = "J"
+                        break;
+                      case 2:
+                        action.inputKeyLeft = "D"
+                        action.inputKeyRight = "K"
+                        break;
+                      case 3:
+                        action.inputKeyLeft = "S"
+                        action.inputKeyRight = "L"
+                        break;
+                      case 4:
+                        action.inputKeyLeft = "A"
+                        action.inputKeyRight = ";"
+                        break;
+                    }
+                  }
               })
             })
+            
             actions.sort((a, b) => (a.assignment > b.assignment) ? 1 : -1)
-            console.log("Actions, hopefully sorted:", actions)
+
+            // I could make the actions array contain ALL actions, each having an assignment integer.
+            // Can then use the integer from the dragging to update Store.weapons, which will
+            // in turn update Store.actions
             return actions
           })
         }
@@ -557,21 +671,37 @@ class Loader {
 
             case "items":
               // get content
-              const itemContent = Avern.Content.items.find(i => i.label === c.userData.label)
-              // check store
-              // if item is already in Store.items, return
-              const currentItems = get(Avern.Store.items)
+              if (c.userData.type === "weapon") {
+                console.log("WEAPON!")
+                const weaponContent = Avern.Content.weapons.find(i => i.label === c.userData.label)
+                console.log(weaponContent)
+                const currentWeapons = get(Avern.Store.weapons)
 
-              if (itemContent) {
-                let shouldSpawnItem = true
-                if (currentItems.find(i => i.id===itemContent.label)) shouldSpawnItem = false
+                if (weaponContent) {
+                  let shouldSpawnWeapon= true
+                  if (currentWeapons.find(i => i.id===weaponContent.label)) shouldSpawnWeapon = false
 
-                if (shouldSpawnItem) {
-                  const itemOnMap = Avern.GameObjects.createGameObject(scene, c.name)
-                  itemOnMap.addComponent(ItemOnMap, c, itemContent)
+                  if (shouldSpawnWeapon) {
+                    const weaponOnMap = Avern.GameObjects.createGameObject(scene, c.name)
+                    weaponOnMap.addComponent(WeaponOnMap, c, weaponContent)
+                  }                
+                }  
+              } else {
+                const itemContent = Avern.Content.items.find(i => i.label === c.userData.label)
+                // check store
+                // if item is already in Store.items, return
+                const currentItems = get(Avern.Store.items)
+
+                if (itemContent) {
+                  let shouldSpawnItem = true
+                  if (currentItems.find(i => i.id===itemContent.label)) shouldSpawnItem = false
+
+                  if (shouldSpawnItem) {
+                    const itemOnMap = Avern.GameObjects.createGameObject(scene, c.name)
+                    itemOnMap.addComponent(ItemOnMap, c, itemContent)
+                  }                
                 }                
               }
-
               break;
 
             case "doors":
