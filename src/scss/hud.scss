@@ -87,7 +87,7 @@
         background: radial-gradient(transparent, var(--avern-yellow));
       }
     }
-    &.is-prepared {
+    &.primed {
       transform: scale(1.2);
       transform-origin: center;
 
@@ -215,9 +215,19 @@
     margin-right: 140px;
   }
 }
-
+.equipped .main-row {
+  display: flex;
+  gap: 8px;
+  flex-direction: row-reverse;
+  #setTarget {
+    order: -1;
+  }
+  .rightHanded & {
+    flex-direction: row;
+  }
+}
 // offhand
-.offhand .main-row, .equipped .main-row {
+.offhand .main-row {
   display: flex;
   gap: 8px;
   .rightHanded & {

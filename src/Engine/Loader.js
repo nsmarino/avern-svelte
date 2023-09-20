@@ -1,5 +1,5 @@
 import sanityClient from "../sanityClient"
-import {writable} from "svelte/store"
+import {writable, derived} from "svelte/store"
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import {get} from "svelte/store"
@@ -214,7 +214,7 @@ class Loader {
                     baseDamage: 25,
                     range: 15,
                     primed: false,
-                    assignment: "action1",
+                    assignment: 1,
                     primeAnimation: "load",
                     animation: "shoot",
                     primaryModifier: "Faith",
@@ -232,7 +232,7 @@ class Loader {
                     baseDamage: 10,
                     range: 5,
                     primed: false,
-                    assignment: "action2",
+                    assignment: 2,
                     primeAnimation: "load",
                     animation: "slash",
                     primaryModifier: "Faith",
@@ -249,7 +249,7 @@ class Loader {
                     baseDamage: 10,
                     range: 5,
                     primed: false,
-                    assignment: "action3",
+                    assignment: 3,
                     primeAnimation: "load",
                     locked: true,
                     animation: "slash",
@@ -266,7 +266,7 @@ class Loader {
                     image: weaponImg,
                     range: 15,
                     primed: false,
-                    assignment: "action4",
+                    assignment: 4,
                     primeAnimation: "load",
                     locked: true,
                     animation: "shoot",
@@ -430,76 +430,8 @@ class Loader {
             },
         ],
     
-        items: [
-    
-        ],
-    
-        actions: [
-            {
-                id: "shoot_from_distance",
-                label: "Shoot from a distance",
-                caption: "Loading rifle",
-                description: ".",
-                primeLength: 1,
-                baseDamage: 25,
-                range: 15,
-                primed: false,
-                assignment: null,
-                input: "KeyF",
-                indicator: "F",
-                requiresTarget: true,
-                primeAnimation: "load",
-                animation: "shoot",
-            },
-            {
-                id: "bayonet_slash",
-                label: "Slash with bayonet",
-                description: "",
-                caption: "Affixing bayonet",
-                primeLength: 0.6,
-                cooldown: 0,
-                baseDamage: 10,
-                range: 5,
-                primed: false,
-                input: "KeyD",
-                indicator: "D",
-                requiresTarget: false,
-                primeAnimation: "load",
-                animation: "slash"
-            },
-            {
-                id: "set_land_mine",
-                label: "Set Landmine",
-                locked: true,
-                primeLength: 3,
-                cooldown: 0,
-                baseDamage: 40,
-                range: 3,
-                primed: false,
-                input: "KeyS",
-                indicator: "S",
-                requiresTarget: false,
-                primeAnimation: "plant",
-                animation: "detonate",
-            },
-            {
-                id: "blast_at_close_range",
-                label: "Blast at close range",
-                description: ".",
-                primeLength: 2.5,
-                baseDamage: 2,
-                locked: true,
-                range: 20,
-                primed: false,
-                input: "KeyA",
-                indicator: "A",
-                requiresTarget: true,
-                primeAnimation: "loadShotgun",
-                animation: "shotgun",
-            },
-            ]
-        ,
-    
+        items: [],
+
         // simple array of interactions and notices
         log: [],
     
@@ -517,6 +449,21 @@ class Loader {
       const store = useSavedGame ? JSON.parse(localStorage.getItem("AvernStore")) : this.newGameStore
       for (const [key, value] of Object.entries(store)) {
         Avern.Store[key] = writable(value)
+
+        // derived store for actions:
+        if (key==="weapons") {
+          Avern.Store["actions"] = derived(Avern.Store[key], (weapons)=> {
+            const actions = []
+            weapons.forEach(weapon => {
+              weapon.actions.forEach(action => {
+                  if (action.assignment) actions.push(action)
+              })
+            })
+            actions.sort((a, b) => (a.assignment > b.assignment) ? 1 : -1)
+            console.log("Actions, hopefully sorted:", actions)
+            return actions
+          })
+        }
       }
       Avern.Store.pauseMenu.set(false)
     }

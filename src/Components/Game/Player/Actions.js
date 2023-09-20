@@ -15,20 +15,6 @@ class Actions extends GameplayComponent {
     constructor(gameObject) {
         super(gameObject)
 
-        this.actionData = {}
-        console.log("Action data as fed to this component", this.actionData)
-
-        // store unsubscribe fn for if component is destroyed:
-        this.unsubscribeFromWeapons = Avern.Store.weapons.subscribe((weapons)=>{
-            // every time the weapons change, update this.actionData
-            console.log("Weapons has changed. Create new this.actionData for internal use.", weapons)
-            weapons.forEach(weapon => {
-                weapon.actions.forEach(action => {
-                    if (action.assignment) this.actionData[action.assignment] = action
-                })
-            })
-        })
-
         this.casting = false
         this.castingProgress = 0
 
@@ -46,16 +32,16 @@ class Actions extends GameplayComponent {
         const inputs = Avern.Inputs.getInputs()
         
         if ( inputs.action1 ) {
-            this.handleAction(this.actionData.action1,inputs)
+            this.handleAction(get(Avern.Store.actions)[0],inputs)
         }
         if ( inputs.action2 ) {
-            this.handleAction(this.actionData.action2,inputs)
+            this.handleAction(get(Avern.Store.actions)[1],inputs)
         }
         if ( inputs.action3 ) {
-            this.handleAction(this.actionData.action3,inputs)
+            this.handleAction(get(Avern.Store.actions)[2],inputs)
         }
         if ( inputs.action4 ) {
-            this.handleAction(this.actionData.action4,inputs)
+            this.handleAction(get(Avern.Store.actions)[3],inputs)
         }
     }
 
@@ -64,6 +50,7 @@ class Actions extends GameplayComponent {
             this.emitSignal("show_notice", {notice: "Action locked", color: "yellow", delay: 2000})
             return;
         }
+        console.log("THIS IS THE ACTION BEING HANDLED.", action)
         if (action.primed) {
             this.doAction(action)
         } else if (this.casting && this.activeCast.id !== action.id) {
@@ -80,14 +67,24 @@ class Actions extends GameplayComponent {
         //     this.emitSignal("show_notice", {notice: "Target required", color: "red", delay: 2000})
         //     return;
         // }
-        action.primed = false
+
+        Avern.Store.weapons.update(weapons=> {
+            weapons.forEach(weapon => {
+                weapon.actions.forEach(weaponAction=>{
+                    weaponAction.primed = false
+                    return weaponAction
+                })
+                return weapon
+            })
+            return weapons
+        })
 
         this.emitSignal("action_availed", { action })
     }
     
     handleActionResult(animation){
         gsap.to(this.actionIndicator, { opacity: 0, duration: 0.1 })
-        const action = Object.values(this.actionData).find(act => act.animation===animation)
+        const action = get(Avern.Store.actions).find(act => act.animation===animation)
         console.log(action)
         let flashPosition
         switch (action.id) {
@@ -189,11 +186,21 @@ class Actions extends GameplayComponent {
         this.casting = false
         this.castingProgress = 0
         this.activeCast = null
-        Object.values(this.actionData).forEach(act=>act.primed=false)
-        action.primed = true
+
+        Avern.Store.weapons.update(weapons=> {
+            weapons.forEach(weapon => {
+                weapon.actions.forEach(weaponAction=>{
+                    weaponAction.primed = weaponAction.id === action.id ? true : false
+                    return weaponAction
+                })
+                return weapon
+            })
+            return weapons
+        })
         this.emitSignal("casting_finish", { action })
 
-        this.actionIndicator.innerHTML = `<span>TKTK</span>`
+        // Need to set input keys on assignment via CharacterMenu
+        this.actionIndicator.innerHTML = `<span>${action.label}</span>`
 
         gsap.to(this.actionIndicator, { opacity: 1, duration: 0.1 })
         Avern.Sound.readyHandler.currentTime = 0
@@ -272,6 +279,16 @@ class Actions extends GameplayComponent {
             break;
           case "player_death":
             if (this.activeCast) this.interruptCast()
+            Avern.Store.weapons.update(weapons=> {
+                weapons.forEach(weapon => {
+                    weapon.actions.forEach(weaponAction=>{
+                        weaponAction.primed = false
+                        return weaponAction
+                    })
+                    return weapon
+                })
+                return weapons
+            })
             break;
           case "active_target":
             this.targeting = true

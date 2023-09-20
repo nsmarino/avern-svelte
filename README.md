@@ -45,3 +45,59 @@ If you have state that's important to retain within a component, consider creati
 import { writable } from 'svelte/store'
 export default writable(0)
 ```
+
+
+          <!-- Start actions... -->
+          <!-- <div id="action4" data-linked-action="3" class="equipment-action input-key action4 locked">
+            <div class="key-inner">
+              <span>{$config.leftHanded ? "A" : ";"}</span>
+              <img class="svg" src="/assets/ui/aimed-shot.svg" alt="">
+            </div>
+            <div class="action-active-indicator"></div>
+            <div class="action-tooltip">
+              <h3>Blast at close range</h3>
+              <p>You stuff the barrel of the rifle with dozens of razor sharp projectiles. The closer an enemy, the more savagely will their flesh be torn.</p>
+              <p style="font-family: var(--serif-italic);">[Bravado]</p>
+            </div>
+          </div> -->
+
+          <!-- <div id="action3" data-linked-action="2" class="equipment-action input-key action3 locked">
+            <div class="key-inner">
+              <span>{$config.leftHanded ? "S" : "L"}</span>
+              <img class="svg" src="/assets/ui/land-mine.svg" alt="">
+            </div>
+            <div class="action-active-indicator"></div>
+            <div class="action-tooltip">
+              <h3>Set landmine</h3>
+              <p>You produce an oily iron capsule from the pouch at your waist. Once planted in the earth, it can be detonated from a distance. Be careful, as the blast can harm you as well.</p>
+              <p  style="font-family: var(--serif-italic);">[Guile]</p>
+            </div>
+          </div> -->
+
+<!-- 
+        <div id="action2" data-linked-action="1" class="equipment-action input-key action2">
+          <div class="key-inner">
+            <span>{$config.leftHanded ? "D" : "K"}</span>
+            <img class="svg" src="/assets/ui/bayonet.svg" alt="">
+          </div>
+          <div class="action-active-indicator"></div>
+          <div class="action-tooltip">
+            <h3>Slash with bayonet</h3>
+            <p>A quick slash with the blade attachment on the rifle. Does little damage.</p>
+            <p  style="font-family: var(--serif-italic);">[Bravado]</p>
+          </div>
+        </div> -->
+
+        <!-- <div id="action1" data-linked-action="0" class="equipment-action input-key action1">
+          <div class="key-inner">
+            <span>{$config.leftHanded ? "F" : "J"}</span>
+            <img class="svg" src="/assets/ui/muzzle-blast.svg" alt="">
+          </div>
+          <div class="action-active-indicator is-prepared"></div>
+          <div class="action-tooltip">
+            <h3>Shoot from a distance</h3>
+            <p>You ready the rifle and take careful aim. Your eyes narrow and time seems to stop.</p>
+            <p style="font-family: var(--serif-italic);">[Cruelty]</p>
+          </div>
+        </div> -->
+        <!-- End actions... -->
