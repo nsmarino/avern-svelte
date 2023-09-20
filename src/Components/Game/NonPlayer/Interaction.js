@@ -118,6 +118,17 @@ class Interaction extends GameplayComponent {
             if (this.content[this.contentIndex].item) {
                 console.log("ITEM !!!! Update inventory in store, emit signal?")
             }
+            if (this.content[this.contentIndex].weapon) {
+                Avern.Sound.itemHandler.currentTime=0
+                Avern.Sound.itemHandler.play()
+                const weaponContent = Avern.Content.weapons.find(i => i.label === this.content[this.contentIndex].weapon)
+                console.log("Push this content", weaponContent)
+                console.log(Avern.Store)
+                Avern.Store.weapons.update((weapons)=>{
+                    weapons.push(weaponContent)
+                    return weapons
+                })
+            }
 
             this.contentIndex += 1
         } else {

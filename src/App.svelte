@@ -5,9 +5,12 @@
   import KeyboardMap from "./lib/KeyboardMap.svelte";
   import Prompt from "./lib/Prompt.svelte";
   import Tutorial from "./lib/Tutorial.svelte";
+    import OpeningRemarks from "./lib/OpeningRemarks.svelte";
 
   // @ts-ignore
   const pauseMenu = Avern.Store.pauseMenu
+    // @ts-ignore
+  const openingRemarks = Avern.Store.openingRemarks
 
 </script>
 
@@ -20,6 +23,9 @@
   {/if}
 
   <CharacterMenu />
-  <!-- <Tutorial />   -->
+
+  <!-- {#if $openingRemarks}
+    <OpeningRemarks />  
+  {/if} -->
 </div>
 

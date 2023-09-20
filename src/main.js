@@ -4,7 +4,7 @@ import Engine from "./Engine"
 
 window.Avern = Engine
 
-import stagingBase from "../assets/FSE--Level-COURTYARD.gltf"
+import stagingBase from "../assets/staging-world-state.gltf"
 
 import App from './App.svelte'
 
@@ -25,6 +25,8 @@ function startMenu() {
 
 	const showIntro = () => {
 		gsap.set(".menu-options", { display: "none"})
+		gsap.set(".fse-bg", { display: 'none'})
+
 		gsap.set(".intro", { display: 'block'})
 		gsap.to(".intro", { opacity: 1, duration: 1, y: 0, pointerEvents: "auto"  })
 	}

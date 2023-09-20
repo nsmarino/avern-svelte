@@ -71,7 +71,7 @@ class Loader {
             // check when scene is loaded; also check on world_state_changed signal
             // if world conditions don't all match, destroy
             worldConditions: [
-              {id:"gateUnlocked", value:true}
+              {id:"gateUnlocked", value:false}
             ],
             model: yoshuaHaystack,
             content: [
@@ -106,7 +106,7 @@ class Loader {
                   {
                       type: "dialogue",
                       text: "I am Yoshua. I come from the capital. I was taken there -- along with my sister.",
-                      image: yoshuaHappy,
+                      image: yoshuaAlert,
                       label: "Yoshua, fugitive",
                   },
                   {
@@ -128,9 +128,9 @@ class Loader {
                     label: "Yoshua, fugitive",
                   },
                   {
-                      type: "item",
+                      type: "weapon",
                       text: "You have received [Ceremonial Dagger].",
-                      item: "ceremonial_dagger"
+                      weapon: "ceremonial_dagger"
                   },
                 ]
               },
@@ -234,7 +234,82 @@ class Loader {
               },
             ]
           },
+            {
+                name: "Ceremonial Dagger",
+                label: "ceremonial_dagger",
+                image: weaponImg,
+                description: "A simple copper blade.",
+                primary: "Cruelty",
+                actions: [
+                  {
+                    id: "brandish_for_intimidation",
+                    label: "Brandish for intimidation purposes",
+                    caption: "Summoning courage",
+                    description: "Reduce enemy attack and defense",
+                    image: weaponImg,
+                    primeLength: 1,
+                    baseDamage: 25,
+                    range: 5,
+                    primed: false,
+                    assignment: null,
+                    primeAnimation: "load",
+                    animation: "shoot",
+                    primaryModifier: "Faith",
+                    secondaryModifier: "Bravado",
+                  },
+                  {
+                    id: "open_artery",
+                    label: "Open artery",
+                    caption: "Honing blade",
+                    description: "Damage over time",
+                    image: weaponImg,
+                    primeLength: 1,
+                    baseDamage: 25,
+                    range: 5,
+                    primed: false,
+                    assignment: null,
+                    primeAnimation: "load",
+                    animation: "shoot",
+                    primaryModifier: "Faith",
+                    secondaryModifier: "Bravado",
 
+                  },
+                  {
+                    id: "Stun with pommel",
+                    label: "Stun with pommel",
+                    caption: "Gathering strength",
+                    description: "Slow windup but dazes an enemy for 30 seconds or until they are damaged",
+                    image: weaponImg,
+                    primeLength: 1,
+                    baseDamage: 25,
+                    range: 5,
+                    primed: false,
+                    assignment: null,
+                    primeAnimation: "load",
+                    animation: "shoot",
+                    primaryModifier: "Faith",
+                    secondaryModifier: "Bravado",
+                  },
+                  {
+                    id: "stab_in_frenzy",
+                    label: "Stab in a frenzy",
+                    caption: "Three strikes, high chance of critical hit but reduces defense during performance of action",
+                    description: ".",
+                    image: weaponImg,
+                    secondary: "",
+                    primeLength: 1,
+                    baseDamage: 25,
+                    range: 5,
+                    primed: false,
+                    assignment: null,
+                    primeAnimation: "load",
+                    animation: "shoot",
+                    primaryModifier: "Faith",
+                    secondaryModifier: "Bravado",
+
+                  },
+                ]
+            },
         ],
 
         enemies:[
@@ -441,88 +516,14 @@ class Loader {
             //       },
             //     ]
             // },
-            // {
-            //     name: "Ceremonial Dagger",
-            //     image: weaponImg,
-            //     description: "A simple copper blade.",
-            //     primary: "Cruelty",
-            //     actions: [
-            //       {
-            //         id: "brandish_for_intimidation",
-            //         label: "Brandish for intimidation purposes",
-            //         caption: "Summoning courage",
-            //         description: "Reduce enemy attack and defense",
-            //         image: weaponImg,
-            //         primeLength: 1,
-            //         baseDamage: 25,
-            //         range: 5,
-            //         primed: false,
-            //         assignment: null,
-            //         primeAnimation: "load",
-            //         animation: "shoot",
-            //         primaryModifier: "Faith",
-            //         secondaryModifier: "Bravado",
-            //       },
-            //       {
-            //         id: "open_artery",
-            //         label: "Open artery",
-            //         caption: "Honing blade",
-            //         description: "Damage over time",
-            //         image: weaponImg,
-            //         primeLength: 1,
-            //         baseDamage: 25,
-            //         range: 5,
-            //         primed: false,
-            //         assignment: null,
-            //         primeAnimation: "load",
-            //         animation: "shoot",
-            //         primaryModifier: "Faith",
-            //         secondaryModifier: "Bravado",
 
-            //       },
-            //       {
-            //         id: "Stun with pommel",
-            //         label: "Stun with pommel",
-            //         caption: "Gathering strength",
-            //         description: "Slow windup but dazes an enemy for 30 seconds or until they are damaged",
-            //         image: weaponImg,
-            //         primeLength: 1,
-            //         baseDamage: 25,
-            //         range: 5,
-            //         primed: false,
-            //         assignment: null,
-            //         primeAnimation: "load",
-            //         animation: "shoot",
-            //         primaryModifier: "Faith",
-            //         secondaryModifier: "Bravado",
-            //       },
-            //       {
-            //         id: "stab_in_frenzy",
-            //         label: "Stab in a frenzy",
-            //         caption: "Three strikes, high chance of critical hit but reduces defense during performance of action",
-            //         description: ".",
-            //         image: weaponImg,
-            //         secondary: "",
-            //         primeLength: 1,
-            //         baseDamage: 25,
-            //         range: 5,
-            //         primed: false,
-            //         assignment: null,
-            //         primeAnimation: "load",
-            //         animation: "shoot",
-            //         primaryModifier: "Faith",
-            //         secondaryModifier: "Bravado",
-
-            //       },
-            //     ]
-            // },
         ],
     
         items: [],
 
         // simple array of interactions and notices
         log: [],
-    
+        openingRemarks: true,
         tutorials: [
             {
                 label: "openingRemarks",
