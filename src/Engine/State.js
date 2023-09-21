@@ -32,17 +32,19 @@ import { writable } from 'svelte/store';
 
 // wednesday:
     // can rearrange actions and pick up weapons; can save that
-    // can show tutorial modal and change hand config
-    // can save if tutorial was shown and save hand config preference
-    // show weapon tutorial
+        // gain xp
+    // can save xp from enemies []
+
 // - break -
 // NIGHT: enemies!
 
 // thursday:
     // prototype various actions
+        // can show tutorial modal and change hand config
+    // can save if tutorial was shown and save hand config preference
+    // show weapon tutorial
+
     // deal damage w/o target???
-    // gain xp
-    // can save xp from enemies []
     // can save player position, health, flasks, current level state (which enemies are alive)
     // cleanup
     // NIGHT: more blender

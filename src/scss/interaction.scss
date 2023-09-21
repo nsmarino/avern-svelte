@@ -74,7 +74,9 @@
             color: var(--avern-tan);
             font-size: 14px;
             &.narration {
-                color: white;
+                color: var(--avern-light-grey);
+                font-size: 16px;
+                font-style: italic;
             }
         }
     }

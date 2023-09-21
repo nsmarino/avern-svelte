@@ -9,8 +9,8 @@ import GameplayComponent from '../../_Component';
 import Body from '../Player/Body';
 
 
-import staging1 from '../../../../assets/staging-1.gltf'
-import staging2 from '../../../../assets/staging-2.gltf'
+// import staging1 from '../../../../assets/staging-1.gltf'
+// import staging2 from '../../../../assets/staging-2.gltf'
 
 
 class Connection extends GameplayComponent {
@@ -20,9 +20,8 @@ class Connection extends GameplayComponent {
         this.gameObject.transform.position.copy(spawnPoint.position)
 
         this.destination = spawnPoint.userData.label
-
+        console.log("Destination of connection", this.destination)
         this.transitionStarted = false
-        console.log("Connection is getting init?")
 
         const initFromGLTF = async () => {
             this.gltf = await new GLTFLoader().loadAsync(gltf)
@@ -53,22 +52,22 @@ class Connection extends GameplayComponent {
     startTransition() {
         this.transitionStarted = true
         console.log("Start transition to", this.destination)
-        let url = ""
-        switch(this.destination){
-            case "staging_1":
-                console.log("load staging 1")
-                url = staging1
-                break;
-            case "staging_2":
-                console.log("load staging 2")
-                url = staging2
-                break;
-        }
+        // let url = ""
+        // switch(this.destination){
+        //     case "staging_1":
+        //         console.log("load staging 1")
+        //         url = staging1
+        //         break;
+        //     case "staging_2":
+        //         console.log("load staging 2")
+        //         url = staging2
+        //         break;
+        // }
 		gsap.to(".mask", { opacity: 1, duration: 2})
 		gsap.to(".mask svg", { opacity: 1, duration: 2})
 		gsap.to(".mask p", { opacity: 1, duration: 2})
         setTimeout(async () => {
-            await Avern.Loader.switchScene(url)
+            await Avern.Loader.switchScene(this.destination)
         }, 3000)
     }
 

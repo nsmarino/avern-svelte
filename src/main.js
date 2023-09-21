@@ -4,8 +4,6 @@ import Engine from "./Engine"
 
 window.Avern = Engine
 
-import stagingBase from "../assets/staging-world-state.gltf"
-
 import App from './App.svelte'
 
 function startMenu() {
@@ -72,7 +70,6 @@ function startMenu() {
 
 async function init(useSavedGame) {
 	await Avern.Loader.loadFromCMS(useSavedGame) // get content asynchronously.
-	Avern.Content.baseFile = stagingBase
 	await Avern.Loader.initScene()
 	new App({
 		target: document.getElementById('app'),
