@@ -9,6 +9,7 @@ import {writable, derived, get} from "svelte/store"
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import yoshuaHaystack from "../../assets/npcs/yoshua_haystack.gltf"
+import gatekeeperDismayed from "../../assets/npcs/fse--gatekeeper.gltf"
 import { Pathfinding, PathfindingHelper } from 'three-pathfinding';
 import { acceleratedRaycast } from 'three-mesh-bvh';
 import gsap from "gsap"
@@ -80,9 +81,10 @@ class Loader {
             // check when scene is loaded; also check on world_state_changed signal
             // if world conditions don't all match, destroy
             worldConditions: [
-              {id:"gateUnlocked", value:true}
+              {id:"keyRetrieved", value:true}
             ],
             model: yoshuaHaystack,
+            anim: "SIT",
             content: [
               {
                 prompt: "Talk to the drowsy interloper",
@@ -162,9 +164,10 @@ class Loader {
             // check when scene is loaded; also check on world_state_changed signal
             // if world conditions don't all match, destroy
             worldConditions: [
-              {id:"gateUnlocked", value:false}
+              {id:"keyRetrieved", value:false}
             ],
-            model: yoshuaHaystack,
+            model: gatekeeperDismayed,
+            anim: "SIT",
             content: [
               {
                 prompt: "Talk to gatekeeper",
@@ -200,17 +203,19 @@ class Loader {
                   {
                     type: "weapon",
                     text: "You have received [Goatherd's Rifle].",
-                    weapon: "goatherd-rifle"
+                    weapon: "goatherd-rifle",
+                    image: gatekeeperPortrait,
                   },
                   {
                     type: "narration",
                     text: "The cliff path is dangerous and at times veers into the Old Town. You will need to be very careful...but the gatekeeper could really use your help.",
+                    image: gatekeeperPortrait,
                   },
                   {
                       type: "dialogue",
                       text: "Thank you, child! I shall pray for your safe return.",
                       image: gatekeeperPortrait,
-                      label: "Thankful gatekeeper",
+                      label: "Gatekeeper",
                   },
                 ]
               },
@@ -233,9 +238,11 @@ class Loader {
             // check when scene is loaded; also check on world_state_changed signal
             // if world conditions don't all match, destroy
             worldConditions: [
-              {id:"gateUnlocked", value:true}
+              {id:"keyRetrieved", value:true}
             ],
-            model: yoshuaHaystack,
+            model: gatekeeperDismayed,
+            anim: "STAND",
+
             content: [
               {
                 prompt: "Talk to the gatekeeper",
@@ -522,6 +529,7 @@ class Loader {
         worldEvents: {
           // these will be checked against for interactions etc
             gateUnlocked: false,
+            keyRetrieved: false,
             esthelSaved: false,
         },
     
@@ -681,7 +689,8 @@ class Loader {
               const from = Avern.GameObjects.createGameObject(scene, c.userData.label)  
               from.transform.position.copy(c.position)
               from.transform.rotation.copy(c.rotation)
-              console.log(from.transform)              
+              console.log(c.userData.label, c.rotation.y)
+              // console.log("Here is arrive ro", from.transform.rotation.y)              
               break;
 
             case "interactions":

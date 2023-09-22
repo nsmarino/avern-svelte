@@ -142,7 +142,7 @@ class ItemOnMap extends GameplayComponent {
         if (this.content.label==="rear-entrance") {Avern.Store.worldEvents.update(events => {
             const updatedEvents = {
                 ...events,
-                gateUnlocked: true
+                keyRetrieved: true
 
             }
             return updatedEvents

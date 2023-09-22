@@ -35,7 +35,7 @@ class FollowCamera extends GameplayComponent {
         this.playerCameraTarget.position.y += 1
         this.playerCameraPlaceholder = new THREE.Object3D()
         this.playerCameraTarget.add(this.playerCameraPlaceholder)
-        this.playerCameraPlaceholder.position.set(0,2,-15)
+        this.playerCameraPlaceholder.position.set(0,1.5,-18)
         this.gameObject.transform.add(this.playerCameraTarget)
 
         window.addEventListener( 'resize', function () {

@@ -33,9 +33,14 @@ class Connection extends GameplayComponent {
                 this.gltf.scene.getObjectByName("capsule-top"),
                 this.gltf.scene.getObjectByName("capsule-radius")
             )
-            this.gameObject.transform.visible = false
-
-            gameObject.transform.add(this.colliderCapsule.body)
+            // this.gameObject.transform.visible = false
+            const geometry = new THREE.BoxGeometry( 20,20,20); 
+            const material = new THREE.MeshBasicMaterial( {color: 0xFFFFFF} ); 
+            material.transparent = true
+            material.opacity = 0.3
+            const cube = new THREE.Mesh( geometry, material ); 
+            gameObject.transform.children[0].visible = false
+            gameObject.transform.add(cube)
         }
         initFromGLTF()
     }

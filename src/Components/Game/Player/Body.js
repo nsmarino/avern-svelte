@@ -40,8 +40,8 @@ class Body extends GameplayComponent {
             const spawnFrom = Avern.GameObjects.getGameObjectByName(to)
             console.log(spawnFrom)
             this.transform.position.copy(spawnFrom.transform.position)
-            console.log("Check thsi out:", spawnFrom.transform.rotation)
-            this.gameObject.transform.rotation.y = spawnFrom.transform.rotation.y
+            console.log("I will copy this rotation:", spawnFrom.transform.rotation.y)
+            this.gameObject.transform.rotation.copy(spawnFrom.transform.rotation)
 
         } else {
             this.transform.position.set( 0, 3, 0 )

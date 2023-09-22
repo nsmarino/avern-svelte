@@ -27,6 +27,8 @@ function startMenu() {
 
 		gsap.set(".intro", { display: 'block'})
 		gsap.to(".intro", { opacity: 1, duration: 1, y: 0, pointerEvents: "auto"  })
+		gsap.set(".intro-placeholder-illus", { display: 'flex'})
+		gsap.to(".intro-placeholder-illus", { opacity: 1, duration: 1, y: 0, pointerEvents: "auto"  })
 	}
 	const showCredits = () => {
 		gsap.set(".menu-options", { display: "none"})

@@ -26,7 +26,6 @@
     const interaction = Avern.Store.interaction
 
   </script>
-  {#if !$interaction.active}
   <div class="player-input" class:rightHanded={!$config.leftHanded} in:fade={{ duration: 250, delay: 300 }}>
 
     {#if $actions.length > 0}
@@ -230,7 +229,6 @@
     </div>
 
   </div>
-  {/if}
   <style>
 
   </style>

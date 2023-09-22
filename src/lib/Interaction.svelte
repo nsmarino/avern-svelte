@@ -17,13 +17,13 @@
             {#if $interaction.node.image}
               <img src="{$interaction.node.image}" alt="">
             {/if}
-            <div class="interaction-card">
+            <div class="interaction-card" class:narration={$interaction.node.type==="narration" || $interaction.node.type==="item"}>
               {#if $interaction.node.label}
                 <h2>
                   {$interaction.node.label}
                 </h2>
               {/if}
-              <div class="text-content" class:narration={$interaction.node.type==="narration" || $interaction.node.type==="item"}>
+              <div class="text-content">
                 {$interaction.node.text}
               </div>
               <div class="next-node-input-key">
