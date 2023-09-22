@@ -138,6 +138,15 @@ class ItemOnMap extends GameplayComponent {
         Avern.Sound.itemHandler.play()
         this.emitSignal("item_pickup", { item: this.content.item })
         this.emitSignal("show_notice", { notice: `Picked up ${this.content.item.name}`, color: "yellow", delay: 5000})
+       
+        if (this.content.label==="rear-entrance") {Avern.Store.worldEvents.update(events => {
+            const updatedEvents = {
+                ...events,
+                gateUnlocked: true
+
+            }
+            return updatedEvents
+        })}
         this.gameObject.removeFromScene()
     }
     

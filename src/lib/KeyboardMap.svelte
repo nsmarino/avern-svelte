@@ -1,8 +1,5 @@
 <script>  
-  import { fade } from "svelte/transition";
-
-  import { cubicIn, cubicOut } from "svelte/easing";
-
+  import { fade } from "svelte/transition"
   import forwardArrow from "../../assets/ui/forward.svg"
   import left from "../../assets/ui/left.svg"
   import right from "../../assets/ui/right.svg"
@@ -121,7 +118,6 @@
         </div>
       </div>      
     {/if}
-
 
     <div class="offhand">
       <div class="top-row">

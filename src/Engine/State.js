@@ -64,6 +64,7 @@ import { writable } from 'svelte/store';
 // on hold:
     // AreaTrigger for lighting change?
     // enemy projectiles (arrows and slightly tracking magic)
+    // leashing
     // break enemy into components
     // --- collider....actions...body...mind...
     // enemies should be slightly circling player as they get closer; enemies should move away from each other; enemies should pay attention to each others attacks

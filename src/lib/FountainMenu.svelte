@@ -1,14 +1,5 @@
 <script>
-    // @ts-ignore
-    const tutorial = Avern.Store.interaction
 
-    function closeTutorial(){
-      console.log("close it up!")
-    }
-
-    function updateKeyboardConfig(isLeft){
-      console.log("Update!", isLeft)
-    }
 </script>
 
 <div class="menu-bg">

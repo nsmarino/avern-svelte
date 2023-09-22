@@ -1,11 +1,14 @@
 import sanityClient from "../sanityClient"
-import {writable, derived} from "svelte/store"
-import * as THREE from 'three';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import {get} from "svelte/store"
-import yoshuaHaystack from "../../assets/npcs/yoshua_haystack.gltf"
+
 import courtyardLevel from "../../assets/FSE--Level-COURTYARD.gltf"
 import cliffsLevel from "../../assets/FSE--Level-CLIFFS.gltf"
+import simple1 from "../../assets/simple-1.gltf"
+import simple2 from "../../assets/simple-2.gltf"
+
+import {writable, derived, get} from "svelte/store"
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import yoshuaHaystack from "../../assets/npcs/yoshua_haystack.gltf"
 import { Pathfinding, PathfindingHelper } from 'three-pathfinding';
 import { acceleratedRaycast } from 'three-mesh-bvh';
 import gsap from "gsap"
@@ -50,14 +53,14 @@ class Loader {
 
       // 'content' should only be interested in what's present the actual scene file. the Store is used to determine what actually spawns in the game
       Avern.Content = {
-        baseFile: cliffsLevel,
+        baseFile: simple1,
         items:[
           {
-            label: "gatehouse-key",
+            label: "rear-entrance",
             item: {
               name: "Key to the Gatehouse",
               img: "",
-              id: "gatehouse-key",
+              id: "rear-entrance",
               category: "key",
             }
           },
@@ -71,7 +74,7 @@ class Loader {
         ],
         interactions:[
           {
-            label: "yoshua_haystack",
+            label: "yoshua-haystack",
             index: 0,
 
             // check when scene is loaded; also check on world_state_changed signal
@@ -154,7 +157,7 @@ class Loader {
             ],
           },
           {
-            label: "gatekeeper_dismayed",
+            label: "gatekeeper-dismayed",
             index: 0,
             // check when scene is loaded; also check on world_state_changed signal
             // if world conditions don't all match, destroy
@@ -224,7 +227,7 @@ class Loader {
             ],
           },
           {
-            label: "gatekeeper_relieved",
+            label: "gatekeeper-relieved",
             index: 0,
 
             // check when scene is loaded; also check on world_state_changed signal
@@ -492,9 +495,9 @@ class Loader {
         ],
         gates:[
           {
-            label: "rear_entrance",
+            label: "rear-entrance",
             prompt: "Open rear door of gatehouse",
-            unlockedBy: "gatehouse-key"
+            unlockedBy: "rear-entrance"
           }
         ],
       }
@@ -560,7 +563,7 @@ class Loader {
       for (const [key, value] of Object.entries(store)) {
         Avern.Store[key] = writable(value)
 
-        // derived store for actions:
+        // store for actions:
         if (key==="weapons") {
           Avern.Store["actions"] = derived(Avern.Store[key], (weapons)=> {
             const actions = []
@@ -604,9 +607,9 @@ class Loader {
       Avern.Store.pauseMenu.set(false)
     }
 
-    async initScene(id=null) {
+    async initScene(to) {
       const scene = new THREE.Scene();
-      scene.name = id ? id : "Start"
+      scene.name = to ? to : "Start"
       Avern.State.scene = scene
       
       const sky = Avern.GameObjects.createGameObject(scene, "sky")
@@ -626,25 +629,25 @@ class Loader {
         this.initNonPlayerFromBaseFile(gltfScene,scene)
       }
 
-      if (Avern.Config.player.include) this.initPlayer(scene)
+      if (Avern.Config.player.include) this.initPlayer(scene, to)
       if (Avern.Config.interface.include) this.initInterface(scene)
-      if(Avern.renderPaused) Avern.renderPaused=false
     }
 
     initNavmeshFromBaseFile(baseFile, scene) {
+      console.log(baseFile.children.filter(child=> child.isMesh && child.userData.gltfExtensions.EXT_collections.collections).map(ch=>ch.userData.gltfExtensions.EXT_collections.collections))
       const navmesh = baseFile.children.filter(child=> child.isMesh && child.userData.gltfExtensions.EXT_collections.collections[0]==="navmesh")[0]
       if (!navmesh) return;
       Avern.pathfindingZone = baseFile.name
       Avern.PATHFINDING.setZoneData(Avern.pathfindingZone, Pathfinding.createZone(navmesh.geometry));
       // visualize:
-      // for (const vert of Avern.PATHFINDING.zones[baseFile.name].vertices) {
-      //     const indicatorSize = 0.1 
-      //     const geometry = new THREE.BoxGeometry( indicatorSize,indicatorSize,indicatorSize); 
-      //     const material = new THREE.MeshBasicMaterial( {color: 0x000000} ); 
-      //     const cube = new THREE.Mesh( geometry, material ); 
-      //     cube.position.copy(vert)
-      //     scene.add( cube );
-      // }
+      for (const vert of Avern.PATHFINDING.zones[baseFile.name].vertices) {
+          const indicatorSize = 0.1 
+          const geometry = new THREE.BoxGeometry( indicatorSize,indicatorSize,indicatorSize); 
+          const material = new THREE.MeshBasicMaterial( {color: 0x000000} ); 
+          const cube = new THREE.Mesh( geometry, material ); 
+          cube.position.copy(vert)
+          scene.add( cube );
+      }
       navmesh.visible = false
       scene.add(navmesh)
     }
@@ -670,9 +673,15 @@ class Loader {
               // fountain.addComponent(Fountain, c)
               break;
 
-            case "to":
+            case "leave":
               const connection = Avern.GameObjects.createGameObject(scene, c.name)                        
               connection.addComponent(Connection, c)
+              break;
+            case "arrive":
+              const from = Avern.GameObjects.createGameObject(scene, c.userData.label)  
+              from.transform.position.copy(c.position)
+              from.transform.rotation.copy(c.rotation)
+              console.log(from.transform)              
               break;
 
             case "interactions":
@@ -741,11 +750,11 @@ class Loader {
       });
     }
 
-    initPlayer(scene) {
+    initPlayer(scene, to) {
       const player = Avern.GameObjects.createGameObject(scene, "player")
       Avern.Player = player
       for (const component of Avern.Config.player.components) {
-          player.addComponent(component)
+          player.addComponent(component, to)
       }
     }
 
@@ -761,35 +770,31 @@ class Loader {
 
     }
 
-    async switchScene(tag){
-      console.log(tag)
-      gsap.to(".mask", { opacity: 0, duration: 2})
-      gsap.to(".mask svg", { opacity: 0, duration: 2})
-      gsap.to(".mask p", { opacity: 0, duration: 2})
+    async switchScene(toLabel){
+      console.log(toLabel)
+      gsap.to(".mask", { opacity: 0, duration: 2, delay: 2})
+      gsap.to(".mask svg", { opacity: 0, duration: 2, delay: 1})
+      gsap.to(".mask p", { opacity: 0, duration: 2, delay: 1 })
       Avern.GameObjects.removeAllGameObjects()
 
-      switch(tag) {
-        case "cliffs_start": 
-          Avern.Content.baseFile=cliffsLevel
+      // TEMP: clean up dom els (stupidly)
+      document.querySelectorAll(".order-container, .numbers-container, .enemy-bar").forEach(el => el.remove())
+      console.log("TO LABEL", toLabel)
+      switch(toLabel) {
+        case "courtyard-path": 
+        case "courtyard-gate": 
+        case "player-restart": 
+          Avern.Content.baseFile=simple1
           break;
-        case "cliffs_end": 
-          Avern.Content.baseFile=cliffsLevel
+        case "cliffs-start": 
+          Avern.Content.baseFile=simple2
           break;
-        case "cliffs_start_to_courtyard": 
-          Avern.Content.baseFile=courtyardLevel
-          break;
-        case "cliffs_end_to_courtyard": 
-          Avern.Content.baseFile=courtyardLevel
-          break;
-        case "courtyard_to_cliffs_start": 
-          Avern.Content.baseFile=cliffsLevel
-          break;
-        case "courtyard_to_cliffs_end": 
-          Avern.Content.baseFile=cliffsLevel
+        case "cliffs-end": 
+          Avern.Content.baseFile=simple2
           break;
       }
 
-      await this.initScene(tag)
+      await this.initScene(toLabel)
       Avern.GameObjects.attachObservers() // Listen for signals from other gameObjects' components.
 
     }

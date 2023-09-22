@@ -79,7 +79,6 @@ async function init(useSavedGame) {
 }
 
 function render() {
-	if(Avern.renderPaused)return
 	requestAnimationFrame( render );
 	const delta = Math.min( Avern.Core.clock.getDelta(), 0.1 );
 

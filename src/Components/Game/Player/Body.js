@@ -14,7 +14,7 @@ const RESET = "RESET"
 const REPLACE = "REPLACE"
 
 class Body extends GameplayComponent {
-    constructor(gameObject) {
+    constructor(gameObject, to) {
         super(gameObject)
         this.gameObject = gameObject
         this.gltf = null
@@ -35,7 +35,18 @@ class Body extends GameplayComponent {
         this.movementLocked = false
         this.crucialFrameSent = false
 
-        this.transform.position.set( 0, 3, 0 )
+        if (to) {
+            console.log("SUCCESSFULLY PASSED", to, "TO PLAYER BODY")
+            const spawnFrom = Avern.GameObjects.getGameObjectByName(to)
+            console.log(spawnFrom)
+            this.transform.position.copy(spawnFrom.transform.position)
+            console.log("Check thsi out:", spawnFrom.transform.rotation)
+            this.gameObject.transform.rotation.y = spawnFrom.transform.rotation.y
+
+        } else {
+            this.transform.position.set( 0, 3, 0 )
+        }
+
         this.transform.capsuleInfo = {
             radius: this.radius,
             segment: new THREE.Line3( new THREE.Vector3(), new THREE.Vector3( 0, -1.0, 0.0 ))
@@ -397,14 +408,22 @@ class Body extends GameplayComponent {
                     this.movementLocked = false
                     this.crucialFrameSent = false
 
-                    // Send signal to other components
-                    this.emitSignal("reset_stage")
-                    this.gameObject.transform.rotation.y = 0
+                    gsap.to(".mask", { opacity: 1, duration: 1})
+                    gsap.to(".mask svg", { opacity: 1, duration: 1})
+                    gsap.to(".mask p", { opacity: 1, duration: 1})
+                    setTimeout(async () => {
+                        Avern.State.playerDead = false
+            
+                        await Avern.Loader.switchScene("player-restart")
+                    }, 1000)
 
-                    // by that token this should probably be somewhere else
-                    gsap.to(".mask", { opacity: 0, duration: 1, delay: 1})
-                    gsap.to(".mask svg", { opacity: 1, duration: 0.2})
-                    gsap.to(".mask p", { opacity: 1, duration: 0.2})
+                    // this.emitSignal("reset_stage")
+                    // this.gameObject.transform.rotation.y = 0
+
+                    // // by that token this should probably be somewhere else
+                    // gsap.to(".mask", { opacity: 0, duration: 1, delay: 1})
+                    // gsap.to(".mask svg", { opacity: 1, duration: 0.2})
+                    // gsap.to(".mask p", { opacity: 1, duration: 0.2})
 
                 },6000)
                 break;

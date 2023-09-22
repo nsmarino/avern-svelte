@@ -33,7 +33,7 @@ class Connection extends GameplayComponent {
                 this.gltf.scene.getObjectByName("capsule-top"),
                 this.gltf.scene.getObjectByName("capsule-radius")
             )
-            // this.gameObject.transform.visible = false
+            this.gameObject.transform.visible = false
 
             gameObject.transform.add(this.colliderCapsule.body)
         }
@@ -63,12 +63,12 @@ class Connection extends GameplayComponent {
         //         url = staging2
         //         break;
         // }
-		gsap.to(".mask", { opacity: 1, duration: 2})
-		gsap.to(".mask svg", { opacity: 1, duration: 2})
-		gsap.to(".mask p", { opacity: 1, duration: 2})
+		gsap.to(".mask", { opacity: 1, duration: 1})
+		gsap.to(".mask svg", { opacity: 1, duration: 1})
+		gsap.to(".mask p", { opacity: 1, duration: 1})
         setTimeout(async () => {
             await Avern.Loader.switchScene(this.destination)
-        }, 3000)
+        }, 1000)
     }
 
     onSignal(signalName, data={}) {

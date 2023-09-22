@@ -54,14 +54,14 @@ class Gateway extends GameplayComponent {
         if (key) {
             this.colliderIsActive = false
             this.gameObject.transform.visible = false
-            Avern.Store.worldEvents.update(events => {
-                const updatedEvents = {
-                    ...events,
-                    gateUnlocked: true
+            // Avern.Store.worldEvents.update(events => {
+            //     const updatedEvents = {
+            //         ...events,
+            //         gateUnlocked: true
 
-                }
-                return updatedEvents
-            })
+            //     }
+            //     return updatedEvents
+            // })
             this.emitSignal("show_notice", { notice: `Unlocked with ${key.name}`, color: "yellow", delay: 5000})
         } else {
             this.emitSignal("show_notice", { notice: `Locked`, color: "red", delay: 5000})

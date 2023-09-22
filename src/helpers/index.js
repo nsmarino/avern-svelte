@@ -112,7 +112,7 @@ function generateCapsuleCollider(start, end, radius) {
     )
     tubeWireframe.material.opacity = 1
     tubeWireframe.material.wireframe = true
-    tubeWireframe.visible = true
+    tubeWireframe.visible = false
 
     
     const torusGeometry = new THREE.TorusGeometry( capsuleRadius, 0.02, 12, 40 ); 

@@ -4,12 +4,10 @@ import Inputs from "./Inputs"
 import Loader from "./Loader"
 import State, { Store } from "./State"
 import Sound from "./Sound"
-import Progress from "./Progress"
 import Config from "./Config"
 import { Pathfinding, PathfindingHelper } from "three-pathfinding"
 
 const Engine = {
-    renderPaused: false,
     Core: new Core(),    
     GameObjects: new GameObjects(),
     Inputs: new Inputs(),
@@ -17,7 +15,6 @@ const Engine = {
     Content: {},
     State: new State(),
     Sound: new Sound(),
-    Progress: new Progress(),
 
     // All Caps for external libraries
     PATHFINDING: new Pathfinding(),

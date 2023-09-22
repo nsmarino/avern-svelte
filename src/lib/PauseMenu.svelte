@@ -16,7 +16,8 @@
     console.log("SAVE GAME")
     const copyOfStore = {}
     for (const entry in Avern.Store) {
-      copyOfStore[entry] = get(Avern.Store[entry])
+      // actions is derived so should not be saved
+      if (entry !== "actions") copyOfStore[entry] = get(Avern.Store[entry])
     }
     console.log(copyOfStore)
     localStorage.setItem("AvernStore", JSON.stringify(copyOfStore))

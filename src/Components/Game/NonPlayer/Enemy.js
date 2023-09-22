@@ -21,7 +21,7 @@ class Enemy extends GameplayComponent {
     this.gameObject.transform.position.copy(spawnPoint.position)
   
     this.enemyType = spawnPoint.userData.label
-    this.startingBehavior = spawnPoint.userData.behavior || "idle"
+    this.startingBehavior = spawnPoint.userData.behavior || "wander"
     // this.HELPER = Avern.PATHFINDINGHELPER
     // Avern.State.scene.add(this.HELPER)
 
@@ -57,9 +57,7 @@ class Enemy extends GameplayComponent {
     this.behavior = this.startingBehavior
     this.velocity = new THREE.Vector3( 0, 0, 0 );
     this.speed = 3
-    console.log(Avern.pathfindingZone)
     this.targetGroup = Avern.PATHFINDING.getGroup(Avern.pathfindingZone, spawnPoint.position);
-    console.log("targetgroup", this.targetGroup)
     this.lerpFactor = 0.2
     this.originNode = Avern.PATHFINDING.getClosestNode(spawnPoint.position, Avern.pathfindingZone, this.targetGroup)
     this.path = null
@@ -453,23 +451,18 @@ class Enemy extends GameplayComponent {
 
   followPursuePath(deltaTime) {
     const destination = Avern.Player.transform.position
-    console.log(destination)
     if (this.checkTarget() && this.gameObject.transform.position.distanceTo(destination) < this.actionRange) {
         this.behavior = "attack"
         this.fadeIntoAction(this.attack, 0)
         return
     } else {
         // Set path anytime player moves:
-        console.log("here is distance to dest", this.prevPlayerPosition, destination, this.path)
         if (this.prevPlayerPosition.distanceTo(destination) > 0.05 || !this.path) {
-          console.log("Why is this not firing")
             const targetGroup = Avern.PATHFINDING.getGroup(Avern.pathfindingZone, this.gameObject.transform.position);
-            console.log("Nav mesh", targetGroup)
             const closestNode = Avern.PATHFINDING.getClosestNode(this.gameObject.transform.position, Avern.pathfindingZone, targetGroup)
             const destinationNode = Avern.PATHFINDING.getClosestNode(destination, Avern.pathfindingZone, targetGroup)
     
             const path = Avern.PATHFINDING.findPath(closestNode.centroid, destinationNode.centroid, Avern.pathfindingZone, 0);
-            console.log("Found path", path)
             // if (path) {
             //   this.HELPER.setPlayerPosition(this.gameObject.transform.position)
             //   this.HELPER.setTargetPosition(destination)
@@ -477,7 +470,6 @@ class Enemy extends GameplayComponent {
             // }
             this.path = path
         }
-        console.log(this.path)
         if (!this.path) return;
         let targetPosition = this.path[ 0 ];
         if (!this.path[0]) return
@@ -626,18 +618,11 @@ class Enemy extends GameplayComponent {
 
         break;
       case "clear_target":
-        console.log("Clear target on self")
         this.isTargeted = false
         this.ring.visible = false
         this.orderContainer.classList.remove("targeted")
         gsap.set(this.bar, { opacity: 0})
         break;
-      // case "line_of_sight":
-      //   console.log(data.capsule.segment)
-      //   const distance = distancePointToLine(this.gameObject.transform.position, data.capsule.segment, Avern.Player.transform)
-      //   console.log(distance)
-      //   this.emitSignal("los_distance", { distance })
-      //   break;
     }
   }
   getScreenCoordinatesAndDistance() {

@@ -20,12 +20,15 @@ class Actions extends GameplayComponent {
 
         this.targeting = false
 
-        this.actionIndicator = document.createElement("div")
-        this.actionIndicator.classList.add("action-indicator")
-        gsap.set(this.actionIndicator, { opacity: 0 })
-
-        document.body.appendChild(this.actionIndicator)
-    
+        this.actionIndicator = null
+        if (document.querySelector(".action-indicator")) {
+            this.actionIndicator = document.querySelector(".action-indicator")
+        } else {
+            this.actionIndicator = document.createElement("div")
+            this.actionIndicator.classList.add("action-indicator")
+            gsap.set(this.actionIndicator, { opacity: 0 })
+            document.body.appendChild(this.actionIndicator)
+        }
     }
 
     handleInputs() {

@@ -5,9 +5,9 @@
   
   </script>
 
-  {#if $prompt}
+{#if $prompt}
   <div class="interaction-prompt">{$prompt} <span class="prompt-input-key"><span>{$config.leftHanded ? "H": "G"}</span></span></div>
-  {/if}
+{/if}
 
 <style>
 

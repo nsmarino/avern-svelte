@@ -9,14 +9,8 @@
 </script>
 
     {#if $interaction.active}
-      <div class="interaction-bg"
-      in:fly={{ easing: cubicOut, y: 10, duration: 200 }}
-      out:fly={{ easing: cubicIn, y: -10, duration: 300 }}
-
-    ></div>
-      <div class="interaction-container" in:fly={{ easing: cubicOut, y: 10, duration: 300 }}
-      out:fly={{ easing: cubicIn, y: -10, duration: 300 }}
-      >
+      <div class="interaction-bg" in:fly={{ easing: cubicOut, y: 10, duration: 200 }} out:fly={{ easing: cubicIn, y: -10, duration: 300 }}></div>
+      <div class="interaction-container" in:fly={{ easing: cubicOut, y: 10, duration: 300 }} out:fly={{ easing: cubicIn, y: -10, duration: 300 }}>
           <div 
             class="interaction-content" 
           >
