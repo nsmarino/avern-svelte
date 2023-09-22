@@ -17,7 +17,7 @@
             {#if $interaction.node.image}
               <img src="{$interaction.node.image}" alt="">
             {/if}
-            <div class="interaction-card" class:narration={$interaction.node.type==="narration" || $interaction.node.type==="item"}>
+            <div class="interaction-card" class:narration={$interaction.node.type==="narration" || $interaction.node.type==="item" || $interaction.node.type==="weapon"}>
               {#if $interaction.node.label}
                 <h2>
                   {$interaction.node.label}
