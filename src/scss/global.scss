@@ -16,6 +16,10 @@
   position: relative;
   border-radius: 6px;
   background: linear-gradient(180deg, rgba(48, 30, 3, 0.8) 0%, rgba(50, 50, 50, 0.8) 100%);;
+ p {
+    color: var(--avern-tan);
+    line-height: 1.8em;
+  }
 }
 .tutorial {
   max-width: 600px;
@@ -25,16 +29,22 @@
 }
 .menu-pane .config-button {
   background: none;
-  border: none;
   display: inline;
   width: fit-content;
   margin-bottom: 0;
+  margin-right: 20px;
+  border: 1px solid white;
+  color: white;
+  opacity: 0.6;
+  padding: 5px 20px;
   &:hover {
-    text-decoration: underline;
+    opacity: 1;
 
   }
   &.active {
+    opacity: 1;
     color: var(--avern-green);
+    border-color: var(--avern-green);
 
   }
 }
@@ -47,7 +57,7 @@
   font-weight: normal;
   text-shadow: 1px 1px 2px var(--avern-brown);
   top: -18px;
-  left: 20px;
+  left: 40px;
 }
 .menu-inner-bg {
 
@@ -64,6 +74,10 @@
   color: var(--avern-tan);
   margin-bottom: 20px;
   justify-content: center;
+  &:hover {
+    color: white;
+    border-color: white;
+  }
 }
 
 .flex-col {

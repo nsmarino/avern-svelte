@@ -19,7 +19,6 @@ class Interaction extends GameplayComponent {
         const currentOngoingInteractions = get(Avern.Store.ongoingInteractions)
         if (currentOngoingInteractions[this.interactions.label] !== undefined) {
             this.interactionsIndex = currentOngoingInteractions[this.interactions.label]
-            console.log("This is the index that will be used", this.interactionsIndex)
         }
 
         this.prompt = this.interactions.content[this.interactionsIndex].prompt
@@ -122,7 +121,6 @@ class Interaction extends GameplayComponent {
                 Avern.Sound.itemHandler.currentTime=0
                 Avern.Sound.itemHandler.play()
                 const weaponContent = Avern.Content.weapons.find(i => i.label === this.content[this.contentIndex].weapon)
-                console.log("Push this content", weaponContent)
                 console.log(Avern.Store)
                 Avern.Store.weapons.update((weapons)=>{
                     weapons.push(weaponContent)
@@ -140,16 +138,23 @@ class Interaction extends GameplayComponent {
         Avern.State.worldUpdateLocked = false
         Avern.Store.interaction.set({active: false, node: {}})
         this.contentIndex = 0
-
-        // Set up next interaction. This could check world events
+        console.log(this.interactionsIndex)
         if (this.interactions.content[this.interactionsIndex+1]) {
+            console.log(this.interactions.content[this.interactionsIndex+1])
             this.content= this.interactions.content[this.interactionsIndex+1].nodes
             this.prompt= this.interactions.content[this.interactionsIndex+1].prompt
             Avern.Store.ongoingInteractions.update(ong => {
                 ong[this.interactions.label] = this.interactionsIndex+1
                 return ong
             })
-            this.interactionsIndex+1
+            this.interactionsIndex+=1
+        } else {
+            if (!get(Avern.Store.endOfDemoShown) && this.interactions.label==="yoshua-haystack") {
+                setTimeout(() => {
+                  Avern.Store.endOfDemoVisible.set(true)
+                  Avern.Store.endOfDemoShown.set(true)
+                }, 2000)
+              }
         }
 
         Avern.Store.prompt.set(this.prompt)

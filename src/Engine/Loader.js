@@ -139,7 +139,8 @@ class Loader {
                   {
                       type: "weapon",
                       text: "You have received [Ceremonial Dagger].",
-                      weapon: "ceremonial_dagger"
+                      weapon: "ceremonial_dagger",
+                      image: yoshuaSerious,
                   },
                 ]
               },
@@ -555,17 +556,12 @@ class Loader {
 
         // simple array of interactions and notices
         log: [],
-        openingRemarks: true,
-        tutorials: [
-            {
-                label: "openingRemarks",
-                shown: false,
-            },
-            {
-                label: "weapons",
-                shown: false,
-            },
-        ]
+        openingRemarksVisible: false,
+        combatTutorialVisible:  false,
+        endOfDemoVisible: false,
+        openingRemarksShown: false,
+        combatTutorialShown:  false,
+        endOfDemoShown: false,
       }
       const store = useSavedGame ? JSON.parse(localStorage.getItem("AvernStore")) : this.newGameStore
       for (const [key, value] of Object.entries(store)) {
@@ -639,6 +635,12 @@ class Loader {
 
       if (Avern.Config.player.include) this.initPlayer(scene, to)
       if (Avern.Config.interface.include) this.initInterface(scene)
+      if (!get(Avern.Store.openingRemarksShown)) {
+        setTimeout(() => {
+          Avern.Store.openingRemarksVisible.set(true)
+          Avern.Store.openingRemarksShown.set(true)
+        }, 3000)
+      }
     }
 
     initNavmeshFromBaseFile(baseFile, scene) {
@@ -648,14 +650,14 @@ class Loader {
       Avern.pathfindingZone = baseFile.name
       Avern.PATHFINDING.setZoneData(Avern.pathfindingZone, Pathfinding.createZone(navmesh.geometry));
       // visualize:
-      for (const vert of Avern.PATHFINDING.zones[baseFile.name].vertices) {
-          const indicatorSize = 0.1 
-          const geometry = new THREE.BoxGeometry( indicatorSize,indicatorSize,indicatorSize); 
-          const material = new THREE.MeshBasicMaterial( {color: 0x000000} ); 
-          const cube = new THREE.Mesh( geometry, material ); 
-          cube.position.copy(vert)
-          scene.add( cube );
-      }
+      // for (const vert of Avern.PATHFINDING.zones[baseFile.name].vertices) {
+      //     const indicatorSize = 0.1 
+      //     const geometry = new THREE.BoxGeometry( indicatorSize,indicatorSize,indicatorSize); 
+      //     const material = new THREE.MeshBasicMaterial( {color: 0x000000} ); 
+      //     const cube = new THREE.Mesh( geometry, material ); 
+      //     cube.position.copy(vert)
+      //     scene.add( cube );
+      // }
       navmesh.visible = false
       scene.add(navmesh)
     }
@@ -788,7 +790,6 @@ class Loader {
 
       // TEMP: clean up dom els (stupidly)
       document.querySelectorAll(".order-container, .numbers-container, .enemy-bar").forEach(el => el.remove())
-      console.log("TO LABEL", toLabel)
       switch(toLabel) {
         case "courtyard-path": 
         case "courtyard-gate": 
@@ -797,6 +798,12 @@ class Loader {
           break;
         case "cliffs-start": 
           Avern.Content.baseFile=simple2
+          if (!get(Avern.Store.combatTutorialShown)) {
+            setTimeout(() => {
+              Avern.Store.combatTutorialVisible.set(true)
+              Avern.Store.combatTutorialShown.set(true)
+            }, 6000)
+          }
           break;
         case "cliffs-end": 
           Avern.Content.baseFile=simple2

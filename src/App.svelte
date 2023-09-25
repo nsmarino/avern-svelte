@@ -4,13 +4,16 @@
   import Interaction from "./lib/Interaction.svelte";
   import KeyboardMap from "./lib/KeyboardMap.svelte";
   import Prompt from "./lib/Prompt.svelte";
-  import Tutorial from "./lib/Tutorial.svelte";
-    import OpeningRemarks from "./lib/OpeningRemarks.svelte";
+  import OpeningRemarks from "./lib/OpeningRemarks.svelte";
+  import CombatTutorial from "./lib/CombatTutorial.svelte";
+  import EndOfDemo from "./lib/EndOfDemo.svelte";
 
   // @ts-ignore
   const pauseMenu = Avern.Store.pauseMenu
     // @ts-ignore
-  const openingRemarks = Avern.Store.openingRemarks
+  const openingRemarksVisible = Avern.Store.openingRemarksVisible
+  const combatTutorialVisible = Avern.Store.combatTutorialVisible
+  const endOfDemoVisible = Avern.Store.endOfDemoVisible
 
 </script>
 
@@ -24,8 +27,14 @@
 
   <CharacterMenu />
 
-  <!-- {#if $openingRemarks}
+  {#if $openingRemarksVisible}
     <OpeningRemarks />  
-  {/if} -->
+  {/if}
+  {#if $combatTutorialVisible}
+    <CombatTutorial />  
+  {/if}
+  {#if $endOfDemoVisible}
+    <EndOfDemo />  
+  {/if}
 </div>
 
