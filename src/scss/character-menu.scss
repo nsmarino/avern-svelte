@@ -14,7 +14,6 @@
     .menu-pane {
       display: flex;
       align-items: center;
-      max-width: 700px;
     }
     .portrait {
       width: 100px;
@@ -22,60 +21,114 @@
     .stats {
       display: flex;
       justify-content: space-between;
+      gap: 40px;
+      padding: 20px;
+      .attribute-line, .level-line {
+        display: flex;
+        width: 120px;
+        justify-content: space-between;
+        font-size: 12px;
+        margin-bottom: 5px;
+      }
     }
-
+.action-descript {
+  width: 100%;
+  height: 240px;
+  .action-descript-bg {
+    width: 80%;
+    height: 100%;
+    background: var(--avern-input-gradient);
+    margin: 0 auto;
+  }
+}
 .actions {
   display: flex;
-  width: 440px;
+  width: 386px;
   align-self: stretch;
   flex-wrap: wrap;
   position: relative;
   height: min-content;
-  padding-top: 120px;
-  margin: 10px;
-  gap: 10px;
+  padding-top: 100px;
+  margin: -20px 20px 20px;
+  gap: 15px;
 }
 
     .action-tile {
-      width: 100px;
-      height: 100px;
+      width: 80px;
+      height: 80px;
       border: 1px solid white;
       background: black;
       border-radius: 6px;
+      cursor: grab;
+      position: relative;
+
+      &:hover {
+        .menu-action-tooltip {
+          h3 {
+            margin: 0;
+            font-size: 14px;
+          }
+          p {
+            margin: 0;
+            font-size: 12px;
+          }
+        }
+      }
+      img {
+        width: 80%;
+        height: 80%;
+        padding: 10%;
+      }
       span {
         position: absolute;
         top: 2px;
-        right: 2px;
+        right: 6px;
         color: white;
       }
 
       &.action1 {
-        border: 1px solid blue;
+        border: 1px solid var(--avern-yellow);
+        background: var(--avern-off-black);
         position: absolute;
         top: 0;
         right: 1px;
       }
       &.action2 {
-        border: 1px solid blue;
+        border: 1px solid var(--avern-yellow);
+        background: var(--avern-off-black);
         position: absolute;
         top: 0;
-        right: 112px;
+        right: 102px;
 
       }
       &.action3 {
-        border: 1px solid blue;
+        border: 1px solid var(--avern-yellow);
+        background: var(--avern-off-black);
         position: absolute;
         top: 0;
-        right: 223px;
+        right: 203px;
 
       }
       &.action4 {
-        border: 1px solid blue;
+        border: 1px solid var(--avern-yellow);
+        background: var(--avern-off-black);
         position: absolute;
         top: 0;
-        right: 334px;
+        right: 304px;
 
       }
+    }
+    .menu-action-tooltip {
+      position: absolute;
+      top: 0;
+      left: 90px;
+      width: 250px;
+      display: none;
+      z-index: 3;
+      background: var(--avern-off-black);
+      border: 1px solid var(--avern-yellow);
+      border-radius: 6px;
+      padding: 20px;
     }
     &.rightHanded .action-tile.action1{
       right: 336px;

@@ -7,6 +7,13 @@
     }
 
     function updateKeyboardConfig(isLeft){
+      if (isLeft) {
+        Avern.Inputs.leftHanded = true
+        Avern.Inputs.config=Avern.Inputs.leftHandedConfig
+      } else {
+        Avern.Inputs.leftHanded = false
+        Avern.Inputs.config=Avern.Inputs.rightHandedConfig
+      }
       Avern.Store.config.update(st => {
           const updatedSt = {
               ...st,
@@ -29,9 +36,9 @@
         <button class="config-button" class:active={$config.leftHanded} on:click={() => updateKeyboardConfig(true)}>Use Left Handed Config</button>
         <button class="config-button" class:active={!$config.leftHanded} on:click={() => updateKeyboardConfig(false)}>Use Right Handed Config</button>
       </div>
-                
+      
       <p>It is now the early morning.</p>
-      <button on:click={closeTutorial}>Start Journey</button>
+      <button on:click={closeTutorial}>Wake Up</button>
     </div>
 
   </div>

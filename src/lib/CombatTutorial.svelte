@@ -17,8 +17,9 @@
       <div class="demo-container">
         <div>
             <p>Target an enemy with {#if $config.leftHanded }<span>G</span>{:else}<span>H</span>{/if}.</p>
-            <p>Press {#if $config.leftHanded}<span>F</span> or <span>D</span>{:else}<span>J</span> or <span>K</span>{/if} to prepare an attack.</p>
-            <p>When an attack is ready, press that key again to perform it.</p>
+            <p>Press {#if $config.leftHanded}<span>F</span>{:else}<span>J</span>{/if} to load your rifle.</p>
+            <p>Once you've loaded the rifle, press {#if $config.leftHanded}<span>F</span>{:else}<span>J</span>{/if} again to fire.</p>
+            <p>Hover the cursor over the <span>Keyboard Map</span> to see what other attacks are available.</p>
         </div>
         <div><video src="showing-combat.mov" muted loop autoplay></video></div>
       </div>
@@ -32,16 +33,7 @@
     span {
         color: white;
     }
-    .demo-container span {
-        background-color: var(--avern-off-black);
-        border: 1px solid white;
-        width: 10px;
-        padding: 0px 4px;
-        border-radius: 2px;
-        display: inline-block;
-        margin: 0 2px;
-        border-bottom-width: 2px;
-    }
+
     video {
         width: 280px;
     }

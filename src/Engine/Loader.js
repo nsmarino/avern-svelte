@@ -203,7 +203,7 @@ class Loader {
                   },
                   {
                     type: "weapon",
-                    text: "You have received [Goatherd's Rifle].",
+                    text: "You have received [Goatherd's Rifle]. Hover the cursor over the keyboard map below to learn more.",
                     weapon: "goatherd-rifle",
                     image: gatekeeperPortrait,
                   },
@@ -802,7 +802,7 @@ class Loader {
             setTimeout(() => {
               Avern.Store.combatTutorialVisible.set(true)
               Avern.Store.combatTutorialShown.set(true)
-            }, 6000)
+            }, 3000)
           }
           break;
         case "cliffs-end": 

@@ -1,4 +1,6 @@
 <script>
+    import { writable, get} from 'svelte/store'
+
     // @ts-ignore
     const characterMenu = Avern.Store.characterMenu
     // @ts-ignore
@@ -78,77 +80,113 @@
         return weapons
       })
     }
+    function setItemsTab(tab) {
+    itemsTab.set(tab)
+  }
+
+  const itemsTab = writable("items")
+
 </script>
 {#if $characterMenu}
   <div id="character-menu" class:rightHanded={!$config.leftHanded} class="menu-bg" in:fly={{ easing: cubicOut, y: 10, duration: 200 }} out:fly={{ easing: cubicIn, y: -10, duration: 300 }}>
     <div class="menu-pane">
-      <div class="actions">
-        {#each $actions as weaponAction (weaponAction)}
-          <div
-            role="button"
-            tabindex="-1"
-            animate:flip={{ duration: dragDuration }}
-            class="card action-tile action{weaponAction.assignment}"
-            class:assigned={weaponAction.assignment<=4}
+      <div>
+        <!-- <div class="action-descript">
+          <div class="action-descript-bg"></div>
+        </div> -->
+        <div class="actions">
+          {#each $actions as weaponAction (weaponAction)}
+            <div
+              role="button"
+              tabindex="-1"
+              animate:flip={{ duration: dragDuration }}
+              class="card action-tile action{weaponAction.assignment}"
+              class:assigned={weaponAction.assignment<=4}
 
-            draggable="true"
-            on:dragstart={() => draggingCard = weaponAction}
-            on:dragend={() => draggingCard = undefined}
-            on:dragenter={() => swapWith(weaponAction)}
-            on:dragover|preventDefault
-          >
-            {#if (weaponAction.inputKeyLeft && weaponAction.inputKeyRight)}<span>{$config.leftHanded ? weaponAction.inputKeyLeft : weaponAction.inputKeyRight}</span>{/if}
-            {weaponAction.label}
-          </div>
-        {/each}
+              draggable="true"
+              on:dragstart={() => draggingCard = weaponAction}
+              on:dragend={() => draggingCard = undefined}
+              on:dragenter={() => swapWith(weaponAction)}
+              on:dragover|preventDefault
+            >
+              {#if (weaponAction.inputKeyLeft && weaponAction.inputKeyRight)}<span>{$config.leftHanded ? weaponAction.inputKeyLeft : weaponAction.inputKeyRight}</span>{/if}
+              <img src={weaponAction.image} alt="">
+              <div class="menu-action-tooltip">
+                <h3>{weaponAction.label}</h3>
+                <p>{weaponAction.description}</p>
+              </div>
+            </div>
+          {/each}
+        </div>        
       </div>
-      <div class="portrait">
-        <img src="/assets/portraits/castrate/characterMenu.svg" alt="">
-      </div>
+
+
 
       <div class="flex-col">
         <div class="stats">
-          <dl class="attributes">
-            <dt>Vigor</dt>
-            <dd>12</dd>
-            <dt>Guile</dt>
-            <dd>12</dd>
-            <dt>Cruelty</dt>
-            <dd>10</dd>
-            <dt>Bravado</dt>
-            <dd>10</dd>
-            <dt>Faith</dt>
-            <dd>8</dd>
-          </dl>
-          <dl class="level-rel">
-            <dt>Level</dt>
-            <dd>10</dd>
-            <dt>XP</dt>
-            <dd>0</dd>
-            <dt>Next level</dt>
-            <dd>800</dd>
-            <dt>Health</dt>
-            <dd>40/100</dd>
-          </dl>
+          <div class="attributes">
+            <div class="attribute-line">
+              <div>Vigor</div>
+              <div>10</div>
+            </div>
+            <div class="attribute-line">
+              <div>Guile</div>
+              <div>10</div>
+            </div>
+            <div class="attribute-line">
+              <div>Bravado</div>
+              <div>10</div>
+            </div>
+            <div class="attribute-line">
+              <div>Cruelty</div>
+              <div>10</div>
+            </div>
+            <div class="attribute-line">
+              <div>Faith</div>
+              <div>10</div>
+            </div>
+          </div>
+          <div class="level-rel">
+            <div class="level-line">
+              <div>Level</div>
+              <div>10</div>
+            </div>
+            <div class="level-line">
+              <div>XP</div>
+              <div>0</div>
+            </div>
+            <div class="level-line">
+              <div>Next level</div>
+              <div>0</div>
+            </div>
+            <div class="level-line">
+              <div>Health</div>
+              <div>40/100</div>
+            </div>
+          </div>
         </div>
         <div class="item-container">
           <div class="tabs">
-            <button>Items</button>
-            <button>Weapons</button>
+            <button on:click={()=>setItemsTab("items")} class:active={$itemsTab==="items"}>Items</button>
+            <button on:click={()=>setItemsTab("weapons")} class:active={$itemsTab==="weapons"}>Weapons</button>
           </div>
-          <div class="item-thumbs">
-            {#each $items as item}
-              <div>{item.name}</div>
-            {/each}
-          </div>
-          <div class="weapon-thumbs">
-            {#each $weapons as weapon}
-              <div>{weapon.name}</div>
-            {/each}
-          </div>
+      {#if $itemsTab === "items"}
+        <div class="item-thumbs">
+          {#each $items as item}
+            <div>{item.name}</div>
+          {/each}
         </div>
-      </div>      
-    </div>
+      {/if}
+      {#if $itemsTab === "weapons"}
+        <div class="weapon-thumbs">
+          {#each $weapons as weapon}
+            <div>{weapon.name}</div>
+          {/each}
+        </div>
+      {/if}
+      </div>
+    </div>      
+  </div>
 
   </div>  
 {/if}

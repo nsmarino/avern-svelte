@@ -57,21 +57,36 @@
   font-weight: normal;
   text-shadow: 1px 1px 2px var(--avern-brown);
   top: -18px;
-  left: 40px;
+  left: 20px;
 }
 .menu-inner-bg {
 
 }
-
+.menu-pane .tabs {
+  display: flex;
+  button {
+      background: none;
+      border: none;
+      color: var(--avern-yellow);
+      width: fit-content;
+      cursor: pointer;
+      &:hover {
+          color: white;
+      }
+      &.active {
+          text-decoration: underline;
+      }
+  }
+}
 .menu-pane button {
   background: var(--avern-input-gradient);
   border: 1px solid var(--avern-grey);
   border-radius: 6px;
   display: flex;
   padding: 4px;
-  width: 150px;
+  width: 120px;
   font-family: SourceSans;
-  color: var(--avern-tan);
+  color: white;
   margin-bottom: 20px;
   justify-content: center;
   &:hover {
@@ -83,7 +98,7 @@
 .flex-col {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 40px;
 }
 .right-align {
   text-align: right;
