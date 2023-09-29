@@ -413,18 +413,15 @@ class Body extends GameplayComponent {
                     gsap.to(".mask p", { opacity: 1, duration: 1})
                     setTimeout(async () => {
                         Avern.State.playerDead = false
-            
+                        Avern.Store.player.update(player => {
+                            const updatedPlayer = {
+                              ...player,
+                              hp: player.maxHp
+                            }
+                            return updatedPlayer
+                          })
                         await Avern.Loader.switchScene("player-restart")
                     }, 1000)
-
-                    // this.emitSignal("reset_stage")
-                    // this.gameObject.transform.rotation.y = 0
-
-                    // // by that token this should probably be somewhere else
-                    // gsap.to(".mask", { opacity: 0, duration: 1, delay: 1})
-                    // gsap.to(".mask svg", { opacity: 1, duration: 0.2})
-                    // gsap.to(".mask p", { opacity: 1, duration: 0.2})
-
                 },6000)
                 break;
             case "capsule_collide":

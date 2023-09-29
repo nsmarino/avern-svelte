@@ -22,6 +22,7 @@
     const actions = Avern.Store.actions
     // @ts-ignore
     const player = Avern.Store.player
+    console.log($player)
     // @ts-ignore
     const interaction = Avern.Store.interaction
 

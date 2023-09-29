@@ -3,13 +3,12 @@ import GameplayComponent from '../../_Component';
 import Enemy from '../NonPlayer/Enemy';
 import Actions from './Actions';
 import Body from './Body';
+import {get} from 'svelte/store'
 
 class Vitals extends GameplayComponent {
     constructor(gameObject) {
         super(gameObject)
         this.gameObject = gameObject
-        this.hp = 100
-        this.landmineVector = new THREE.Vector3()
     }
 
     onSignal(signalName, data) {
@@ -21,61 +20,54 @@ class Vitals extends GameplayComponent {
         case "casting_interrupt":
           break;
         case "player_heal":
-          if (Avern.State.flaskCount > 0) {
-            (this.hp + 30 > 100) ? this.hp = 100 : this.hp += 30
-            document.documentElement.style.setProperty("--player-vitality-width", `${this.hp}%`);
+          if (get(Avern.Store.player).flasks > 0) {
+            if (get(Avern.Store.player).hp + 30 > get(Avern.Store.player).maxHp) {
+              Avern.Store.player.update(player => {
+                const updatedPlayer = {
+                  ...player,
+                  flasks: player.flasks - 1,
+                  hp: player.maxHp
+                }
+                console.log(updatedPlayer)
+                return updatedPlayer
+              })
+            } else {
+              Avern.Store.player.update(player => {
+                const updatedPlayer = {
+                  ...player,
+                  flasks: player.flasks - 1,
+                  hp: player.hp + 30
+                }
+                console.log(updatedPlayer)
+
+                return updatedPlayer
+              })
             }
-          break;
-        case "monster_casting_finish":
-          this.hp -= 20
-          document.documentElement.style.setProperty("--player-vitality-width", `${this.hp}%`);
-          if (this.hp <= 0) {
-              this.emitSignal("player_death")
-              this.hp = 100
-              document.documentElement.style.setProperty("--player-vitality-width", `${this.hp}%`);
           }
           break;
 
         case "monster_attack":
           console.log("Receive monster attack")
           this.hp -= data.damage
-          document.documentElement.style.setProperty("--player-vitality-width", `${this.hp}%`);
-          if (this.hp <= 0) {
+          Avern.Store.player.update(player => {
+            const updatedPlayer = {
+              ...player,
+              hp: player.hp - data.damage
+            }
+            return updatedPlayer
+          })
+          console.log("HERE IS HP AFTER UPDATE?", get(Avern.Store.player).hp)
+          if (get(Avern.Store.player).hp <= 0) {
               this.emitSignal("player_death")
               Avern.Sound.thudHandler.currentTime = 0.02
               Avern.Sound.thudHandler.play()
-  
               Avern.State.playerDead = true
-              this.hp = 0
-              document.documentElement.style.setProperty("--player-vitality-width", `${this.hp}%`);
           } else {
             this.emitSignal("player_receive_heavy_damage")
             Avern.Sound.thudHandler.currentTime = 0.02
             Avern.Sound.thudHandler.play()
           }
           break;
-        case "landmine_detonated":
-          this.landmineVector.copy(this.gameObject.transform.position)
-          this.landmineVector.y -=3
-          if (this.landmineVector.distanceTo(data.position) < data.radius) {
-            this.hp -= data.damage
-            document.documentElement.style.setProperty("--player-vitality-width", `${this.hp}%`);
-            if (this.hp <= 0) {
-                this.emitSignal("player_death")
-                Avern.State.playerDead = true
-                this.hp = 0
-                document.documentElement.style.setProperty("--player-vitality-width", `${this.hp}%`);
-            } else {
-              this.emitSignal("player_receive_heavy_damage")
-            }  
-          }
-          break;
-
-        case "reset_stage":
-            this.hp = 100
-            document.documentElement.style.setProperty("--player-vitality-width", `${this.hp}%`);
-            Avern.State.playerDead = false
-            break;
       }
     }
 

@@ -514,11 +514,12 @@ class Loader {
         scene: "url",
 
         // just an array of IDs so the engine knows not to load them; cleared every time a scene is changed
-        killedEnemies:[],
+        killedBosses:[],
     
         player: { 
             flasks: 5,
             hp: 100,
+            maxHp: 100,
             level: 10,
             xp: 0,
             location: null,

@@ -17,36 +17,9 @@ class Inventory extends GameplayComponent {
               items.push(data.item)
               return items
             })
-            // Avern.State.inventory.push(data.item)
-
-            // temp:
-            // Avern.State.flaskCount += 1
-            // document.querySelectorAll('[data-flask]').forEach(el => el.innerHTML = Avern.State.flaskCount)
-            // stateStore.update(st => {
-            //     const updatedSt = {
-            //         ...st,
-            //         flaskCount: st.flaskCount + 1
-            //     }
-            //     return updatedSt
-            // })
             break;
-          // case "player_heal":
-          //   if (Avern.State.flaskCount > 0) Avern.State.flaskCount -= 1
-          //   document.querySelectorAll('[data-flask]').forEach(el => el.innerHTML = Avern.State.flaskCount)
-            // stateStore.update(st => {
-            //     const updatedSt = {
-            //         ...st,
-            //         flaskCount: st.flaskCount - 1
-            //     }
-            //     return updatedSt
-            // })
-            // break;
         }
     }
-    
-    // attachObservers(parent) {
-
-    // }
 }
 
 export default Inventory

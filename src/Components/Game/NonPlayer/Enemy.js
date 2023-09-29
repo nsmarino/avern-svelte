@@ -497,6 +497,12 @@ class Enemy extends GameplayComponent {
     this.orderContainer.remove()
     Avern.State.Enemies = Avern.State.Enemies.filter(enem => enem.name !== this.gameObject.name)
     this.dead = true
+    Avern.Store.player.update(player => {
+      return {
+        ...player,
+        xp: player.xp + 80
+      }
+    })
     this.fadeIntoAction(this.death, 0.2)
   }
 

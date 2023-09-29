@@ -7,6 +7,7 @@
   import OpeningRemarks from "./lib/OpeningRemarks.svelte";
   import CombatTutorial from "./lib/CombatTutorial.svelte";
   import EndOfDemo from "./lib/EndOfDemo.svelte";
+    import PlayerHud from "./lib/PlayerHUD.svelte";
 
   // @ts-ignore
   const pauseMenu = Avern.Store.pauseMenu
@@ -20,6 +21,7 @@
 <div id="hud">
   <Prompt />
   <Interaction />
+  <PlayerHud />
   <KeyboardMap />
   {#if $pauseMenu}
     <PauseMenu />    

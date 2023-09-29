@@ -76,8 +76,6 @@ class State {
     constructor(){
         this.playerDead = false
 
-        this.flaskCount = 5
-
         // populated by Loader (e)
         this.scene = null
         this.camera = new THREE.PerspectiveCamera(

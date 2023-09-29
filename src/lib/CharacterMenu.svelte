@@ -15,6 +15,7 @@
     // @ts-ignore
     const characterMenu = Avern.Store.characterMenu
     // @ts-ignore
+    const player = Avern.Store.player
     const items = Avern.Store.items
     const weapons = Avern.Store.weapons
     const actions = Avern.Store.actions
@@ -80,7 +81,7 @@
     }
 
     const itemsTab = writable("items")
-    const info = writable(null)
+    const infoToShow = writable(null)
 
     function handleHover(e) {
       if (primaryMouseButtonDown) return
@@ -118,9 +119,6 @@
       const allPossibleSourcesOfInfo = [ ...$actions, ...$items, ...$weapons, ...stats]
       infoToShow.set(allPossibleSourcesOfInfo.find(i => i.id === tag) || null)
     }
-
-    const infoToShow = writable(null)
-
 </script>
 {#if $characterMenu}
   <div id="character-menu" class:rightHanded={!$config.leftHanded} class="menu-bg" in:fly={{ easing: cubicOut, y: 10, duration: 200 }} out:fly={{ easing: cubicIn, y: -10, duration: 300 }}>
@@ -185,19 +183,19 @@
           <div class="level-rel">
             <div class="level-line">
               <div>Level</div>
-              <div>10</div>
+              <div>{$player.level}</div>
             </div>
             <div class="level-line">
               <div>XP</div>
-              <div>0</div>
+              <div>{$player.xp}</div>
             </div>
             <div class="level-line">
               <div>Next level</div>
-              <div>0</div>
+              <div>829</div>
             </div>
             <div class="level-line">
               <div>Health</div>
-              <div>40/100</div>
+              <div>{$player.hp}/{$player.maxHp}</div>
             </div>
           </div>
         </div>
