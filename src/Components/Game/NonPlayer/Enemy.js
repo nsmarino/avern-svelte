@@ -22,8 +22,8 @@ class Enemy extends GameplayComponent {
   
     this.enemyType = spawnPoint.userData.label
     this.startingBehavior = spawnPoint.userData.behavior || "wander"
-    // this.HELPER = Avern.PATHFINDINGHELPER
-    // Avern.State.scene.add(this.HELPER)
+    this.HELPER = Avern.PATHFINDINGHELPER
+    Avern.State.scene.add(this.HELPER)
 
     this.bar = document.createElement("div")
     this.innerBar = document.createElement("div")
@@ -461,13 +461,12 @@ class Enemy extends GameplayComponent {
             const targetGroup = Avern.PATHFINDING.getGroup(Avern.pathfindingZone, this.gameObject.transform.position);
             const closestNode = Avern.PATHFINDING.getClosestNode(this.gameObject.transform.position, Avern.pathfindingZone, targetGroup)
             const destinationNode = Avern.PATHFINDING.getClosestNode(destination, Avern.pathfindingZone, targetGroup)
-    
             const path = Avern.PATHFINDING.findPath(closestNode.centroid, destinationNode.centroid, Avern.pathfindingZone, 0);
-            // if (path) {
-            //   this.HELPER.setPlayerPosition(this.gameObject.transform.position)
-            //   this.HELPER.setTargetPosition(destination)
-            //   this.HELPER.setPath(path)
-            // }
+            if (path) {
+              this.HELPER.setPlayerPosition(this.gameObject.transform.position)
+              this.HELPER.setTargetPosition(destination)
+              this.HELPER.setPath(path)
+            }
             this.path = path
         }
         if (!this.path) return;
@@ -476,10 +475,14 @@ class Enemy extends GameplayComponent {
         this.velocity = targetPosition.clone().sub( this.gameObject.transform.position );
         this.updateRotationToFacePoint(this.gameObject.transform, targetPosition, this.lerpFactor)
       
-        if (this.velocity.lengthSq() > 0.1) {
+        if (this.velocity.lengthSq() > 0.1 ) {
           this.velocity.normalize();
           // Move to next waypoint
           this.gameObject.transform.position.add( this.velocity.multiplyScalar( deltaTime * this.speed ) );
+          const targetGroup = Avern.PATHFINDING.getGroup(Avern.pathfindingZone, this.gameObject.transform.position);
+          const closest = Avern.PATHFINDING.getClosestNode(this.gameObject.transform.position, Avern.pathfindingZone, targetGroup)
+          this.gameObject.transform.position.lerp(new THREE.Vector3( this.gameObject.transform.position.x, closest.centroid.y, this.gameObject.transform.position.z ), 0.6)
+          
         } else {
           // Remove node from the path we calculated
           this.path.shift();

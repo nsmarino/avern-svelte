@@ -173,6 +173,15 @@ class Inputs {
                 trackWasPressed: true,
                 trackUp: true,
             },
+            look: {
+                code: "KeyN",
+                name: "N",
+                pressed: false,
+
+                onlyOnce: true,
+                trackWasPressed: true,
+                trackUp: true,
+            },
         }
         this.rightHandedConfig = {
             forward: {
@@ -328,6 +337,16 @@ class Inputs {
                 trackWasPressed: true,
                 trackUp: true,
             },
+
+            look: {
+                code: "KeyV",
+                name: "V",
+                pressed: false,
+
+                onlyOnce: true,
+                trackWasPressed: true,
+                trackUp: true,
+            },
         }
         
         this.config = this.leftHandedConfig
@@ -372,6 +391,10 @@ class Inputs {
             turn: false,
             turnWasPressed:false,
             turnWasLifted:false,
+
+            look: false,
+            lookWasPressed:false,
+            lookWasLifted:false,
         }
         
         window.addEventListener( 'keydown', function(e) {

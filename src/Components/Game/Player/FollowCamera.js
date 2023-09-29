@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-
+import { OrbitControls } from "../../../helpers/OrbitControls"
 import GameplayComponent from '../../_Component';
 
 class FollowCamera extends GameplayComponent {
@@ -38,14 +38,18 @@ class FollowCamera extends GameplayComponent {
         this.playerCameraPlaceholder.position.set(0,1.5,-18)
         this.gameObject.transform.add(this.playerCameraTarget)
 
+        // console.log(OrbitControls)
+        // this.controls = new OrbitControls( this.camera, document.querySelector("canvas") );
+
         window.addEventListener( 'resize', function () {
             this.camera.aspect = window.innerWidth / window.innerHeight;
             this.camera.updateProjectionMatrix();
         }.bind(this), false );
-
     }
 
     update() {
+        // this.controls.target = Avern.Player.transform.position
+
         if (!this.targeting) {
             if ((this.playerCameraTarget.getWorldPosition(this.comparisonVector).distanceTo(this.cameraTarget.getWorldPosition(this.comparisonVector2)) > 0.2 )) {
                 this.playerCameraTarget.getWorldPosition(this.targetVector)
