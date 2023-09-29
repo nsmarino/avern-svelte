@@ -268,18 +268,19 @@ class Loader {
           {
             label: "goatherd-rifle",
             name: "Goatherd's Rifle",
+            id: "goatherd-rifle",
             image: weaponImg,
-            description: "Given to you by the Smithmaster for fending off antwolves in the hills",
+            description: "Given to you by the Gatekeeper for fending off antwolves in the hills",
             actions: [
               {
                 id: "shoot_from_distance",
                 label: "Shoot from a distance",
                 caption: "Loading rifle",
                 image: aimedShot,
-                description: ".",
+                description: "You eyes narrow and time seems to slow. High chance of critical hit.",
                 primeLength: 1,
                 baseDamage: 25,
-                range: 15,
+                range: 40,
                 primed: false,
                 assignment: null,
                 primeAnimation: "load",
@@ -291,7 +292,7 @@ class Loader {
               {
                 id: "bayonet_slash",
                 label: "Slash with bayonet",
-                description: "",
+                description: "A quick slice with the bayonet attachment on the rifle.",
                 image: bayonet,
                 caption: "Affixing bayonet",
                 primeLength: 0.6,
@@ -308,7 +309,7 @@ class Loader {
               {
                 id: "rifle_club",
                 label: "Club with butt of rifle",
-                description: "",
+                description: "Slows down target movement for 5 seconds.",
                 caption: "Shifting weight",
                 primeLength: 0.6,
                 image: propelSelf,
@@ -326,7 +327,7 @@ class Loader {
                 id: "rapid_fire",
                 label: "Rapid fire shots",
                 caption: "Loading rifle",
-                description: ".",
+                description: "Intrepidly blast away until all that is left is the ringing in your ears. Good damage but your accuracy will suffer.",
                 primeLength: 1,
                 baseDamage: 25,
                 image: muzzleBlast,
@@ -344,6 +345,7 @@ class Loader {
           {
             name: "Ceremonial Dagger",
             label: "ceremonial_dagger",
+            id: "ceremonial-dagger",
             image: weaponImg,
             description: "A simple copper blade.",
             primary: "Cruelty",

@@ -1,5 +1,16 @@
 <script>
-    import { writable, get} from 'svelte/store'
+    var primaryMouseButtonDown = false;
+
+    function setPrimaryButtonState(e) {
+      var flags = e.buttons !== undefined ? e.buttons : e.which;
+      primaryMouseButtonDown = (flags & 1) === 1;
+    }
+
+    document.addEventListener("mousedown", setPrimaryButtonState);
+    document.addEventListener("mousemove", setPrimaryButtonState);
+    document.addEventListener("mouseup", setPrimaryButtonState);
+
+    import { writable, get, derived} from 'svelte/store'
 
     // @ts-ignore
     const characterMenu = Avern.Store.characterMenu
@@ -57,22 +68,6 @@
             action.inputKeyLeft = ""
             action.inputKeyRight = ""
           }
-          // console.log(action.label, action.assignment)
-          // switch(action.assignment) {
-          //   case 1:
-          //     action.inputKey = $config.leftHanded ? "F" : "J"
-          //     break;
-          //   case 2:
-          //     break;
-          //   case 3:
-          //     break;
-          //   case 4:
-          //     break;
-          //   default:
-          //     action.inputKey = ""
-          //     break;
-          // }
-
         })
       })
       // not completely sure how this works but it does
@@ -81,15 +76,55 @@
       })
     }
     function setItemsTab(tab) {
-    itemsTab.set(tab)
-  }
+      itemsTab.set(tab)
+    }
 
-  const itemsTab = writable("items")
+    const itemsTab = writable("items")
+    const info = writable(null)
+
+    function handleHover(e) {
+      if (primaryMouseButtonDown) return
+      if (e.target.dataset.infoTag) {
+        getInfoToShow(e.target.dataset.infoTag)
+      } else if (e.target.closest("[data-info-tag")) {
+        getInfoToShow(e.target.closest("[data-info-tag").dataset.infoTag)
+      } else {
+        infoToShow.set(null)
+      }
+    }
+    const stats = [
+      {
+        id: "vigor",
+        description: "Governs how much health you have."
+      },
+      {
+        id: "guile",
+        description: "Governs actions that use cunning and trickery."
+      },
+      {
+        id: "bravado",
+        description: "Governs actions that use strength and courage."
+      },
+      {
+        id: "cruelty",
+        description: "Governs actions that use brutality and detachment."
+      },
+      {
+        id: "faith",
+        description: "Governs actions that align you with a higher power."
+      },
+    ]
+    function getInfoToShow(tag) {
+      const allPossibleSourcesOfInfo = [ ...$actions, ...$items, ...$weapons, ...stats]
+      infoToShow.set(allPossibleSourcesOfInfo.find(i => i.id === tag) || null)
+    }
+
+    const infoToShow = writable(null)
 
 </script>
 {#if $characterMenu}
   <div id="character-menu" class:rightHanded={!$config.leftHanded} class="menu-bg" in:fly={{ easing: cubicOut, y: 10, duration: 200 }} out:fly={{ easing: cubicIn, y: -10, duration: 300 }}>
-    <div class="menu-pane">
+    <div class="menu-pane" on:mouseover={handleHover} on:focus={()=>{}} role="application">
       <div>
         <!-- <div class="action-descript">
           <div class="action-descript-bg"></div>
@@ -102,6 +137,7 @@
               animate:flip={{ duration: dragDuration }}
               class="card action-tile action{weaponAction.assignment}"
               class:assigned={weaponAction.assignment<=4}
+              data-info-tag={weaponAction.id}
 
               draggable="true"
               on:dragstart={() => draggingCard = weaponAction}
@@ -125,23 +161,23 @@
       <div class="flex-col">
         <div class="stats">
           <div class="attributes">
-            <div class="attribute-line">
+            <div class="attribute-line" data-info-tag="vigor">
               <div>Vigor</div>
               <div>10</div>
             </div>
-            <div class="attribute-line">
+            <div class="attribute-line" data-info-tag="guile">
               <div>Guile</div>
               <div>10</div>
             </div>
-            <div class="attribute-line">
+            <div class="attribute-line" data-info-tag="bravado">
               <div>Bravado</div>
               <div>10</div>
             </div>
-            <div class="attribute-line">
+            <div class="attribute-line" data-info-tag="cruelty">
               <div>Cruelty</div>
               <div>10</div>
             </div>
-            <div class="attribute-line">
+            <div class="attribute-line" data-info-tag="faith">
               <div>Faith</div>
               <div>10</div>
             </div>
@@ -165,6 +201,20 @@
             </div>
           </div>
         </div>
+        <div class="info-box">
+          {#if $infoToShow}
+            {#if $infoToShow.label}
+              <h4>{$infoToShow.label}</h4>
+            {/if}
+          <p>{$infoToShow.description}</p>
+            {#if $infoToShow.primaryModifier}
+              <p class="primary-modifier">primary: {$infoToShow.primaryModifier}</p>
+            {/if}
+            {#if $infoToShow.secondaryModifier}
+              <p class="secondary-modifier">secondary: {$infoToShow.secondaryModifier}</p>
+            {/if}
+          {/if}
+        </div>
         <div class="item-container">
           <div class="tabs">
             <button on:click={()=>setItemsTab("items")} class:active={$itemsTab==="items"}>Items</button>
@@ -173,14 +223,14 @@
       {#if $itemsTab === "items"}
         <div class="item-thumbs">
           {#each $items as item}
-            <div>{item.name}</div>
+            <div data-info-tag={item.id}>{item.name}</div>
           {/each}
         </div>
       {/if}
       {#if $itemsTab === "weapons"}
         <div class="weapon-thumbs">
           {#each $weapons as weapon}
-            <div>{weapon.name}</div>
+            <div data-info-tag={weapon.id}>{weapon.name}</div>
           {/each}
         </div>
       {/if}

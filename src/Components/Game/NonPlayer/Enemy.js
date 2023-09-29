@@ -564,7 +564,10 @@ class Enemy extends GameplayComponent {
         break;
       case("receive_direct_attack"):
         if (this.isTargeted===true) {
-          if (Avern.Player.transform.position.distanceTo(this.gameObject.transform.position) >= data.range) {
+          if ((this.gameObject.transform.position.y < Avern.Player.transform.position.y - 2) || (this.gameObject.transform.position.y > Avern.Player.transform.position.y)) {
+            this.emitSignal("show_notice", {notice: "You must be on the same elevation as the target", color: "red", delay: 2000})
+            return
+          } else if (Avern.Player.transform.position.distanceTo(this.gameObject.transform.position) >= data.range) {
             this.emitSignal("show_notice", {notice: "Out of range", color: "red", delay: 2000})
             return
           }

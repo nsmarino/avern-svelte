@@ -48,13 +48,17 @@
     justify-content: center;
     img {
         width: 200px;
+        transition: all 0.2s ease;
+
+        &.narration {
+            opacity: 0.6;
+            transition: all 0.2s ease;
+        }
     }
     .interaction-content {
         display: flex;
         align-items: end;
         gap: 20px;
-    }
-    .interaction- {
     }
     .interaction-card {
         position: relative;

@@ -13,7 +13,12 @@
     gap: 20px;
     .menu-pane {
       display: flex;
-      align-items: center;
+      // align-items: center;
+      height: 500px;
+    }
+    .flex-col {
+      gap: 0;
+      border-left: 1px solid var(--avern-light-grey);
     }
     .portrait {
       width: 100px;
@@ -23,6 +28,7 @@
       justify-content: space-between;
       gap: 40px;
       padding: 20px;
+      background: rgba(48, 30, 3, 0.5);
       .attribute-line, .level-line {
         display: flex;
         width: 120px;
@@ -41,6 +47,39 @@
     margin: 0 auto;
   }
 }
+.tabs button {
+  margin-bottom: 5px;
+}
+.item-container {
+  flex-grow: 1;
+  flex-shrink: 0;
+  padding: 20px;
+  background: var(--avern-off-black);
+  overflow: scroll;
+  overflow-x: hidden;
+}
+.info-box {
+  padding: 5px 20px;
+  height: 140px;
+  width: 320px;
+  background: var(--avern-input-gradient);
+  .primary-modifier, .secondary-modifier {
+    font-size: 10px;
+    margin-bottom: 0;
+  }
+  h4 {
+    margin-bottom: 0;
+    font-size: 14px;
+    font-family: var(--serif-italic);
+    color: var(--avern-yellow);
+  }
+  p {
+    padding: 0;
+    margin: 0;
+    font-size: 12px;
+    margin-bottom: 5px;
+  }
+}
 .actions {
   display: flex;
   width: 386px;
@@ -49,8 +88,8 @@
   position: relative;
   height: min-content;
   padding-top: 100px;
-  margin: -20px 20px 20px;
-  gap: 15px;
+  margin: 20px;
+  gap: 19px;
 }
 
     .action-tile {

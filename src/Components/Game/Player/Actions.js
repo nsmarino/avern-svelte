@@ -93,7 +93,7 @@ class Actions extends GameplayComponent {
         switch (action.id) {
             case "shoot_from_distance":
                 // if (!Avern.State.target) return
-                this.emitSignal("receive_direct_attack", {damage: action.baseDamage })
+                this.emitSignal("receive_direct_attack", {damage: action.baseDamage, range: action.range })
                 // eslint-disable-next-line no-case-declarations
                 flashPosition = Avern.Player.getComponent(Body).rifleMesh.getWorldPosition(new THREE.Vector3())
                 flashPosition.y += 1
