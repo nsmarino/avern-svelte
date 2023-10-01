@@ -1,9 +1,8 @@
 import sanityClient from "../sanityClient"
 
-import courtyardLevel from "../../assets/FSE--Level-COURTYARD.gltf"
-import cliffsLevel from "../../assets/FSE--Level-CLIFFS.gltf"
-import simple1 from "../../assets/simple-1.gltf"
-import simple2 from "../../assets/simple-2.gltf"
+import demoCourtyard from "../../assets/levels/demo-courtyard.gltf"
+import demoCliffs from "../../assets/levels/demo-cliffs.gltf"
+import demoSwamp from "../../assets/levels/demo-swamp.gltf"
 
 import {writable, derived, get} from "svelte/store"
 import * as THREE from 'three';
@@ -39,6 +38,8 @@ import yoshuaAlert from "../../assets/portraits/yoshua/alert.svg"
 import yoshuaHappy from "../../assets/portraits/yoshua/happy.svg"
 import yoshuaSerious from "../../assets/portraits/yoshua/serious.svg"
 import gatekeeperPortrait from "../../assets/portraits/gatekeeper/default.svg"
+import smithmasterPortrait from "../../assets/portraits/smithmaster/default.svg"
+import esthelPortrait from "../../assets/portraits/esthel/default.svg"
 
 class Loader {
     constructor() {
@@ -54,7 +55,7 @@ class Loader {
 
       // 'content' should only be interested in what's present the actual scene file. the Store is used to determine what actually spawns in the game
       Avern.Content = {
-        baseFile: simple1,
+        baseFile: demoCourtyard,
         items:[
           {
             label: "rear-entrance",
@@ -62,6 +63,15 @@ class Loader {
               name: "Key to the Gatehouse",
               img: "",
               id: "rear-entrance",
+              category: "key",
+            }
+          },
+          {
+            label: "cage-key",
+            item: {
+              name: "Cage Key",
+              img: "",
+              id: "cage-key",
               category: "key",
             }
           },
@@ -258,12 +268,140 @@ class Loader {
               },
             ],
           },
-        ],
+          {
+            label: "smithmaster-morning",
+            index: 0,
 
-        // this will be where i put explosives kit and ceremonial dagger.
-        // you pick up explosives kit on the map
+            // check when scene is loaded; also check on world_state_changed signal
+            // if world conditions don't all match, destroy
+            worldConditions: [
+              {id:"keyRetrieved", value:true}
+            ],
+            model: yoshuaHaystack,
+            anim: "SIT",
+
+            content: [
+              {
+                prompt: "Talk to the smithmaster",
+                nodes: [
+                  {
+                    type: "dialogue",
+                    text: "Are you helping that old fool again, castrate? Tend to your goats and leave him to his tottering about.",
+                    image: smithmasterPortrait,
+                    label: "Smithmaster",
+                  },
+                  {
+                    type: "dialogue",
+                    text: "If we are lucky, perhaps he will totter off a cliff and we will all be freed from his whining.",
+                    image: smithmasterPortrait,
+                    label: "Smithmaster",
+                  },
+                  {
+                    type: "dialogue",
+                    text: "Besides, those goats of yours have been been screeching since the sun rose. Run along and see what the matter is with them -- they keep me from my work.",
+                    image: smithmasterPortrait,
+                    label: "Smithmaster",
+                  },
+                ]
+              },
+            ],
+          },
+          {
+            label: "goat-eating",
+            index: 0,
+
+            // check when scene is loaded; also check on world_state_changed signal
+            // if world conditions don't all match, destroy
+            worldConditions: [
+              {id:"keyRetrieved", value:false}
+            ],
+            model: yoshuaHaystack,
+            anim: "SIT",
+
+            content: [
+              {
+                prompt: "Look at the goats",
+                nodes: [
+                  {
+                    type: "narration",
+                    text: "The goats are happily munching away on the fresh swampgrass. They won't be moving anytime soon.",
+                    label: "The Goats",
+                  }
+                ]
+              },
+            ],
+          },
+          {
+            label: "esthel-captive",
+            index: 0,
+
+            // check when scene is loaded; also check on world_state_changed signal
+            // if world conditions don't all match, destroy
+            worldConditions: [
+              {id:"keyRetrieved", value:true}
+            ],
+            model: yoshuaHaystack,
+            anim: "SIT",
+
+            content: [
+              {
+                prompt: "Talk to the captive",
+                nodes: [
+                  {
+                    type: "dialogue",
+                    text: "What are you?",
+                    image: esthelPortrait,
+                    label: "Captive girl",
+                  },
+                  {
+                    type: "narration",
+                    text: "Her voice is clear and her tone imperious. Her skin has the same alabaster sheen as her brother's, but her eyes are icy and steady. You have opened the cage but she does not move.",
+                    image: esthelPortrait,
+                    label: "Captive girl",
+                  },
+                  {
+                    type: "dialogue",
+                    text: "Ah, I see. You are a castrate. I was not aware that castrates were still in use.",
+                    image: esthelPortrait,
+                    label: "Captive girl",
+                  },
+                  {
+                    type: "narration",
+                    text: "She regards you a moment longer, studying the contours of your mask. Her eyes catch the copper dagger on your belt",
+                    image: esthelPortrait,
+                    label: "Captive girl",
+                  },
+                  {
+                    type: "dialogue",
+                    text: "You carry the Spring's Blade. You have met my brother? I am Esthel. Will you bring me to Yoshua, castrate?",
+                    image: esthelPortrait,
+                    label: "Esthel",
+                  },
+                  {
+                    type: "narration",
+                    text: "Her eyes finally snap away from you. She examines her cage with a brisk finality, as if noting which memories of her imprisonment to carry with her and which to leave here.",
+                    image: esthelPortrait,
+                    label: "Esthel",
+                  },
+                  {
+                    type: "dialogue",
+                    text: "You have freed me from my captors. I thank you, castrate. Bring me to my brother.",
+                    image: esthelPortrait,
+                    label: "Esthel",
+                  },
+                  {
+                    type: "narration",
+                    text: "A moment ago she expressed surprise that your kind still existed, but it seems she is well aware what role you serve. She gives orders in a detached manner, with little concern for how you will receive them.",
+                    image: esthelPortrait,
+                    label: "Esthel",
+                  }, 
+                ]
+              },
+            ],
+          },
+        ],
         // you receive ceremonial dagger from yoshua.
-        // you would also get the rifle from the gatekeeper w weapon tutorial popup
+        // you get the rifle from the gatekeeper w weapon tutorial popup
         weapons: [
           {
             label: "goatherd-rifle",
@@ -286,8 +424,7 @@ class Loader {
                 primeAnimation: "load",
                 animation: "shoot",
                 primaryModifier: "Faith",
-                secondaryModifier: "Bravado",
-
+                secondaryModifier: "Cruelty",
               },
               {
                 id: "bayonet_slash",
@@ -304,7 +441,7 @@ class Loader {
                 primeAnimation: "load",
                 animation: "slash",
                 primaryModifier: "Faith",
-                secondaryModifier: "Bravado",
+                secondaryModifier: "Cruelty",
               },
               {
                 id: "rifle_club",
@@ -314,31 +451,30 @@ class Loader {
                 primeLength: 0.6,
                 image: propelSelf,
                 cooldown: 0,
-                baseDamage: 10,
+                baseDamage: 0,
                 range: 5,
                 primed: false,
                 assignment: null,
                 primeAnimation: "load",
-                animation: "slash",
+                animation: "club",
                 primaryModifier: "Faith",
                 secondaryModifier: "Bravado",
               },
               {
                 id: "rapid_fire",
-                label: "Rapid fire shots",
+                label: "Rapid Shot",
                 caption: "Loading rifle",
-                description: "Intrepidly blast away until all that is left is the ringing in your ears. Good damage but your accuracy will suffer.",
+                description: "Intrepid blast from a standing position. You're working on pure reflex here so your accuracy suffers somewhat.",
                 primeLength: 1,
                 baseDamage: 25,
                 image: muzzleBlast,
-                range: 15,
+                range: 30,
                 primed: false,
                 assignment: null,
                 primeAnimation: "load",
-                animation: "shoot",
+                animation: "fire",
                 primaryModifier: "Faith",
                 secondaryModifier: "Bravado",
-
               },
             ]
           },
@@ -347,63 +483,62 @@ class Loader {
             label: "ceremonial_dagger",
             id: "ceremonial-dagger",
             image: weaponImg,
-            description: "A simple copper blade.",
+            description: "Although free from ornamentation, this simple copper blade is warm to the touch. It seems to pulsaate in your hand.",
             primary: "Cruelty",
             actions: [
               {
-                id: "brandish_for_intimidation",
-                label: "Brandish for intimidation purposes",
-                caption: "Summoning courage",
-                description: "Reduce enemy attack and defense",
+                id: "lose_yourself",
+                label: "Lose yourself in the blade",
+                caption: "Standing on the precipice",
+                description: "Give yourself over to the churning current inside the blade. Increases attack and reduces defense for 5 seconds.",
                 image: weaponImg,
                 primeLength: 1,
                 baseDamage: 25,
                 range: 5,
                 primed: false,
                 assignment: null,
-                primeAnimation: "load",
-                animation: "shoot",
-                primaryModifier: "Faith",
+                primeAnimation: "withdraw",
+                animation: "lose_yourself",
+                primaryModifier: "Cruelty",
                 secondaryModifier: "Bravado",
               },
               {
                 id: "open_artery",
                 label: "Open artery",
                 caption: "Honing blade",
-                description: "Damage over time",
+                description: "Dart in with the blade. A steady stream of blood springs forth.",
                 image: weaponImg,
                 primeLength: 1,
                 baseDamage: 25,
                 range: 5,
                 primed: false,
                 assignment: null,
-                primeAnimation: "load",
-                animation: "shoot",
-                primaryModifier: "Faith",
-                secondaryModifier: "Bravado",
-
+                primeAnimation: "withdraw",
+                animation: "open_artery",
+                primaryModifier: "Cruelty",
+                secondaryModifier: "Guile",
               },
               {
                 id: "Stun with pommel",
                 label: "Stun with pommel",
                 caption: "Gathering strength",
-                description: "Slow windup but dazes an enemy for 30 seconds or until they are damaged",
+                description: "Bonk an enemy on the head, stunning them for 10 seconds or until they receive damage.",
                 image: weaponImg,
                 primeLength: 1,
                 baseDamage: 25,
                 range: 5,
                 primed: false,
                 assignment: null,
-                primeAnimation: "load",
-                animation: "shoot",
-                primaryModifier: "Faith",
-                secondaryModifier: "Bravado",
+                primeAnimation: "withdraw",
+                animation: "pommel_smack",
+                primaryModifier: "Cruelty",
+                secondaryModifier: "Guile",
               },
               {
                 id: "stab_in_frenzy",
                 label: "Stab in a frenzy",
-                caption: "Three strikes, high chance of critical hit but reduces defense during performance of action",
-                description: ".",
+                caption: "Working up a thirst",
+                description: "Strike quickly, high chance of critical hit but reduces defense for 3 seconds.",
                 image: weaponImg,
                 secondary: "",
                 primeLength: 1,
@@ -411,94 +546,14 @@ class Loader {
                 range: 5,
                 primed: false,
                 assignment: null,
-                primeAnimation: "load",
-                animation: "shoot",
-                primaryModifier: "Faith",
-                secondaryModifier: "Bravado",
-
-              },
-            ]
-          },
-          {
-            name: "Explosives Kit",
-            label: "explosives-kit",
-            image: weaponImg,
-            description: "A roughly woven bag containing metal capsules, bundles of string and a pouch of gritty yellow powder.",
-            primary: "Guile",
-            actions: [
-              {
-                id: "remote_landmine",
-                label: "Plant landmine for remote detonation",
-                caption: "Planting landmine",
-                description: ".",
-                image: landmine,
-                secondary: "",
-                primeLength: 1,
-                baseDamage: 25,
-                range: 5,
-                primed: false,
-                assignment: null,
-                primeAnimation: "load",
-                animation: "shoot",
-                primaryModifier: "Faith",
-                secondaryModifier: "Bravado",
-              },
-              {
-                id: "timed_landmine",
-                label: "Plant landmine and set timer",
-                caption: "Planting landmine",
-                description: ".",
-                image: landmine,
-                secondary: "",
-                primeLength: 1,
-                baseDamage: 25,
-                range: 5,
-                primed: false,
-                assignment: null,
-                primeAnimation: "load",
-                animation: "shoot",
-                primaryModifier: "Faith",
-                secondaryModifier: "Bravado",
-              },
-              {
-                id: "throw_grenade",
-                label: "Throw grenade",
-                caption: "Packing grenade",
-                description: ".",
-                image: landmine,
-                secondary: "",
-                primeLength: 1,
-                baseDamage: 25,
-                range: 5,
-                primed: false,
-                assignment: null,
-                primeAnimation: "load",
-                animation: "shoot",
-                primaryModifier: "Faith",
-                secondaryModifier: "Bravado",
-
-              },
-              {
-                id: "detonate_smoke_bomb",
-                label: "Detonate smoke bomb",
-                caption: "Packing smoke bomb",
-                description: ".",
-                image: landmine,
-                secondary: "",
-                primeLength: 1,
-                baseDamage: 25,
-                range: 5,
-                primed: false,
-                assignment: null,
-                primeAnimation: "load",
-                animation: "shoot",
-                primaryModifier: "Faith",
+                primeAnimation: "withdraw",
+                animation: "thrust_slash",
+                primaryModifier: "Cruelty",
                 secondaryModifier: "Bravado",
               },
             ]
           },
         ],
-
         enemies:[
         ],
         gates:[
@@ -506,7 +561,12 @@ class Loader {
             label: "rear-entrance",
             prompt: "Open rear door of gatehouse",
             unlockedBy: "rear-entrance"
-          }
+          },
+          {
+            label: "prisoner-cage",
+            prompt: "Open cage",
+            unlockedBy: "cage-key"
+          },
         ],
       }
 
@@ -748,11 +808,9 @@ class Loader {
               const gateContent = Avern.Content.gates.find(g => g.label === c.userData.label)
               // check store
               console.log(gateContent)
-              // if worldEvent[this gate was unlocked], spawn in unlocked state
-              if (!currentWorldEvents.gateUnlocked) {
-                const gateway = Avern.GameObjects.createGameObject(scene, c.name)
-                gateway.addComponent(Gateway, c, gateContent)
-              }
+              if (c.userData.label === "rear-entrance" && currentWorldEvents.gateUnlocked) return
+              const gateway = Avern.GameObjects.createGameObject(scene, c.name)
+              gateway.addComponent(Gateway, c, gateContent)
               break;
 
             default:
@@ -795,19 +853,22 @@ class Loader {
         case "courtyard-path": 
         case "courtyard-gate": 
         case "player-restart": 
-          Avern.Content.baseFile=simple1
+          Avern.Content.baseFile=demoCourtyard
           break;
         case "cliffs-start": 
-          Avern.Content.baseFile=simple2
-          if (!get(Avern.Store.combatTutorialShown)) {
-            setTimeout(() => {
-              Avern.Store.combatTutorialVisible.set(true)
-              Avern.Store.combatTutorialShown.set(true)
-            }, 3000)
-          }
-          break;
+          // Avern.Content.baseFile=simple2
+          // if (!get(Avern.Store.combatTutorialShown)) {
+          //   setTimeout(() => {
+          //     Avern.Store.combatTutorialVisible.set(true)
+          //     Avern.Store.combatTutorialShown.set(true)
+          //   }, 3000)
+          // }
+          // break;
         case "cliffs-end": 
-          Avern.Content.baseFile=simple2
+          Avern.Content.baseFile=demoCliffs
+          break;
+        case "swamp-start": 
+          Avern.Content.baseFile=demoSwamp
           break;
       }
 

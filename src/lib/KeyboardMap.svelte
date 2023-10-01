@@ -221,7 +221,7 @@
           <div class="action-active-indicator"></div>
           <div class="action-tooltip">
             <h3>Look around</h3>
-            <p>Examine your environment by moving the cursor. Disables player movement.</p>
+            <p>Examine your environment by dragging the cursor. Disables player movement.</p>
           </div>
         </div>
         <div style="font-family:var(--serif); font-size: 14px;">[SPACE] - Jump</div>

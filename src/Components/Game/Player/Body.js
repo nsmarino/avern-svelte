@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import playerGltf from "../../../../assets/pc/fse--player1-turn180.gltf"
+import playerGltf from "../../../../assets/pc/fse--PC-DEMO.gltf"
 import GameplayComponent from '../../_Component';
 import Actions from "./Actions"
 import InteractionOverlay from '../../Interface/InteractionOverlay';
@@ -155,15 +155,15 @@ class Body extends GameplayComponent {
                 crucialFrame: null,
                 canInterrupt: false,
             }
-            this.loadShotgun = {
-                id: "load_shotgun",
-                anim: this.setUpAnim(clips, "LOAD", false, false, 2.6),
+            this.withdraw = {
+                id: "withdraw",
+                anim: this.setUpAnim(clips, "WITHDRAW_BLADE", false, false, 1.1),
                 crucialFrame: null,
                 canInterrupt: false,
             }
-            this.plant = {
-                id: "plant",
-                anim: this.setUpAnim(clips, "PLANT", false, false, 5),
+            this.loadShotgun = {
+                id: "load_shotgun",
+                anim: this.setUpAnim(clips, "LOAD", false, false, 2.6),
                 crucialFrame: null,
                 canInterrupt: false,
             }
@@ -179,15 +179,21 @@ class Body extends GameplayComponent {
                 crucialFrame: 50,
                 canInterrupt: true,
             }
+            this.fire = {
+                id: "fire",
+                anim: this.setUpAnim(clips, "RAPID_FIRE", false, true, 0.8),
+                crucialFrame: 5,
+                canInterrupt: true,
+            }
+            this.club = {
+                id: "club",
+                anim: this.setUpAnim(clips, "RIFLE_PUNCH", false, true),
+                crucialFrame: 50,
+                canInterrupt: true,
+            }
             this.slash = {
                 id: "slash",
                 anim: this.setUpAnim(clips, "SLASH", false, true, 1),
-                crucialFrame: 30,
-                canInterrupt: true,
-            }
-            this.detonate = {
-                id: "detonate",
-                anim: this.setUpAnim(clips, "DETONATE", false, true, 0.8),
                 crucialFrame: 30,
                 canInterrupt: true,
             }
@@ -201,6 +207,32 @@ class Body extends GameplayComponent {
                 id: "drink",
                 anim: this.setUpAnim(clips, "DRINK", false, true, 1.5),
                 crucialFrame: null,
+                canInterrupt: true,
+            }
+
+            // ceremonial dagger:
+            this.pommel_smack = {
+                id: "pommel_smack",
+                anim: this.setUpAnim(clips, "POMMEL_SMACK", false, true, 1),
+                crucialFrame: 30,
+                canInterrupt: true,
+            }
+            this.thrust_slash = {
+                id: "thrust_slash",
+                anim: this.setUpAnim(clips, "THRUST_SLASH", false, true, 1),
+                crucialFrame: 30,
+                canInterrupt: true,
+            }
+            this.open_artery = {
+                id: "open_artery",
+                anim: this.setUpAnim(clips, "OPEN_ARTERY", false, true, 1),
+                crucialFrame: 30,
+                canInterrupt: true,
+            }
+            this.lose_yourself = {
+                id: "lose_yourself",
+                anim: this.setUpAnim(clips, "BATTLE_CRY", false, true, 1),
+                crucialFrame: 30,
                 canInterrupt: true,
             }
 
@@ -250,9 +282,13 @@ class Body extends GameplayComponent {
             case this.drink.anim:
                 this.emitSignal("player_heal")
             case this.shoot.anim:
-            case this.shotgun.anim:
-            case this.detonate.anim:
+            case this.fire.anim:
+            case this.thrust_slash.anim:
+            case this.pommel_smack.anim:
+            case this.lose_yourself.anim:
+            case this.open_artery.anim:
             case this.slash.anim:
+            case this.club.anim:
                 if (inputs.forward) {
                     this.fadeIntoAction(this.run, 0.1, REPLACE)
                 } else if (inputs.back) {
