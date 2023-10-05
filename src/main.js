@@ -21,15 +21,24 @@ function startMenu() {
 		gsap.to(".mask p", { opacity: 0, delay: 2, duration: 0.2 })
 	}
 
-	const showIntro = () => {
+	const showInitialConfig = () => {
 		gsap.set(".menu-options", { display: "none"})
 		gsap.set(".fse-bg", { display: 'none'})
+		gsap.set(".initial-config", { display: 'block'})
+		gsap.to(".initial-config", { opacity: 1, duration: 1, y: 0, pointerEvents: "auto"  })
+	}
 
+	const showIntro = (dominantHand) => {
+		window.avernKeyboardConfig = dominantHand
+		gsap.set(".initial-config", { display: "none"})
 		gsap.set(".intro", { display: 'block'})
 		gsap.to(".intro", { opacity: 1, duration: 1, y: 0, pointerEvents: "auto"  })
 		gsap.set(".intro-placeholder-illus", { display: 'flex'})
 		gsap.to(".intro-placeholder-illus", { opacity: 1, duration: 1, y: 0, pointerEvents: "auto"  })
+		Avern.Inputs.setConfig(dominantHand)
+		document.querySelector(".intro .next-card-key").innerText = dominantHand === "left" ? "H" : "G"
 	}
+
 	const showCredits = () => {
 		gsap.set(".menu-options", { display: "none"})
 		gsap.set(".credits", { display: 'block'})
@@ -50,7 +59,9 @@ function startMenu() {
 	}
 	document.addEventListener("click", showMenu)
 
-	document.querySelector(".new-game").addEventListener("click", showIntro)
+	document.querySelector(".new-game").addEventListener("click", showInitialConfig)
+	document.querySelector(".config-left").addEventListener("click", () => showIntro("left"))
+	document.querySelector(".config-right").addEventListener("click", () => showIntro("right"))
 	document.querySelector(".show-credits").addEventListener("click", showCredits)
 	document.querySelector(".hide-credits").addEventListener("click", hideCredits)
 

@@ -1,7 +1,7 @@
 class Inputs {
     constructor() {
-        this.leftHanded=true
-
+        this.leftHanded=window.avernKeyboardConfig==="left"
+        console.log("here is lefty", this.leftHanded)
         this.leftHandedConfig = {
             forward: {
                 code: "KeyI",
@@ -442,6 +442,13 @@ class Inputs {
             return false;
         }.bind(this), false);
 
+    }
+
+    setConfig(dominantHand) {
+        if (dominantHand !== "left") {
+            this.leftHanded = false
+            this.config=this.rightHandedConfig
+        }
     }
 
     getInputs() {

@@ -607,7 +607,7 @@ class Loader {
         },
     
         config: {
-            leftHanded: true,
+            leftHanded: window.avernKeyboardConfig==="left",
         },
     
         weapons: [
@@ -620,7 +620,7 @@ class Loader {
         openingRemarksVisible: false,
         combatTutorialVisible:  false,
         endOfDemoVisible: false,
-        openingRemarksShown: false,
+        openingRemarksShown: true,
         combatTutorialShown:  false,
         endOfDemoShown: false,
       }

@@ -143,6 +143,22 @@
           padding: 0 7px 0 250px;
           margin: auto 0;        
         }
+        .start-menu .initial-config {
+          margin: auto;
+          max-width: 400px;
+        }
+        .start-menu .initial-config span {
+          color: white;
+        }
+        .start-menu .initial-config h2 {
+          font-family: var(--serif-italic);
+          margin-bottom: 40px;
+        }
+        .start-menu .initial-config .config-container {
+          margin-top: 40px;
+          display: flex;
+          justify-content: space-between;
+        }
         .start-menu .intro-placeholder-illus {
           width: 30%;
           position: fixed;
@@ -152,14 +168,15 @@
           height: 100%;
         }
         ::-webkit-scrollbar {
-  -webkit-appearance: none;
-  width: 7px;
-}
+          -webkit-appearance: none;
+          width: 7px;
+        }
 
-  ::-webkit-scrollbar-thumb {
-    border-radius: 4px;
-    background-color: var(--avern-tan);
-  }
+        ::-webkit-scrollbar-thumb {
+          border-radius: 4px;
+          background-color: var(--avern-tan);
+        }
+
         .start-menu button {
           background: var(--avern-input-gradient);
           border: 1px solid var(--avern-grey);
@@ -172,6 +189,7 @@
           margin-bottom: 20px;
           justify-content: center;
         }
+
         h1 {
           font-family: Inria-Italic;
           font-style: italic;
@@ -195,15 +213,17 @@
         .start-menu button:disabled {
           opacity: 0.4;
         }
+
         .start-menu button:hover:not(:disabled) {
           filter: brightness(1.25)
-
         }
+
         .start-menu footer {
           justify-self: end;
           text-align: center;
           margin-top: 100px;
         }
+
         .start-menu footer a {
           font-size: 12px;
           text-transform: uppercase;
@@ -248,18 +268,6 @@
           margin: 5px;
 
         }
-        /* @keyframes gentleBobbing {
-          0%, 100% {
-            transform: translateY(3px);
-          }
-          50% {
-            transform: translateY(-3px);
-          }
-        } */
-
-
-
-
 
       .enemy-bar {
         width: 80px;
@@ -294,14 +302,9 @@
       <img class="fse-bg" src="/fse-bg.svg" style="position: absolute; display: none; opacity: 0; transform: translateY(20px); pointer-events: none;" alt="">
 
       <div class="intro-prompt">
-        <!-- <svg viewBox="0 0 993 806" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 100px; margin-bottom: 40px;">
-          <path d="M176.673 472.5L1 805H992L951.654 730L825.152 596L780.183 429.5L717.143 354.5L609.133 102.5L519.195 1L424.213 247.5H338.898L244.337 429.5L176.673 472.5Z" fill="var(--avern-off-black)" stroke="var(--avern-dark-red)"/>
-          </svg> -->
-          
-  
-      <p>Click anywhere to start</p>
-   
+        <p>Click anywhere to start</p>
       </div>
+
       <div class="menu-options"  style="display: none; opacity: 0; transform: translateY(20px); pointer-events: none;">
         <h1>Fortress Shepherd Eunuch</h1>
 
@@ -318,50 +321,64 @@
           avern.systems</a></footer> 
       </div>
 
-        <div class="intro" style="display: none; opacity: 0; transform: translateY(40px); pointer-events: none;">
-          <p>The Merchant's Road has long connected the empire's capital to the riches of the far east.</p>
-          <p>Each day caravans trudge through marsh and mountain, bearing loads of precious metals, pungent spices and fine textiles.</p>
-          <p>The road is long and dangerous. Here and there the caravans seek refuge in heavily fortified settlements, knots of safety in this cord of commerce.</p>
-          <p>One such settlement is the fortress of Koker, high in the jagged mountains on the eastern frontier of the empire.</p>
-          <p>You have lived here almost all your life.</p>
-
-          <br />
-
-          <p>You do not remember the earthquake that devastated your village, and you do not remember the merchants who found you amidst the wreckage.</p>
-          <p>You do not remember the clink of gold when they sold you into this fortress's service.</p>
-          <p>You do not remember the bite of the blade that forever marked the degree of your servitude.</p>
-          <p>You will live for the fortress, and you will have no life beyond it.</p>
-          <p>You wear a wooden mask, as all the empire's castrates do, and you carry a bolt action rifle.</p>
-          <p>There are goats on the cliffs above the fortress, and you are their guardian.</p>
-
-          <button class="start-btn"><span>Play</span></button>
+      <div class="initial-config" style="display: none; opacity: 0; transform: translateY(20px); pointer-events: none;">
+        <h2>Opening Remarks</h2>
+        <p><span>FORTRESS SHEPHERD EUNUCH</span> is primarily played with both hands on the keyboard.
+        <p>You can hover the cursor over the in-game <span>KEYBOARD MAP</span> to learn more.</p>
+        <p>Keyboard configurations have been designed for both left-handed and right-handed players. This can be changed at any time from the <span>PAUSE MENU</span>.</p>
+        <div class="config-container">
+          <button class="config-left">Use Left Handed Config</button>
+          <button class="config-right">Use Right Handed Config</button>
         </div>
-        <div class="intro-placeholder-illus" style="display: none; opacity: 0; transform: translateY(40px); pointer-events: none;">
-          <svg viewBox="0 0 963 831" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M99.1578 571.783C75.6498 557.955 47.7096 546.565 26.3284 529.586C14.7807 520.416 14.2143 511.293 17.0554 498.224C20.3916 482.878 30.4277 469.936 36.3307 455.506C40.4238 445.501 38.6058 437.136 37.3726 427.27C34.5135 404.397 30.58 381.958 21.223 360.693C17.3346 351.855 -9.02281 318.385 7.26148 308.806C13.036 305.409 18.159 298.999 23.6194 294.948C35.9935 285.767 53.3304 276.478 67.6922 270.255C74.3695 267.361 85.6153 263.212 92.9063 265.254C114.066 271.179 131.295 285.05 153.962 286.613C164.081 287.311 161.969 276.65 164.798 269.421C170.591 254.616 178.602 240.89 183.552 225.765C191.725 200.792 206.781 171.933 201.89 145.643C197.208 120.479 193.238 102.016 216.477 84.5868C226.236 77.2672 252.937 77.7825 244.504 62.6026C239.343 53.3125 231.163 42.186 240.753 32.5956C244.796 28.553 276.461 14.9573 273.99 12.4868C272.951 11.4478 264.217 3.9818 265.446 3.63054C272.517 1.61044 286.703 1.77611 293.786 2.48444C294.798 2.58557 294.203 14.2316 294.203 15.7167C294.203 22.8849 297.954 29.9306 297.954 37.2842C297.954 68.7272 313.223 98.882 334.004 121.262C348.686 137.073 348.591 155.543 348.591 175.65C348.591 184.984 346.737 196.736 351.404 205.136C358.456 217.83 367.638 222.175 380.369 227.745C394.566 233.956 409.041 252.117 419.44 262.753C430.961 274.535 437.454 292.379 442.779 307.764C445.374 315.259 445.67 324.413 450.802 330.686C454.566 335.286 458.143 340.486 461.117 345.689C462.477 348.07 475.906 336.613 477.996 335.478C483.969 332.236 488.045 330.343 494.979 332.769C509.166 337.735 523.044 341.105 538.01 341.105C543.819 341.105 555.682 343.615 560.098 347.148C570.151 355.19 562.419 361.734 579.373 361.734C595.103 361.734 609.296 358.51 624.28 362.672C642.353 367.693 646.891 357.274 651.994 340.688C653.638 335.345 652.411 327.917 652.411 322.35C652.411 314.544 654.287 307.212 654.287 299.428C654.287 288.236 665.867 282.018 673.979 276.402C696.698 260.673 727.585 237.485 736.806 209.824" stroke="#CDCAAC" stroke-width="3" stroke-linecap="round"/>
-            <path d="M737.09 209.063C737.507 205.727 747.333 204.173 749.801 203.228C766.473 196.843 783.633 191.931 801.167 188.537C811.475 186.542 808.356 178.711 808.356 169.783C808.356 158.657 813.983 148.044 813.983 136.858C813.983 118.07 858.75 119.474 867.954 109.248C873.439 103.153 869.438 89.542 870.662 81.9499C871.717 75.409 877.093 64.0439 883.374 60.9033" stroke="#CDCAAC" stroke-width="3" stroke-linecap="round"/>
-            <path d="M97.046 572.739C96.2523 579.883 91.4828 586.203 86.7753 590.91C81.068 596.617 80.8215 603.1 77.8872 610.069C74.7001 617.638 75.4054 631.548 75.7145 639.894C76.1655 652.071 80.8102 661.983 86.7753 672.286C94.0805 684.904 111.189 695.191 125.488 695.395C153.881 695.801 177.324 697.268 203.704 706.061C217.458 710.646 231.142 715.081 244.984 718.899C267.155 725.015 293.883 722.059 316.682 722.059C332.256 722.059 347.961 718.801 363.69 718.504C370.298 718.38 378.735 717.157 385.219 715.739C391.896 714.278 405.208 712.31 410.303 708.233C416.793 703.042 446.349 686.499 447.239 702.506C447.716 711.107 447.377 715.939 452.571 723.442C461.471 736.296 473.481 727.709 487.729 727.392C490.68 727.327 501.044 728.918 502.839 726.405C504.779 723.688 487.15 717.192 500.172 716.727C514.167 716.227 518.211 716.015 526.837 704.283C528.912 701.46 530.837 697.431 532.565 694.407C534.447 691.114 538.535 691.685 541.058 689.667C552.085 680.845 565.157 691.84 577.005 691.84C579.463 691.84 583.216 685.278 585.893 683.939C589.409 682.181 593.239 680.935 596.954 679.791C603.391 677.811 613.372 677.619 620.063 677.619C625.559 677.619 636.15 677.232 640.605 673.668C642.922 671.815 646.639 671.783 648.901 669.521C650.86 667.561 651.384 662.865 653.838 662.015C681.588 652.41 702.098 696.914 710.92 714.356C714.518 721.471 720.634 740.73 728.104 745.564C733.901 749.315 737.379 755.431 744.201 758.501C751.918 761.973 760.861 765.56 768.989 767.883C779.674 770.936 783.032 775.239 788.543 782.894C790.761 785.975 803.941 809.023 806.319 809.163C818.417 809.875 834.707 799.95 845.822 804.225C851.763 806.51 857.206 816.97 861.327 821.607C862.809 823.274 870.35 830.513 866.759 828.717" stroke="#CDCAAC" stroke-width="3" stroke-linecap="round"/>
-            <path d="M497.793 545.555C498.606 538.242 504.341 528.876 507.303 522.255C509.668 516.968 511.786 511.923 514.912 507.038C515.634 505.91 519.265 499.745 519.311 499.905C522.298 510.362 530.898 518.617 534.171 528.436" stroke="#CDCAAC" stroke-width="3" stroke-linecap="round"/>
-            <path d="M557.711 468.52C561.109 460.875 564.644 453.178 567.935 445.457C568.419 444.32 572.106 430.974 572.69 434.282C573.891 441.088 580.508 449.735 583.389 456.156C586.332 462.715 589.266 472.257 594.089 477.08" stroke="#CDCAAC" stroke-width="3" stroke-linecap="round"/>
-            <path d="M634.744 599.052C634.744 590.416 632.117 564.349 644.374 567.073C657.642 570.021 657.568 587.995 666.842 592.632" stroke="#CDCAAC" stroke-width="3" stroke-linecap="round"/>
-            <path d="M660.426 451.401C660.426 436.903 668.985 423.733 668.985 409.674C668.985 401.245 672.651 409.412 675.524 413.002C682.683 421.952 689.521 430.417 694.664 440.702" stroke="#CDCAAC" stroke-width="3" stroke-linecap="round"/>
-            <path d="M255.988 466.38C271.126 466.38 286.263 466.38 301.401 466.38C322.884 466.38 340.416 462.36 360.842 457.821C378.722 453.847 388.039 459.528 403.52 469.59C410.969 474.432 417.794 484.596 427.178 485.639C433.3 486.319 445.061 491.342 450.716 493.723C457.558 496.604 469.099 497.383 474.255 503.828C482.471 514.098 491.356 518.798 502.073 524.157" stroke="#CDCAAC" stroke-width="3" stroke-linecap="round"/>
-            <path d="M534.43 525.158C543.323 525.158 552.677 523.799 560.51 528.151C566.647 531.56 578.46 529.434 585.307 529.434C587.361 529.434 598.324 527.053 598.561 525.158C599.055 521.212 605.037 518.768 606.922 515.752C608.88 512.62 612.471 511.408 615.663 509.767C619.82 507.629 624.374 502.071 629.344 502.071" stroke="#CDCAAC" stroke-width="3" stroke-linecap="round"/>
-            <path d="M531.695 524.419C536.738 529.462 541.564 534.48 545.93 540.093C547.088 541.581 552.139 549.882 552.139 548.952" stroke="#CDCAAC" stroke-width="3" stroke-linecap="round"/>
-            <path d="M594.387 449.46C599.849 443.315 601.389 430.254 604.987 422.808C607.79 417.006 610.825 411.265 612.18 405.166C612.866 402.079 614.64 399.545 614.83 396.307C615.026 392.98 623.509 403.928 624.446 405.393C627.712 410.496 650.106 445.451 642.088 449.46" stroke="#CDCAAC" stroke-width="3" stroke-linecap="round"/>
-            <path d="M528.969 614.371C529.912 605.879 532.892 596.723 535.48 588.476C538.025 580.367 543.463 569.93 543.961 561.218C544.318 554.96 545.949 542.834 552.895 540.85C556.86 539.717 556.413 544.26 557.59 546.907C560.828 554.192 566.242 558.575 571.143 564.701C578.68 574.122 586.586 581.441 596.357 588.476C601.244 591.995 609.401 596.694 612.106 602.105" stroke="#CDCAAC" stroke-width="3" stroke-linecap="round"/>
-            <path d="M674.801 574.847C674.801 550.74 693.755 530.524 695.244 506.702C695.351 504.999 696.699 509.269 697.213 510.033C703.061 518.726 710.69 526.087 716.824 534.565C722.169 541.955 727.081 552.276 729.317 561.218" stroke="#CDCAAC" stroke-width="3" stroke-linecap="round"/>
-            <path d="M628.461 501.25C638.366 501.25 647.038 511.755 657.385 512.153C669.711 512.627 677.127 520.519 687.066 527.145" stroke="#CDCAAC" stroke-width="3" stroke-linecap="round"/>
-            <path d="M708.871 524.42C715.058 524.42 721.176 522.802 727.195 521.542C745.674 517.674 764.272 514.188 782.619 509.73C792.734 507.273 805.351 502.613 815.859 502.613C820.406 502.613 825.766 503.411 830.169 502.31C841.045 499.591 849.146 490.716 860.834 488.378C874.23 485.699 880.384 486.147 892.181 490.953C899.002 493.732 904.682 497.769 911.943 499.584C926.865 503.315 946.137 502.012 961.008 499.887" stroke="#CDCAAC" stroke-width="3" stroke-linecap="round"/>
-            <circle cx="254" cy="464" r="5" fill="#D9D9D9"/>
-            <circle cx="630" cy="497" r="5" fill="#D9D9D9"/>
-            </svg>            
-        </div>
-        <div class="credits" style="display: none; opacity: 0; transform: translateY(40px); pointer-events: none;">
+      </div>
+
+      <div class="intro" style="display: none; opacity: 0; transform: translateY(40px); pointer-events: none;">
+        <div class="next-card-key"></div>
+        <p>The Merchant's Road has long connected the empire's capital to the riches of the far east.</p>
+        <p>Each day caravans trudge through marsh and mountain, bearing loads of precious metals, pungent spices and fine textiles.</p>
+        <p>The road is long and dangerous. Here and there the caravans seek refuge in heavily fortified settlements, knots of safety in this cord of commerce.</p>
+        <p>One such settlement is the fortress of Koker, high in the jagged mountains on the eastern frontier of the empire.</p>
+        <p>You have lived here almost all your life.</p>
+
+        <br />
+
+        <p>You do not remember the earthquake that devastated your village, and you do not remember the merchants who found you amidst the wreckage.</p>
+        <p>You do not remember the clink of gold when they sold you into this fortress's service.</p>
+        <p>You do not remember the bite of the blade that forever marked the degree of your servitude.</p>
+        <p>You will live for the fortress, and you will have no life beyond it.</p>
+        <p>You wear a wooden mask, as all the empire's castrates do, and you carry a bolt action rifle.</p>
+        <p>There are goats on the cliffs above the fortress, and you are their guardian.</p>
+
+        <button class="start-btn"><span>Play</span></button>
+      </div>
+
+      <div class="intro-placeholder-illus" style="display: none; opacity: 0; transform: translateY(40px); pointer-events: none;">
+        <svg viewBox="0 0 963 831" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M99.1578 571.783C75.6498 557.955 47.7096 546.565 26.3284 529.586C14.7807 520.416 14.2143 511.293 17.0554 498.224C20.3916 482.878 30.4277 469.936 36.3307 455.506C40.4238 445.501 38.6058 437.136 37.3726 427.27C34.5135 404.397 30.58 381.958 21.223 360.693C17.3346 351.855 -9.02281 318.385 7.26148 308.806C13.036 305.409 18.159 298.999 23.6194 294.948C35.9935 285.767 53.3304 276.478 67.6922 270.255C74.3695 267.361 85.6153 263.212 92.9063 265.254C114.066 271.179 131.295 285.05 153.962 286.613C164.081 287.311 161.969 276.65 164.798 269.421C170.591 254.616 178.602 240.89 183.552 225.765C191.725 200.792 206.781 171.933 201.89 145.643C197.208 120.479 193.238 102.016 216.477 84.5868C226.236 77.2672 252.937 77.7825 244.504 62.6026C239.343 53.3125 231.163 42.186 240.753 32.5956C244.796 28.553 276.461 14.9573 273.99 12.4868C272.951 11.4478 264.217 3.9818 265.446 3.63054C272.517 1.61044 286.703 1.77611 293.786 2.48444C294.798 2.58557 294.203 14.2316 294.203 15.7167C294.203 22.8849 297.954 29.9306 297.954 37.2842C297.954 68.7272 313.223 98.882 334.004 121.262C348.686 137.073 348.591 155.543 348.591 175.65C348.591 184.984 346.737 196.736 351.404 205.136C358.456 217.83 367.638 222.175 380.369 227.745C394.566 233.956 409.041 252.117 419.44 262.753C430.961 274.535 437.454 292.379 442.779 307.764C445.374 315.259 445.67 324.413 450.802 330.686C454.566 335.286 458.143 340.486 461.117 345.689C462.477 348.07 475.906 336.613 477.996 335.478C483.969 332.236 488.045 330.343 494.979 332.769C509.166 337.735 523.044 341.105 538.01 341.105C543.819 341.105 555.682 343.615 560.098 347.148C570.151 355.19 562.419 361.734 579.373 361.734C595.103 361.734 609.296 358.51 624.28 362.672C642.353 367.693 646.891 357.274 651.994 340.688C653.638 335.345 652.411 327.917 652.411 322.35C652.411 314.544 654.287 307.212 654.287 299.428C654.287 288.236 665.867 282.018 673.979 276.402C696.698 260.673 727.585 237.485 736.806 209.824" stroke="#CDCAAC" stroke-width="3" stroke-linecap="round"/>
+          <path d="M737.09 209.063C737.507 205.727 747.333 204.173 749.801 203.228C766.473 196.843 783.633 191.931 801.167 188.537C811.475 186.542 808.356 178.711 808.356 169.783C808.356 158.657 813.983 148.044 813.983 136.858C813.983 118.07 858.75 119.474 867.954 109.248C873.439 103.153 869.438 89.542 870.662 81.9499C871.717 75.409 877.093 64.0439 883.374 60.9033" stroke="#CDCAAC" stroke-width="3" stroke-linecap="round"/>
+          <path d="M97.046 572.739C96.2523 579.883 91.4828 586.203 86.7753 590.91C81.068 596.617 80.8215 603.1 77.8872 610.069C74.7001 617.638 75.4054 631.548 75.7145 639.894C76.1655 652.071 80.8102 661.983 86.7753 672.286C94.0805 684.904 111.189 695.191 125.488 695.395C153.881 695.801 177.324 697.268 203.704 706.061C217.458 710.646 231.142 715.081 244.984 718.899C267.155 725.015 293.883 722.059 316.682 722.059C332.256 722.059 347.961 718.801 363.69 718.504C370.298 718.38 378.735 717.157 385.219 715.739C391.896 714.278 405.208 712.31 410.303 708.233C416.793 703.042 446.349 686.499 447.239 702.506C447.716 711.107 447.377 715.939 452.571 723.442C461.471 736.296 473.481 727.709 487.729 727.392C490.68 727.327 501.044 728.918 502.839 726.405C504.779 723.688 487.15 717.192 500.172 716.727C514.167 716.227 518.211 716.015 526.837 704.283C528.912 701.46 530.837 697.431 532.565 694.407C534.447 691.114 538.535 691.685 541.058 689.667C552.085 680.845 565.157 691.84 577.005 691.84C579.463 691.84 583.216 685.278 585.893 683.939C589.409 682.181 593.239 680.935 596.954 679.791C603.391 677.811 613.372 677.619 620.063 677.619C625.559 677.619 636.15 677.232 640.605 673.668C642.922 671.815 646.639 671.783 648.901 669.521C650.86 667.561 651.384 662.865 653.838 662.015C681.588 652.41 702.098 696.914 710.92 714.356C714.518 721.471 720.634 740.73 728.104 745.564C733.901 749.315 737.379 755.431 744.201 758.501C751.918 761.973 760.861 765.56 768.989 767.883C779.674 770.936 783.032 775.239 788.543 782.894C790.761 785.975 803.941 809.023 806.319 809.163C818.417 809.875 834.707 799.95 845.822 804.225C851.763 806.51 857.206 816.97 861.327 821.607C862.809 823.274 870.35 830.513 866.759 828.717" stroke="#CDCAAC" stroke-width="3" stroke-linecap="round"/>
+          <path d="M497.793 545.555C498.606 538.242 504.341 528.876 507.303 522.255C509.668 516.968 511.786 511.923 514.912 507.038C515.634 505.91 519.265 499.745 519.311 499.905C522.298 510.362 530.898 518.617 534.171 528.436" stroke="#CDCAAC" stroke-width="3" stroke-linecap="round"/>
+          <path d="M557.711 468.52C561.109 460.875 564.644 453.178 567.935 445.457C568.419 444.32 572.106 430.974 572.69 434.282C573.891 441.088 580.508 449.735 583.389 456.156C586.332 462.715 589.266 472.257 594.089 477.08" stroke="#CDCAAC" stroke-width="3" stroke-linecap="round"/>
+          <path d="M634.744 599.052C634.744 590.416 632.117 564.349 644.374 567.073C657.642 570.021 657.568 587.995 666.842 592.632" stroke="#CDCAAC" stroke-width="3" stroke-linecap="round"/>
+          <path d="M660.426 451.401C660.426 436.903 668.985 423.733 668.985 409.674C668.985 401.245 672.651 409.412 675.524 413.002C682.683 421.952 689.521 430.417 694.664 440.702" stroke="#CDCAAC" stroke-width="3" stroke-linecap="round"/>
+          <path d="M255.988 466.38C271.126 466.38 286.263 466.38 301.401 466.38C322.884 466.38 340.416 462.36 360.842 457.821C378.722 453.847 388.039 459.528 403.52 469.59C410.969 474.432 417.794 484.596 427.178 485.639C433.3 486.319 445.061 491.342 450.716 493.723C457.558 496.604 469.099 497.383 474.255 503.828C482.471 514.098 491.356 518.798 502.073 524.157" stroke="#CDCAAC" stroke-width="3" stroke-linecap="round"/>
+          <path d="M534.43 525.158C543.323 525.158 552.677 523.799 560.51 528.151C566.647 531.56 578.46 529.434 585.307 529.434C587.361 529.434 598.324 527.053 598.561 525.158C599.055 521.212 605.037 518.768 606.922 515.752C608.88 512.62 612.471 511.408 615.663 509.767C619.82 507.629 624.374 502.071 629.344 502.071" stroke="#CDCAAC" stroke-width="3" stroke-linecap="round"/>
+          <path d="M531.695 524.419C536.738 529.462 541.564 534.48 545.93 540.093C547.088 541.581 552.139 549.882 552.139 548.952" stroke="#CDCAAC" stroke-width="3" stroke-linecap="round"/>
+          <path d="M594.387 449.46C599.849 443.315 601.389 430.254 604.987 422.808C607.79 417.006 610.825 411.265 612.18 405.166C612.866 402.079 614.64 399.545 614.83 396.307C615.026 392.98 623.509 403.928 624.446 405.393C627.712 410.496 650.106 445.451 642.088 449.46" stroke="#CDCAAC" stroke-width="3" stroke-linecap="round"/>
+          <path d="M528.969 614.371C529.912 605.879 532.892 596.723 535.48 588.476C538.025 580.367 543.463 569.93 543.961 561.218C544.318 554.96 545.949 542.834 552.895 540.85C556.86 539.717 556.413 544.26 557.59 546.907C560.828 554.192 566.242 558.575 571.143 564.701C578.68 574.122 586.586 581.441 596.357 588.476C601.244 591.995 609.401 596.694 612.106 602.105" stroke="#CDCAAC" stroke-width="3" stroke-linecap="round"/>
+          <path d="M674.801 574.847C674.801 550.74 693.755 530.524 695.244 506.702C695.351 504.999 696.699 509.269 697.213 510.033C703.061 518.726 710.69 526.087 716.824 534.565C722.169 541.955 727.081 552.276 729.317 561.218" stroke="#CDCAAC" stroke-width="3" stroke-linecap="round"/>
+          <path d="M628.461 501.25C638.366 501.25 647.038 511.755 657.385 512.153C669.711 512.627 677.127 520.519 687.066 527.145" stroke="#CDCAAC" stroke-width="3" stroke-linecap="round"/>
+          <path d="M708.871 524.42C715.058 524.42 721.176 522.802 727.195 521.542C745.674 517.674 764.272 514.188 782.619 509.73C792.734 507.273 805.351 502.613 815.859 502.613C820.406 502.613 825.766 503.411 830.169 502.31C841.045 499.591 849.146 490.716 860.834 488.378C874.23 485.699 880.384 486.147 892.181 490.953C899.002 493.732 904.682 497.769 911.943 499.584C926.865 503.315 946.137 502.012 961.008 499.887" stroke="#CDCAAC" stroke-width="3" stroke-linecap="round"/>
+          <circle cx="254" cy="464" r="5" fill="#D9D9D9"/>
+          <circle cx="630" cy="497" r="5" fill="#D9D9D9"/>
+          </svg>            
+      </div>
+
+      <div class="credits" style="display: none; opacity: 0; transform: translateY(40px); pointer-events: none;">
         <p>Game Design, Programming, Story, and Art: Nicholas Marino</p>
         <p>Music and Sound Design: Theodora Ward</p>
         <button class="hide-credits">Back</button>
-        </div>
+      </div>
     </section>
   </div>
 
