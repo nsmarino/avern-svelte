@@ -93,10 +93,10 @@ class Sound {
             this.introHandler.classList.add("active")
             this.introHandler.play()
         })
-        document.querySelector(".start-btn").addEventListener("click", () => {
-            this.introHandler.pause()
-            this.musicHandler.play()
-        })
+        // document.querySelector(".start-btn").addEventListener("click", () => {
+            // this.introHandler.pause()
+            // this.musicHandler.play()
+        // })
         document.querySelector(".load-game").addEventListener("click", () => {
             this.introHandler.pause()
             this.musicHandler.play()
