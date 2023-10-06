@@ -55,18 +55,6 @@
               <p>The mountain water is fresh and clear. How else could the fortress endure?</p>
             </div>
           </div>
-
-          <div id="characterMenu" class="equipment input-key">
-            <div class="key-inner">
-            <span>{$config.leftHanded ? "R" : "U"}</span>
-            <img class="svg" src={equipment} alt="">
-            </div>
-            <div class="action-active-indicator"></div>
-            <div class="action-tooltip">
-              <h3>Character Menu</h3>
-              <p>Select actions, view stats and examine items and weapons.</p>
-            </div>
-          </div>
         </div>
 
         <div class="main-row">
@@ -103,7 +91,18 @@
 
         </div>
         <div class="bottom-row">
-          <div style="font-family:var(--serif); font-size: 14px;">[SHIFT] - Clear Target</div>
+          <div style="font-family:var(--serif); font-size: 12px; margin: auto;">[SHIFT] - Clear Target</div>
+          <div id="characterMenu" class="equipment input-key">
+            <div class="key-inner">
+            <span>{$config.leftHanded ? "c" : "m"}</span>
+            <img class="svg" src={equipment} alt="">
+            </div>
+            <div class="action-active-indicator"></div>
+            <div class="action-tooltip">
+              <h3>Character Menu</h3>
+              <p>Select actions, view stats and examine items and weapons.</p>
+            </div>
+          </div>
           <div id="prevTarget" class="target-key input-key">   
             <div class="key-inner">     
               <span>{$config.leftHanded ? "V" : "N"}</span>
@@ -121,17 +120,15 @@
 
     <div class="offhand">
       <div class="top-row">
-        <div id="pauseMenu" class="open-menu input-key">
-          <div class="key-inner">
-
-          <span>{$config.leftHanded ? "U" : "R"}</span>
-          <img class="svg" src={openMenu} alt="">
-        </div>
-        <div class="action-active-indicator"></div>
-        <div class="action-tooltip">
-          <h3>Game Menu</h3>
-          <p>Save your game, change settings, or review tutorials and recent interactions.</p>
-        </div>
+        <div id="cameraUp" class="camera-down input-key" style="width: 32px; height: 32px;">   
+          <div class="key-inner">     
+            <span>{$config.leftHanded ? "u" : "r"}</span>
+            <img class="svg" src={look} alt="">
+          </div>
+          <div class="action-active-indicator"></div>
+          <div class="action-tooltip">
+            <h3>Raise camera</h3>
+          </div>
         </div>
 
         <div id="forward" class="forward input-key">
@@ -213,18 +210,30 @@
 
       </div>
       <div class="bottom-row">
-        <div id="look" class="target-key input-key">   
+        <div id="cameraDown" class="camera-down input-key">   
           <div class="key-inner">     
-            <span>{$config.leftHanded ? "N" : "V"}</span>
+            <span>{$config.leftHanded ? "n" : "v"}</span>
             <img class="svg" src={look} alt="">
           </div>
           <div class="action-active-indicator"></div>
           <div class="action-tooltip">
-            <h3>Look around</h3>
-            <p>Examine your environment by dragging the cursor. Disables player movement.</p>
+            <h3>Lower camera</h3>
           </div>
         </div>
-        <div style="font-family:var(--serif); font-size: 14px;">[SPACE] - Jump</div>
+
+        <div id="pauseMenu" class="open-menu input-key">
+          <div class="key-inner">
+
+          <span>{$config.leftHanded ? "m" : "c"}</span>
+          <img class="svg" src={openMenu} alt="">
+        </div>
+        <div class="action-active-indicator"></div>
+        <div class="action-tooltip">
+          <h3>Game Menu</h3>
+          <p>Save your game, change settings, or review tutorials and recent interactions.</p>
+        </div>
+        </div>
+        <div style="font-family:var(--serif); font-size: 12px; margin: auto;">[SPACE] - Jump</div>
 
       </div>
     </div>

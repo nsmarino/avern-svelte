@@ -87,7 +87,7 @@ function startMenu() {
 			document.querySelector(".start-key-indicator").innerText = window.avernKeyboardConfig === "left" ? "H" : "G"
 			gsap.to(".start-key-indicator", { opacity: 1, duration: 1, y: 0, pointerEvents: "auto"  })
 			document.addEventListener("keydown", handleTitleKeyDown)
-		}, 3000)
+		}, 2000)
 	}
 
 	function handleTitleKeyDown(e) {

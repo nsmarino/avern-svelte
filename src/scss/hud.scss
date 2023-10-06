@@ -142,16 +142,15 @@
   }
   .bottom-row {
     display: flex;
-    justify-content: space-between;
     align-items: center;
     .rightHanded & {
       flex-direction: row-reverse;
     }
   }
   .bottom-row .input-key {
-    width: 40px;
-    height: 40px;
-    margin: 8px 24px;
+    width: 32px;
+    height: 32px;
+    margin: 8px 0 0 12px;
   }
 
   .input-key .key-inner {
@@ -196,9 +195,10 @@
 }
  .offhand .top-row {
   display: flex;
+  align-items: end;
   gap: 8px;
   margin-bottom: 8px;
-  margin-left: 58px;
+  margin-left: 48px;
   .rightHanded & {
     flex-direction: row-reverse;
     margin-right: 82px;
@@ -206,6 +206,7 @@
 }
  .equipped .top-row {
   display: flex;
+  align-items: end;
   gap: 8px;
   margin-bottom: 8px;
   margin-left: 110px;

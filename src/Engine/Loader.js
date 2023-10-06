@@ -379,7 +379,7 @@ class Loader {
                   },
                   {
                     type: "narration",
-                    text: "Her eyes finally snap away from you. She examines her cage with a brisk finality, as if noting which memories of her imprisonment to carry with her and which to leave here.",
+                    text: "Her eyes finally snap away from you. She examines her cage with a brisk finality, as if noting which memories of her imprisonment to carry with her and which to leave behind.",
                     image: esthelPortrait,
                     label: "Esthel",
                   },

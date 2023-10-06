@@ -64,8 +64,8 @@ class Inputs {
             },
         
             pauseMenu: {
-                code:"KeyU",
-                name: "U",
+                code:"KeyM",
+                name: "M",
                 pressed: false,
 
                 onlyOnce: true,
@@ -143,8 +143,8 @@ class Inputs {
             },
         
             characterMenu: {
-                code: "KeyR",
-                name: "R",
+                code: "KeyC",
+                name: "C",
                 pressed: false,
 
                 onlyOnce: true,
@@ -173,16 +173,32 @@ class Inputs {
                 trackWasPressed: true,
                 trackUp: true,
             },
-            look: {
+            cameraUp: {
+                code: "KeyU",
+                pressed: false,
+                onlyOnce: false,
+                trackWasPressed: true,
+                trackUp: true,
+            },
+
+            cameraDown: {
                 code: "KeyN",
+                pressed: false,
+                onlyOnce: false,
+                trackWasPressed: true,
+                trackUp: true,
+            },
+
+            cameraReset: {
+                code: "KeyO",
                 name: "N",
                 pressed: false,
-
                 onlyOnce: true,
                 trackWasPressed: true,
                 trackUp: true,
             },
         }
+
         this.rightHandedConfig = {
             forward: {
                 code: "KeyE",
@@ -240,7 +256,7 @@ class Inputs {
             },
         
             pauseMenu: {
-                code:"KeyR",
+                code:"KeyC",
                 pressed: false,
 
                 onlyOnce: true,
@@ -311,7 +327,7 @@ class Inputs {
             },
         
             characterMenu: {
-                code: "KeyU",
+                code: "KeyM",
                 pressed: false,
 
                 onlyOnce: true,
@@ -338,15 +354,30 @@ class Inputs {
                 trackUp: true,
             },
 
-            look: {
-                code: "KeyV",
-                name: "V",
+            cameraUp: {
+                code: "KeyR",
                 pressed: false,
+                onlyOnce: false,
+                trackWasPressed: true,
+                trackUp: true,
+            },
 
+            cameraDown: {
+                code: "KeyV",
+                pressed: false,
+                onlyOnce: false,
+                trackWasPressed: true,
+                trackUp: true,
+            },
+
+            cameraReset: {
+                code: "KeyW",
+                pressed: false,
                 onlyOnce: true,
                 trackWasPressed: true,
                 trackUp: true,
             },
+
         }
         
         this.config = this.leftHandedConfig
@@ -392,9 +423,15 @@ class Inputs {
             turnWasPressed:false,
             turnWasLifted:false,
 
-            look: false,
-            lookWasPressed:false,
-            lookWasLifted:false,
+            // cameraUp: false,
+            // cameraUpWasPressed:false,
+            // cameraUpWasLifted:false,
+            // cameraDown: false,
+            // cameraDownWasPressed:false,
+            // cameraDownWasLifted:false,
+            // cameraReset: false,
+            // cameraResetWasPressed:false,
+            // cameraResetWasLifted:false,
         }
         
         window.addEventListener( 'keydown', function(e) {
