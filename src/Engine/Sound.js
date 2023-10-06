@@ -88,11 +88,11 @@ class Sound {
         this.pageHandler.src = page
         this.pageHandler.volume = 0.2
 
-        document.addEventListener("click", () => {
-            if (this.introHandler.classList.contains("active")) return
-            this.introHandler.classList.add("active")
-            this.introHandler.play()
-        })
+        // document.addEventListener("click", () => {
+        //     if (this.introHandler.classList.contains("active")) return
+        //     this.introHandler.classList.add("active")
+        //     this.introHandler.play()
+        // })
         // document.querySelector(".start-btn").addEventListener("click", () => {
             // this.introHandler.pause()
             // this.musicHandler.play()

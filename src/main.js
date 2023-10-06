@@ -55,6 +55,8 @@ function startMenu() {
 	}
 
 	const showIntro = (dominantHand) => {
+		Avern.Sound.introHandler.play()
+
 		window.avernKeyboardConfig = dominantHand
 		gsap.set(".initial-config", { display: "none"})
 		gsap.set(".intro", { display: 'block'})
