@@ -572,14 +572,13 @@ class Loader {
 
       this.newGameStore = {
         scene: "url",
-
-        // just an array of IDs so the engine knows not to load them; cleared every time a scene is changed
-        killedBosses:[],
     
         player: { 
             flasks: 5,
             hp: 100,
             maxHp: 100,
+            energy: 100,
+            maxEnergy: 100,
             level: 10,
             xp: 0,
             location: null,

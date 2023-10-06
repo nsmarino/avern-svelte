@@ -1,22 +1,38 @@
 // HEALTH
 
-.energy {
+.bars {
   position: fixed;
   top: 40px;
   left: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.health-bar, .energy-bar {
   border: 1px solid var(--avern-off-black);
   padding: 2px;
   background: linear-gradient(var(--avern-grey), var(--avern-off-black));
+  width: fit-content;
 }
-.player-state .energy .health {
+.player-state .bars .health {
   height: 8px;
   width: 300px;
   background: linear-gradient(var(--avern-brown), var(--avern-off-black));
   border: 1px solid var(--avern-off-black);
 }
-.player-state .energy .health .inner-health { 
+.player-state .bars .energy {
+  height: 8px;
+  width: 200px;
+  background: linear-gradient(var(--avern-brown), var(--avern-off-black));
+  border: 1px solid var(--avern-off-black);
+}
+.player-state .bars .health .inner-health { 
   background-color: var(--avern-dark-red);
-  // width: var(--player-vitality-width);
+  height: 100%;
+  transition: width 0.2s;
+}
+.player-state .bars .energy .inner-energy { 
+  background-color: var(--avern-gold);
   height: 100%;
   transition: width 0.2s;
 }

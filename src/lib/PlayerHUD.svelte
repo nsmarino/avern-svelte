@@ -4,8 +4,13 @@
 <div>
     <div class="player-state">
         <!-- Top Left -->
-        <div class="energy">
-          <div class="health"><div class="inner-health" style="width: {($player.hp / $player.maxHp) * 100}%"></div></div>
+        <div class="bars">
+          <div class="health-bar">
+            <div class="health"><div class="inner-health" style="width: {($player.hp / $player.maxHp) * 100}%"></div></div>
+          </div>
+          <div class="energy-bar">
+            <div class="energy"><div class="inner-energy" style="width: {($player.energy / $player.maxEnergy) * 100}%"></div></div>
+          </div>
         </div>
         <!-- Top Right -->
         <div class="xp">
