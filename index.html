@@ -115,6 +115,8 @@
           flex-direction: column;
           gap: 14px;
           height: 100%;
+          align-items: center;
+          justify-content: center;
         }
         .menu-options, .credits {
           padding: 60px 100px;
@@ -273,7 +275,6 @@
         .start-menu footer {
           justify-self: end;
           text-align: center;
-          margin-top: 100px;
         }
 
         .start-menu footer a {
@@ -283,6 +284,7 @@
           text-decoration: none;
           display: flex;
           gap: 4px;
+          justify-content: center;
 
         }
         .start-menu footer svg{
@@ -351,18 +353,18 @@
 
 
     <section class="start-menu-root">
-      <img class="fse-bg" src="/fse-bg.svg" style="position: absolute; display: none; opacity: 0; transform: translateY(20px); pointer-events: none;" alt="">
+      <!-- <img class="fse-bg" src="/fse-bg.svg" style="position: absolute; display: none; opacity: 0; transform: translateY(20px); pointer-events: none;" alt=""> -->
 
-      <div class="intro-prompt">
+      <!-- <div class="intro-prompt">
         <p>Click anywhere to start</p>
-      </div>
+      </div> -->
 
-      <div class="menu-options"  style="display: none; opacity: 0; transform: translateY(20px); pointer-events: none;">
-        <h1>Fortress Shepherd Eunuch</h1>
+      <div class="menu-options">
+        <!-- <h1>Fortress Shepherd Eunuch</h1> -->
 
         <button class="new-game">New Game</button>
         <button class="load-game">Load Game</button>
-        <button class="show-credits">Credits</button>
+        <!-- <button class="show-credits">Credits</button> -->
         <footer><a href="https://www.avern.systems/" target="_blank"> <svg viewBox="0 0 35 30" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M15 28.9999C16.5087 25.1339 16.4712 24.5732 15 21.2631C14.3815 19.8713 13.5264 18.7749 13.5264 17.2105C13.5264 15.2281 14.0739 9.93673 15.7369 9.10522" stroke="var(--avern-blue)" stroke-linecap="round"/>
           <path d="M15 23.1054C17.6666 20.3554 19.204 17.0219 20.731 13.6902C22.1036 10.6954 27.6457 10.5791 30.4737 10.5791" stroke="var(--avern-blue)" stroke-linecap="round"/>

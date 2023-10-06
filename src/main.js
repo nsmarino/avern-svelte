@@ -87,7 +87,7 @@ function startMenu() {
 			document.querySelector(".start-key-indicator").innerText = window.avernKeyboardConfig === "left" ? "H" : "G"
 			gsap.to(".start-key-indicator", { opacity: 1, duration: 1, y: 0, pointerEvents: "auto"  })
 			document.addEventListener("keydown", handleTitleKeyDown)
-		}, 2000)
+		}, 1500)
 	}
 
 	function handleTitleKeyDown(e) {
@@ -110,21 +110,21 @@ function startMenu() {
 		gsap.set(".menu-options", { display: 'block'})
 		gsap.to(".menu-options", { opacity: 1, duration: 1, y: 0, pointerEvents: "auto"  })
 	}
-	const showMenu = () => {
-		gsap.set(".intro-prompt", { display: "none"})
-		gsap.set(".menu-options", { display: 'block'})
-		gsap.to(".menu-options", { opacity: 1, duration: 1, y: 0, pointerEvents: "auto"  })
-		gsap.set(".fse-bg", { display: 'block'})
-		gsap.to(".fse-bg", { opacity: 1, duration: 1, y: 0, pointerEvents: "auto"  })
-		document.removeEventListener("click", showMenu)
-	}
-	document.addEventListener("click", showMenu)
+	// const showMenu = () => {
+	// 	gsap.set(".intro-prompt", { display: "none"})
+	// 	gsap.set(".menu-options", { display: 'block'})
+	// 	gsap.to(".menu-options", { opacity: 1, duration: 1, y: 0, pointerEvents: "auto"  })
+	// 	gsap.set(".fse-bg", { display: 'block'})
+	// 	gsap.to(".fse-bg", { opacity: 1, duration: 1, y: 0, pointerEvents: "auto"  })
+	// 	document.removeEventListener("click", showMenu)
+	// }
+	// document.addEventListener("click", showMenu)
 
 	document.querySelector(".new-game").addEventListener("click", showInitialConfig)
 	document.querySelector(".config-left").addEventListener("click", () => showIntro("left"))
 	document.querySelector(".config-right").addEventListener("click", () => showIntro("right"))
-	document.querySelector(".show-credits").addEventListener("click", showCredits)
-	document.querySelector(".hide-credits").addEventListener("click", hideCredits)
+	// document.querySelector(".show-credits").addEventListener("click", showCredits)
+	// document.querySelector(".hide-credits").addEventListener("click", hideCredits)
 
 	// document.querySelector(".start-btn").addEventListener("click", () => {
 	// 	document.removeEventListener("keydown", handleIntroKeyDown)
