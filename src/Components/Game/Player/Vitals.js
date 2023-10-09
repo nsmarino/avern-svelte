@@ -11,9 +11,30 @@ class Vitals extends GameplayComponent {
         this.gameObject = gameObject
     }
 
+    update(delta) {
+      if (get(Avern.Store.player).energy <= get(Avern.Store.player).maxEnergy) {
+        Avern.Store.player.update(player => {
+          const updatedPlayer = {
+            ...player,
+            energy: player.energy+0.1
+          }
+          return updatedPlayer
+        })
+      }
+    }
     onSignal(signalName, data) {
       switch(signalName) {
         case "casting_start":
+          break;
+        case "player_jump":
+            Avern.Store.player.update(player => {
+              const updatedPlayer = {
+                ...player,
+                energy: player.energy - 2
+              }
+              console.log(updatedPlayer.energy)
+              return updatedPlayer
+            })
           break;
         case "casting_progress":
           break;
