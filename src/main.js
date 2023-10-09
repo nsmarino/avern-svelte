@@ -18,10 +18,17 @@ function startMenu() {
 			image: "image"
 		},
 		{
-			text: "<p>Each day caravans trudge through marsh and mountain, bearing loads of precious metals, pungent spices and fine textiles.</p><p>The road is long and dangerous. Here and there the caravans seek refuge in heavily fortified settlements, knots of safety in this cord of commerce.</p>",
+			text: "<p>Each day caravans trudge through marsh and mountain, bearing loads of precious metals, pungent spices and fine textiles.</p>",
 		},
 		{
-			text: "<p>One such settlement is the fortress of Koker, high in the jagged mountains on the eastern frontier of the empire.</p><p>You have lived here all your life.</p>",
+			text: "<p>The road is long and dangerous. Here and there the caravans seek refuge in heavily fortified settlements, knots of safety in this cord of commerce.</p>",
+		},
+		{
+			text: "<p>One such settlement is the fortress of Koker, high in the jagged mountains on the eastern frontier of the empire.</p>",
+			image: "image"
+		},
+		{
+			text: "<p>You have lived here all your life.</p>",
 			image: "image"
 		},
 		{
@@ -29,11 +36,19 @@ function startMenu() {
 			image: "image"
 		},
 		{
-			text: "<p>You do not remember the clink of gold when they sold you into this fortress's service.</p><p>You do not remember the bite of the blade that forever marked the degree of your servitude.</p><p>You will live for the fortress, and you will have no life beyond it.</p>",
+			text: "<p>You do not remember the clink of gold when they sold you into this fortress's service.</p>",
 			image: "image"
 		},
 		{
-			text: "<p>You wear a wooden mask, as all the empire's castrates do, and you carry a bolt action rifle.</p><p>There are goats on the cliffs above the fortress, and you are their guardian.</p>",
+			text: "<p>You do not remember the bite of the blade that forever marked the degree of your servitude.</p><p>You will live for the fortress, and you will have no life beyond it.</p>",
+			image: "image"
+		},
+		{
+			text: "<p>You wear a wooden mask, as all the empire's castrates do, and you carry a bolt action rifle.</p>",
+			image: "image"
+		},
+		{
+			text: "<p>There are goats on the cliffs above the fortress, and you are their guardian.</p>",
 			image: "image"
 		},
 	]
@@ -71,7 +86,7 @@ function startMenu() {
 		// document.addEventListener("keydown", handleIntroKeyDown)
 		introInterval = setInterval(() => {
 			progressIntro()
-		}, 11000);
+		}, 6600);
 	}
 	const progressIntro = () => {
 		// if ((e.code==="KeyH" && window.avernKeyboardConfig==="left") || (e.code==="KeyG" && window.avernKeyboardConfig==="right")) {
