@@ -26,11 +26,12 @@ class Vitals extends GameplayComponent {
       switch(signalName) {
         case "casting_start":
           break;
-        case "player_jump":
+        case "spend_energy":
+          console.log("Cost:", data.cost)
             Avern.Store.player.update(player => {
               const updatedPlayer = {
                 ...player,
-                energy: player.energy - 2
+                energy: player.energy - data.cost <= 0 ? 0 : player.energy - data.cost
               }
               console.log(updatedPlayer.energy)
               return updatedPlayer

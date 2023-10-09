@@ -1,6 +1,7 @@
 import GameplayComponent from '../../_Component';
 import Enemy from "../NonPlayer/Enemy"
 import Body from "./Body"
+import Vitals from "./Vitals"
 import ActionBar from "../../Interface/ActionBar"
 import Notices from "../../Interface/Notices"
 import Landmine from './Landmine';
@@ -66,11 +67,6 @@ class Actions extends GameplayComponent {
         }
     }
     doAction(action) {
-        // if (!Avern.State.target && action.requiresTarget) {
-        //     this.emitSignal("show_notice", {notice: "Target required", color: "red", delay: 2000})
-        //     return;
-        // }
-
         Avern.Store.weapons.update(weapons=> {
             weapons.forEach(weapon => {
                 weapon.actions.forEach(weaponAction=>{
@@ -81,7 +77,7 @@ class Actions extends GameplayComponent {
             })
             return weapons
         })
-
+        this.emitSignal("spend_energy", {cost: action.cost})
         this.emitSignal("action_availed", { action })
     }
     
@@ -305,6 +301,7 @@ class Actions extends GameplayComponent {
         this.addObserver(Avern.Interface.getComponent(ActionBar))
         this.addObserver(Avern.Interface.getComponent(Notices))
         this.addObserver(parent.getComponent(Body))
+        this.addObserver(parent.getComponent(Vitals))
         this.addObserver(parent.getComponent(Landmine))
         this.addObserver(parent.getComponent(ParticleFX))
         for (const enemy of Avern.State.Enemies) {

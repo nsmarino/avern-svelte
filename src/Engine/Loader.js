@@ -58,7 +58,7 @@ class Loader {
 
       // 'content' should only be interested in what's present the actual scene file. the Store is used to determine what actually spawns in the game
       Avern.Content = {
-        baseFile: yukaLevel,
+        baseFile: demoCourtyard,
         items:[
           {
             label: "rear-entrance",
@@ -416,7 +416,7 @@ class Loader {
                 description: "You eyes narrow and time seems to slow. Causes additional bleed damage.",
                 primeLength: 2,
                 baseDamage: 35,
-                cost: 15,
+                cost: 60,
                 range: 40,
                 primed: false,
                 assignment: null,
@@ -432,7 +432,7 @@ class Loader {
                 description: "The sound of the rifle blast rings in your ears and the acrid smoke fills your nostrils. Causes slowdown.",
                 primeLength: 1,
                 baseDamage: 25,
-                cost: 10,
+                cost: 40,
                 image: muzzleBlast,
                 range: 30,
                 primed: false,
@@ -449,7 +449,7 @@ class Loader {
                 image: bayonet,
                 caption: "Affixing bayonet",
                 primeLength: 0.6,
-                cost: 5,
+                cost: 25,
                 baseDamage: 10,
                 range: 5,
                 primed: false,
@@ -466,7 +466,7 @@ class Loader {
                 caption: "Shifting weight",
                 primeLength: 0.6,
                 image: propelSelf,
-                cost: 15,
+                cost: 80,
                 baseDamage: 0,
                 range: 5,
                 primed: false,
@@ -476,7 +476,6 @@ class Loader {
                 primaryModifier: "Faith",
                 secondaryModifier: "Bravado",
               },
-
             ]
           },
           {
