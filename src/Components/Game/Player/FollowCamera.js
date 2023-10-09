@@ -49,13 +49,23 @@ class FollowCamera extends GameplayComponent {
 
     update() {
         // this.controls.target = Avern.Player.transform.position
-
+        // set rotation with inputs
+        const inputs = Avern.Inputs.getInputs()
         if (!this.targeting) {
+
+            if (inputs.cameraUp && this.playerCameraTarget.rotation.x < 0.9) {
+                this.playerCameraTarget.rotateX(0.03)
+            } else if (inputs.cameraDown && this.playerCameraTarget.rotation.x > -0.4) {
+                this.playerCameraTarget.rotateX(-0.03)
+            }
+
             if ((this.playerCameraTarget.getWorldPosition(this.comparisonVector).distanceTo(this.cameraTarget.getWorldPosition(this.comparisonVector2)) > 0.2 )) {
                 this.playerCameraTarget.getWorldPosition(this.targetVector)
                 this.playerCameraPlaceholder.getWorldPosition(this.cameraPosVector)
                 this.camera.position.lerp(this.cameraPosVector, 0.3)
                 this.cameraTarget.position.lerp(this.targetVector, 0.3)
+
+        
                 this.camera.lookAt(this.cameraTarget.position)
             } else {
                 this.playerCameraTarget.getWorldPosition(this.cameraTarget.position)
@@ -90,6 +100,7 @@ class FollowCamera extends GameplayComponent {
             break;
           case "active_target":
             this.targeting=true
+            this.playerCameraTarget.rotation.set(0,0,0)
 
             break;
           case "clear_target":

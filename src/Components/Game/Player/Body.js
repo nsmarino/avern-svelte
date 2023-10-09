@@ -181,8 +181,8 @@ class Body extends GameplayComponent {
             }
             this.fire = {
                 id: "fire",
-                anim: this.setUpAnim(clips, "RAPID_FIRE", false, true, 0.8),
-                crucialFrame: 5,
+                anim: this.setUpAnim(clips, "KNEEL_AND_FIRE_RIFLE", false, true, 3),
+                crucialFrame: 50,
                 canInterrupt: true,
             }
             this.club = {
