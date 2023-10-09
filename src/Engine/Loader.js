@@ -3,19 +3,22 @@ import sanityClient from "../sanityClient"
 import demoCourtyard from "../../assets/levels/demo-courtyard.gltf"
 import demoCliffs from "../../assets/levels/demo-cliffs.gltf"
 import demoSwamp from "../../assets/levels/demo-swamp.gltf"
-
+import yukaPaths from "../../assets/levels/yuka-paths.gltf"
+import yukaLevel from "../../assets/levels/yuka-level.gltf"
 import {writable, derived, get} from "svelte/store"
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import yoshuaHaystack from "../../assets/npcs/yoshua_haystack.gltf"
 import gatekeeperDismayed from "../../assets/npcs/fse--gatekeeper.gltf"
+
 import { Pathfinding, PathfindingHelper } from 'three-pathfinding';
+import * as YUKA from "yuka"
+
 import { acceleratedRaycast } from 'three-mesh-bvh';
 import gsap from "gsap"
 import weaponImg from "../../assets/ui/weapon.svg"
 import aimedShot from "../../assets/ui/aimed-shot.svg"
 import bayonet from "../../assets/ui/bayonet.svg"
-import landmine from "../../assets/ui/land-mine.svg"
 import muzzleBlast from "../../assets/ui/muzzle-blast.svg"
 import propelSelf from "../../assets/ui/propel-self.svg"
 THREE.Mesh.prototype.raycast = acceleratedRaycast;
@@ -55,7 +58,7 @@ class Loader {
 
       // 'content' should only be interested in what's present the actual scene file. the Store is used to determine what actually spawns in the game
       Avern.Content = {
-        baseFile: demoCourtyard,
+        baseFile: yukaLevel,
         items:[
           {
             label: "rear-entrance",
@@ -389,12 +392,6 @@ class Loader {
                     image: esthelPortrait,
                     label: "Esthel",
                   },
-                  {
-                    type: "narration",
-                    text: "A moment ago she expressed surprise that your kind still existed, but it seems she is well aware what role you serve. She gives orders in a detached manner, with little concern for how you will receive them.",
-                    image: esthelPortrait,
-                    label: "Esthel",
-                  }, 
                 ]
               },
             ],
@@ -686,7 +683,8 @@ class Loader {
         const res = await new GLTFLoader().loadAsync(Avern.Content.baseFile)
         const gltfScene = res.scene;
         gltfScene.updateMatrixWorld( true );
-        this.initNavmeshFromBaseFile(gltfScene,scene)
+        Avern.yukaNavmesh = await this.initNavmesh(yukaPaths)
+        console.log(Avern.yukaNavmesh)
         const collider = Avern.GameObjects.createGameObject(scene, "collider")
         collider.addComponent(Collider, gltfScene)
   
@@ -695,31 +693,40 @@ class Loader {
 
       if (Avern.Config.player.include) this.initPlayer(scene, to)
       if (Avern.Config.interface.include) this.initInterface(scene)
-      if (!get(Avern.Store.openingRemarksShown)) {
-        setTimeout(() => {
-          Avern.Store.openingRemarksVisible.set(true)
-          Avern.Store.openingRemarksShown.set(true)
-        }, 3000)
-      }
+      // if (!get(Avern.Store.openingRemarksShown)) {
+      //   setTimeout(() => {
+      //     Avern.Store.openingRemarksVisible.set(true)
+      //     Avern.Store.openingRemarksShown.set(true)
+      //   }, 3000)
+      // }
     }
 
-    initNavmeshFromBaseFile(baseFile, scene) {
-      console.log(baseFile.children.filter(child=> child.isMesh && child.userData.gltfExtensions.EXT_collections.collections).map(ch=>ch.userData.gltfExtensions.EXT_collections.collections))
-      const navmesh = baseFile.children.filter(child=> child.isMesh && child.userData.gltfExtensions.EXT_collections.collections[0]==="navmesh")[0]
-      if (!navmesh) return;
-      Avern.pathfindingZone = baseFile.name
-      Avern.PATHFINDING.setZoneData(Avern.pathfindingZone, Pathfinding.createZone(navmesh.geometry));
-      // visualize:
-      for (const vert of Avern.PATHFINDING.zones[baseFile.name].vertices) {
-          const indicatorSize = 0.1 
-          const geometry = new THREE.BoxGeometry( indicatorSize,indicatorSize,indicatorSize); 
-          const material = new THREE.MeshBasicMaterial( {color: 0x000000} ); 
-          const cube = new THREE.Mesh( geometry, material ); 
-          cube.position.copy(vert)
-          scene.add( cube );
-      }
-      navmesh.visible = false
-      scene.add(navmesh)
+    async initNavmesh(file) {
+			const loader = new YUKA.NavMeshLoader();
+      // console.log("Yuka navmesh loader:", loader)
+      const navmesh = await loader.load(file)
+      // console.log("Did async work?", navmesh)
+      return navmesh
+      // loader.load( yukaPaths ).then( ( navigationMesh ) => {
+      //   console.log(navigationMesh)
+      //   Avern.yukaNavmesh = navigationMesh
+      // })
+
+      // const navmesh = baseFile.children.filter(child=> child.isMesh && child.userData.gltfExtensions.EXT_collections.collections[0]==="navmesh")[0]
+      // if (!navmesh) return;
+      // Avern.pathfindingZone = baseFile.name
+      // Avern.PATHFINDING.setZoneData(Avern.pathfindingZone, Pathfinding.createZone(navmesh.geometry));
+      // // visualize:
+      // for (const vert of Avern.PATHFINDING.zones[baseFile.name].vertices) {
+      //     const indicatorSize = 0.1 
+      //     const geometry = new THREE.BoxGeometry( indicatorSize,indicatorSize,indicatorSize); 
+      //     const material = new THREE.MeshBasicMaterial( {color: 0x000000} ); 
+      //     const cube = new THREE.Mesh( geometry, material ); 
+      //     cube.position.copy(vert)
+      //     scene.add( cube );
+      // }
+      // navmesh.visible = false
+      // scene.add(navmesh)
     }
 
     initNonPlayerFromBaseFile(baseFile, scene) {
@@ -729,18 +736,11 @@ class Loader {
         if (c.userData.gltfExtensions?.EXT_collections?.collections) {
           switch(c.userData.gltfExtensions.EXT_collections.collections[0]) {
             case "enemies":
-              console.log(c.userData)
-              // get content
-              // check store
-              // if enemy killed (this array is emptied on every rest and scene swap) or worldEventX, return
-
               const enemy = Avern.GameObjects.createGameObject(scene, c.name)                        
               enemy.addComponent(Enemy, c)
               break;
 
             case "fountains":
-              // const fountain = Avern.GameObjects.createGameObject(scene, c.name)                        
-              // fountain.addComponent(Fountain, c)
               break;
 
             case "leave":
@@ -752,14 +752,11 @@ class Loader {
               from.transform.position.copy(c.position)
               from.transform.rotation.copy(c.rotation)
               console.log(c.userData.label, c.rotation.y)
-              // console.log("Here is arrive ro", from.transform.rotation.y)              
               break;
 
             case "interactions":
-              // get content
               const interactionContent = Avern.Content.interactions.find(int => int.label === c.userData.label)
               if (interactionContent) {
-                // check store. if interaction's conditions are not met, return
                 let shouldSpawnInteraction = true
                 for (const condition of interactionContent.worldConditions) {
                   if(currentWorldEvents[condition.id]!==condition.value) shouldSpawnInteraction = false
@@ -802,11 +799,7 @@ class Loader {
               break;
 
             case "doors":
-              // get content
-              console.log(c.userData.label)
               const gateContent = Avern.Content.gates.find(g => g.label === c.userData.label)
-              // check store
-              console.log(gateContent)
               if (c.userData.label === "rear-entrance" && currentWorldEvents.gateUnlocked) return
               const gateway = Avern.GameObjects.createGameObject(scene, c.name)
               gateway.addComponent(Gateway, c, gateContent)

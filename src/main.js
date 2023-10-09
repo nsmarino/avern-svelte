@@ -6,6 +6,8 @@ window.Avern = Engine
 
 import App from './App.svelte'
 
+let introInterval = null
+
 function startMenu() {
 	const rootStart = document.querySelector(".start-menu-root")
 
@@ -66,10 +68,13 @@ function startMenu() {
 		Avern.Inputs.setConfig(dominantHand)
 		document.querySelector(".intro .next-card-key").innerText = dominantHand === "left" ? "H" : "G"
 		document.querySelector(".intro-text-container").innerHTML += `<div class="nextCard">${introContent[introIndex].text}</div>`
-		document.addEventListener("keydown", handleIntroKeyDown)
+		// document.addEventListener("keydown", handleIntroKeyDown)
+		introInterval = setInterval(() => {
+			progressIntro()
+		}, 11000);
 	}
-	const handleIntroKeyDown = (e) => {
-		if ((e.code==="KeyH" && window.avernKeyboardConfig==="left") || (e.code==="KeyG" && window.avernKeyboardConfig==="right")) {
+	const progressIntro = () => {
+		// if ((e.code==="KeyH" && window.avernKeyboardConfig==="left") || (e.code==="KeyG" && window.avernKeyboardConfig==="right")) {
 			introIndex++
 			if (introContent[introIndex]) {
 				document.querySelectorAll(".nextCard").forEach(el=>el.classList.remove("nextCard"))
@@ -77,11 +82,12 @@ function startMenu() {
 			} else {
 				showTitleCard()
 			}
-		}
+		// }
 	}
 
 	function showTitleCard(){
-		document.removeEventListener("keydown", handleIntroKeyDown)
+		clearInterval(introInterval)
+		// document.removeEventListener("keydown", handleIntroKeyDown)
 		document.querySelector(".intro").remove()
 		gsap.set(".title-card", { display: 'flex'})
 		gsap.to(".title-card", { opacity: 1, duration: 1, y: 0, pointerEvents: "auto"  })
@@ -89,7 +95,7 @@ function startMenu() {
 			document.querySelector(".start-key-indicator").innerText = window.avernKeyboardConfig === "left" ? "H" : "G"
 			gsap.to(".start-key-indicator", { opacity: 1, duration: 1, y: 0, pointerEvents: "auto"  })
 			document.addEventListener("keydown", handleTitleKeyDown)
-		}, 1500)
+		}, 4000)
 	}
 
 	function handleTitleKeyDown(e) {
