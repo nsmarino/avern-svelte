@@ -43,8 +43,8 @@ class Enemy extends GameplayComponent {
     this.orderContainer.classList.add("order-container")
     document.body.appendChild(this.orderContainer)
 
-    this.initialHealth = 55
-    this.health = 55
+    this.initialHealth = 65
+    this.health = 65
 
     this.prevAngle = null
     this.originalSpawnPoint = spawnPoint
@@ -56,7 +56,7 @@ class Enemy extends GameplayComponent {
 
     this.behavior = this.startingBehavior
     this.velocity = new THREE.Vector3( 0, 0, 0 );
-    this.speed = 3
+    this.speed = 4
     // this.targetGroup = Avern.PATHFINDING.getGroup(Avern.pathfindingZone, spawnPoint.position);
     this.lerpFactor = 0.2
     // this.originNode = Avern.PATHFINDING.getClosestNode(spawnPoint.position, Avern.pathfindingZone, this.targetGroup)
@@ -163,7 +163,7 @@ class Enemy extends GameplayComponent {
             THREE.AnimationClip.findByName(this.clips, "SHOOT")
           )
           this.actionRange = 18
-          this.crucialFrame = 85
+          this.crucialFrame = 75
           break;
         case "sword":
           this.attack = this.mixer.clipAction(
@@ -385,7 +385,7 @@ class Enemy extends GameplayComponent {
                 this.emitSignal("launch_projectile", {
                   destination: projectileDestination,
                   radius: 1,
-                  speed: 12,
+                  speed: 20,
                 })
                 break;
             }
