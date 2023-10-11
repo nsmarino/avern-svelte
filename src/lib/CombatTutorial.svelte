@@ -19,8 +19,8 @@
             <p>Target an enemy with {#if $config.leftHanded }<span>G</span>{:else}<span>H</span>{/if}.</p>
             <p>Press {#if $config.leftHanded}<span>F</span>{:else}<span>J</span>{/if} to load your rifle.</p>
             <p>Once you've loaded the rifle, press {#if $config.leftHanded}<span>F</span>{:else}<span>J</span>{/if} again to fire.</p>
-            <p>You must be at the same elevation as your target for the attack to succeed.</p>
-        </div>
+            <p>Performing actions cost energy.</p>
+          </div>
         <div>
           <video src="showing-combat.mov" muted loop autoplay></video>
         </div>

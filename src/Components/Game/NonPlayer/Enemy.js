@@ -375,7 +375,20 @@ class Enemy extends GameplayComponent {
           this.crucialFrameSent = true;
 
           if(!Avern.State.playerDead && this.checkTarget()) {
-            this.emitSignal("monster_attack", {damage: 20, percentage: 0.5})
+            switch(this.enemyType) {
+              case "sword":
+                this.emitSignal("monster_attack", {damage: 20, percentage: 0.5})
+                break;
+              case "bow":
+                const projectileDestination = new THREE.Vector3().copy(Avern.Player.transform.position)
+                projectileDestination.y - 2.5
+                this.emitSignal("launch_projectile", {
+                  destination: projectileDestination,
+                  radius: 1,
+                  speed: 8,
+                })
+                break;
+            }
           }
         }
         break;
@@ -435,7 +448,7 @@ class Enemy extends GameplayComponent {
     }
   }
   resetPath() {
-    console.log("reset path")
+    // console.log("reset path")
     const targetGroup = Avern.PATHFINDING.getGroup(Avern.pathfindingZone, this.gameObject.transform.position);
 
     const closestNode = Avern.PATHFINDING.getClosestNode(this.gameObject.transform.position, Avern.pathfindingZone, targetGroup)
@@ -458,6 +471,9 @@ class Enemy extends GameplayComponent {
     const groundRaycast = new THREE.Raycaster(playerPosition, new THREE.Vector3(0, -1, 0))
     groundRaycast.firstHitOnly = true
     const destination = groundRaycast.intersectObject(Avern.State.collider)[0] ? groundRaycast.intersectObject(Avern.State.collider)[0].point : null
+    // const destination = Avern.Player.transform.position
+
+    // console.log(destination)
     if (!destination) return
     // const destination = new THREE.Vector3(Avern.Player.transform.position.x, Avern.Player.transform.position.y-1.8,Avern.Player.transform.position.z) 
     if (this.checkTarget() && this.gameObject.transform.position.distanceTo(destination) < this.actionRange) {
@@ -482,8 +498,11 @@ class Enemy extends GameplayComponent {
             this.path = path
         }
         if (!this.path) return;
-        let targetPosition = this.path[ 1 ];
+        // can probably do a check here to decide whether to use [0] or [1]
+        let targetPosition = this.path[1];
+
         if (!this.path[1]) return
+        // this.mesh.position.copy(this.path[1])
         this.velocity = new THREE.Vector3().copy(targetPosition.clone().sub( this.gameObject.transform.position ));
         this.updateRotationToFacePoint(this.gameObject.transform, targetPosition, this.lerpFactor)
 
@@ -492,6 +511,9 @@ class Enemy extends GameplayComponent {
           this.velocity.normalize();
           // Move to next waypoint
           this.gameObject.transform.position.add( this.velocity.multiplyScalar( deltaTime * this.speed ) );
+          const closestPoint = findClosestPointOnMeshToPoint(Avern.State.env, this.gameObject.transform.position)
+          // console.log(closestPoint)
+          if ( closestPoint) this.gameObject.transform.position.copy(closestPoint)
           // const targetGroup = Avern.PATHFINDING.getGroup(Avern.pathfindingZone, this.gameObject.transform.position);
           // const closest = Avern.PATHFINDING.getClosestNode(this.gameObject.transform.position, Avern.pathfindingZone, targetGroup)
           // this.gameObject.transform.position.lerp(new THREE.Vector3( this.gameObject.transform.position.x, closest.centroid.y, this.gameObject.transform.position.z ), 0.6)
@@ -582,10 +604,11 @@ class Enemy extends GameplayComponent {
         break;
       case("receive_direct_attack"):
         if (this.isTargeted===true) {
-          if ((this.gameObject.transform.position.y < Avern.Player.transform.position.y - 2) || (this.gameObject.transform.position.y > Avern.Player.transform.position.y)) {
-            this.emitSignal("show_notice", {notice: "You must be on the same elevation as the target", color: "red", delay: 2000})
-            return
-          } else if (Avern.Player.transform.position.distanceTo(this.gameObject.transform.position) >= data.range) {
+          // if ((this.gameObject.transform.position.y < Avern.Player.transform.position.y - 2) || (this.gameObject.transform.position.y > Avern.Player.transform.position.y)) {
+          //   this.emitSignal("show_notice", {notice: "You must be on the same elevation as the target", color: "red", delay: 2000})
+          //   return
+          // } else 
+          if (Avern.Player.transform.position.distanceTo(this.gameObject.transform.position) >= data.range) {
             this.emitSignal("show_notice", {notice: "Out of range", color: "red", delay: 2000})
             return
           }
@@ -701,3 +724,33 @@ class Enemy extends GameplayComponent {
 }
 
 export default Enemy
+
+function findClosestPointOnMeshToPoint(mesh, point) {
+  // Create two raycast directions: +Y and -Y
+  const raycastDirections = [new THREE.Vector3(0, 1, 0), new THREE.Vector3(0, -1, 0)];
+
+  // Initialize variables to store the closest distance and point
+  let closestDistance = Number.POSITIVE_INFINITY;
+  let closestPoint = new THREE.Vector3();
+
+  // Loop through the raycast directions
+  for (const direction of raycastDirections) {
+    const raycaster = new THREE.Raycaster(point, direction);
+    const intersects = raycaster.intersectObject(mesh);
+    if (intersects.length > 0) {
+      // The ray intersects the mesh, get the closest intersection point
+      const intersectionPoint = intersects[0].point;
+
+      // Calculate the distance between the intersection point and the original point
+      const distance = point.distanceTo(intersectionPoint);
+      // Update closest point and distance if this intersection is closer
+      if (distance < closestDistance) {
+        // console.log("Distance", distance, "Closest distance", closestDistance)
+        closestDistance = distance;
+        closestPoint = intersectionPoint.clone();
+      }
+    }
+  }
+  if (closestDistance == Number.POSITIVE_INFINITY) return null
+  return closestPoint;
+}

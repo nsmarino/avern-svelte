@@ -3,8 +3,8 @@ import sanityClient from "../sanityClient"
 import demoCourtyard from "../../assets/levels/demo-courtyard.gltf"
 import demoCliffs from "../../assets/levels/demo-cliffs.gltf"
 import demoSwamp from "../../assets/levels/demo-swamp.gltf"
-import yukaPaths from "../../assets/levels/yuka-paths.gltf"
-import yukaLevel from "../../assets/levels/yuka-level.gltf"
+import yukaPaths from "../../assets/levels/my-navmesh.gltf"
+import yukaLevel from "../../assets/levels/my-level.gltf"
 import {writable, derived, get} from "svelte/store"
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
@@ -24,6 +24,7 @@ import propelSelf from "../../assets/ui/propel-self.svg"
 THREE.Mesh.prototype.raycast = acceleratedRaycast;
 
 import Enemy from "../Components/Game/NonPlayer/Enemy";
+import Projectile from "../Components/Game/NonPlayer/Projectile";
 
 import Interaction from "../Components/Game/NonPlayer/Interaction";
 
@@ -58,7 +59,7 @@ class Loader {
 
       // 'content' should only be interested in what's present the actual scene file. the Store is used to determine what actually spawns in the game
       Avern.Content = {
-        baseFile: demoCourtyard,
+        baseFile: yukaLevel,
         items:[
           {
             label: "rear-entrance",
@@ -687,7 +688,6 @@ class Loader {
         const gltfScene = res.scene;
         gltfScene.updateMatrixWorld( true );
         Avern.yukaNavmesh = await this.initNavmesh(yukaPaths)
-        console.log(Avern.yukaNavmesh)
         const collider = Avern.GameObjects.createGameObject(scene, "collider")
         collider.addComponent(Collider, gltfScene)
   
@@ -708,7 +708,11 @@ class Loader {
 			const loader = new YUKA.NavMeshLoader();
       // console.log("Yuka navmesh loader:", loader)
       const navmesh = await loader.load(file)
-      // console.log("Did async work?", navmesh)
+      const shownav = await new GLTFLoader().loadAsync(file)
+
+      Avern.State.scene.add(shownav.scene)
+      console.log(shownav.scene.children[0].material.wireframe = true)
+      console.log("NAVMESH FROM YUKA", navmesh)
       return navmesh
       // loader.load( yukaPaths ).then( ( navigationMesh ) => {
       //   console.log(navigationMesh)
@@ -741,6 +745,7 @@ class Loader {
             case "enemies":
               const enemy = Avern.GameObjects.createGameObject(scene, c.name)                        
               enemy.addComponent(Enemy, c)
+              if (c.userData.label==="bow") enemy.addComponent(Projectile)
               break;
 
             case "fountains":

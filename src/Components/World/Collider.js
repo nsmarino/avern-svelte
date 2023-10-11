@@ -16,7 +16,7 @@ class Collider extends GameplayComponent {
         const levelGeometry = new THREE.Scene()
         for (const mesh of geometryMeshes) {
             mesh.receiveShadow = true
-            mesh.material.side = THREE.FrontSide
+            mesh.material.side = THREE.DoubleSide
             levelGeometry.add(mesh)
         }
         environment = levelGeometry
@@ -34,6 +34,7 @@ class Collider extends GameplayComponent {
         gameObject.transform.parent.add( this.collider );
         gameObject.transform.parent.add( environment );
 
+        Avern.State.env = environment
         Avern.State.collider = this.collider
     }
 

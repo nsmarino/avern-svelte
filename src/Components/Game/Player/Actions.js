@@ -56,7 +56,12 @@ class Actions extends GameplayComponent {
             return;
         }
         if (action.primed) {
-            this.doAction(action)
+            if (get(Avern.Store.player).energy > action.cost) {
+                this.doAction(action)
+            } else {
+                this.emitSignal("show_notice", {notice: "Not enough energy", color: "red", delay: 2000})
+                return;
+            }
         } else if (this.casting && this.activeCast.id !== action.id) {
             if (inputs.forward || inputs.back || (inputs.left && this.targeting) || (inputs.right && this.targeting)) return;
             this.interruptCast()
