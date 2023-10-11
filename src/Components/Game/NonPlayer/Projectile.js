@@ -28,7 +28,6 @@ class Projectile extends GameplayComponent {
     }
 
     update(delta) {            
-        console.log(this.projectiles.length)
 
         for (const projectile of this.projectiles) {
             // apply velocity 

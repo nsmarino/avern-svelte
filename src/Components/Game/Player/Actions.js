@@ -55,21 +55,21 @@ class Actions extends GameplayComponent {
             this.emitSignal("show_notice", {notice: "Action locked", color: "yellow", delay: 2000})
             return;
         }
-        if (action.primed) {
+        // if (action.primed) {
             if (get(Avern.Store.player).energy > action.cost) {
                 this.doAction(action)
             } else {
                 this.emitSignal("show_notice", {notice: "Not enough energy", color: "red", delay: 2000})
                 return;
             }
-        } else if (this.casting && this.activeCast.id !== action.id) {
-            if (inputs.forward || inputs.back || (inputs.left && this.targeting) || (inputs.right && this.targeting)) return;
-            this.interruptCast()
-            this.startCast(action)
-        } else {
-            if (inputs.forward || inputs.back || (inputs.left && this.targeting) || (inputs.right && this.targeting)) return;
-            this.startCast(action)
-        }
+        // } else if (this.casting && this.activeCast.id !== action.id) {
+        //     if (inputs.forward || inputs.back || (inputs.left && this.targeting) || (inputs.right && this.targeting)) return;
+        //     this.interruptCast()
+        //     this.startCast(action)
+        // } else {
+        //     if (inputs.forward || inputs.back || (inputs.left && this.targeting) || (inputs.right && this.targeting)) return;
+        //     this.startCast(action)
+        // }
     }
     doAction(action) {
         Avern.Store.weapons.update(weapons=> {

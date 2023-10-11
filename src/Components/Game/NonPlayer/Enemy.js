@@ -385,7 +385,7 @@ class Enemy extends GameplayComponent {
                 this.emitSignal("launch_projectile", {
                   destination: projectileDestination,
                   radius: 1,
-                  speed: 8,
+                  speed: 12,
                 })
                 break;
             }

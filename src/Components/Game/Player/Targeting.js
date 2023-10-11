@@ -174,7 +174,9 @@ class Targeting extends GameplayComponent {
                     this.losArray = Array.from(this.targetsMap)
                         .sort((a, b) => a[1].losDistance - b[1].losDistance)
                     this.targetIndex = null
-                    this.setTargetFromInputKey(true)
+                    setTimeout(() => {
+                        this.setTargetFromInputKey(true)
+                    }, 100)
                 }
                 break;
             case "targeted_object":
