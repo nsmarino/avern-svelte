@@ -417,7 +417,7 @@ class Loader {
                 description: "You eyes narrow and time seems to slow. Causes additional bleed damage.",
                 primeLength: 1.75,
                 baseDamage: 35,
-                cost: 20,
+                cost: 18,
                 isInstant: false,
                 range: 40,
                 primed: false,
