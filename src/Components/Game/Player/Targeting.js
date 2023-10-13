@@ -176,7 +176,7 @@ class Targeting extends GameplayComponent {
                     this.targetIndex = null
                     setTimeout(() => {
                         this.setTargetFromInputKey(true)
-                    }, 100)
+                    }, 300)
                 }
                 break;
             case "targeted_object":

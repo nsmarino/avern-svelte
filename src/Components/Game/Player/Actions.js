@@ -55,21 +55,21 @@ class Actions extends GameplayComponent {
             this.emitSignal("show_notice", {notice: "Action locked", color: "yellow", delay: 2000})
             return;
         }
-        // if (action.primed) {
+        if (action.primed || action.isInstant) {
             if (get(Avern.Store.player).energy > action.cost) {
                 this.doAction(action)
             } else {
                 this.emitSignal("show_notice", {notice: "Not enough energy", color: "red", delay: 2000})
                 return;
             }
-        // } else if (this.casting && this.activeCast.id !== action.id) {
-        //     if (inputs.forward || inputs.back || (inputs.left && this.targeting) || (inputs.right && this.targeting)) return;
-        //     this.interruptCast()
-        //     this.startCast(action)
-        // } else {
-        //     if (inputs.forward || inputs.back || (inputs.left && this.targeting) || (inputs.right && this.targeting)) return;
-        //     this.startCast(action)
-        // }
+        } else if (this.casting && this.activeCast.id !== action.id) {
+            if (inputs.forward || inputs.back || (inputs.left && this.targeting) || (inputs.right && this.targeting)) return;
+            this.interruptCast()
+            this.startCast(action)
+        } else {
+            if (inputs.forward || inputs.back || (inputs.left && this.targeting) || (inputs.right && this.targeting)) return;
+            this.startCast(action)
+        }
     }
     doAction(action) {
         Avern.Store.weapons.update(weapons=> {
@@ -102,6 +102,16 @@ class Actions extends GameplayComponent {
                 Avern.Sound.gunshotHandler.currentTime = 0.2
                 Avern.Sound.gunshotHandler.play()        
                 break;
+            case "rapid_fire":
+                // if (!Avern.State.target) return
+                this.emitSignal("receive_direct_attack", {damage: action.baseDamage, range: action.range })
+                // eslint-disable-next-line no-case-declarations
+                flashPosition = Avern.Player.getComponent(Body).rifleMesh.getWorldPosition(new THREE.Vector3())
+                flashPosition.y += 1
+                this.emitSignal("particle_fx", { position: flashPosition, duration: 20 })
+                Avern.Sound.gunshotHandler.currentTime = 0.05
+                Avern.Sound.gunshotHandler.play()        
+                break;
             case "bayonet_slash":
                     this.emitSignal("receive_direct_attack", {damage: action.baseDamage, range: action.range })
                     // eslint-disable-next-line no-case-declarations
@@ -109,30 +119,30 @@ class Actions extends GameplayComponent {
                     flashPosition.y += 1
                     this.emitSignal("particle_fx", { position: flashPosition, duration: 20 })     
                 break;
-
-            case "blast_at_close_range":
-                // if (!Avern.State.target) return
-                this.emitSignal("receive_player_attack", {damage: 
-                    calculateDamageByDistance(
-                        action.baseDamage, 
-                        Avern.Player.transform.position.distanceTo(Avern.State.target.transform.position), 
-                        action.range, 
-                        2
-                    ) 
-                })
-                flashPosition = Avern.Player.getComponent(Body).rifleMesh.getWorldPosition(new THREE.Vector3())
-                flashPosition.y += 1
-                this.emitSignal("particle_fx", { position: flashPosition, duration: 80 })
-                Avern.Sound.shotgunHandler.currentTime = 0
-                Avern.Sound.shotgunHandler.play()
+            case "rifle_club":
+                    this.emitSignal("receive_direct_attack", {damage: action.baseDamage, range: action.range })
+                    // eslint-disable-next-line no-case-declarations
+                    flashPosition = Avern.Player.getComponent(Body).rifleMesh.getWorldPosition(new THREE.Vector3())
+                    flashPosition.y += 1
+                    this.emitSignal("particle_fx", { position: flashPosition, duration: 20 })     
                 break;
 
-            case "set_land_mine":
-                console.log("detonate landmine?")
-                this.emitSignal("detonate_landmine")
-                Avern.Sound.landmineHandler.currentTime = 0
-                Avern.Sound.landmineHandler.play()
-                break;
+            // case "blast_at_close_range":
+            //     // if (!Avern.State.target) return
+            //     this.emitSignal("receive_player_attack", {damage: 
+            //         calculateDamageByDistance(
+            //             action.baseDamage, 
+            //             Avern.Player.transform.position.distanceTo(Avern.State.target.transform.position), 
+            //             action.range, 
+            //             2
+            //         ) 
+            //     })
+            //     flashPosition = Avern.Player.getComponent(Body).rifleMesh.getWorldPosition(new THREE.Vector3())
+            //     flashPosition.y += 1
+            //     this.emitSignal("particle_fx", { position: flashPosition, duration: 80 })
+            //     Avern.Sound.shotgunHandler.currentTime = 0
+            //     Avern.Sound.shotgunHandler.play()
+            //     break;
         }
     }
 

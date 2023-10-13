@@ -16,7 +16,7 @@ class Vitals extends GameplayComponent {
         Avern.Store.player.update(player => {
           const updatedPlayer = {
             ...player,
-            energy: player.energy+0.1
+            energy: player.energy+0.033
           }
           return updatedPlayer
         })
@@ -70,12 +70,13 @@ class Vitals extends GameplayComponent {
           break;
 
         case "monster_attack":
-          console.log("Receive monster attack")
-          this.hp -= data.damage
+          console.log("Receive monster attack, lowering HP and raising energy:")
           Avern.Store.player.update(player => {
             const updatedPlayer = {
               ...player,
-              hp: player.hp - data.damage
+              hp: player.hp - data.damage,
+              energy: player.energy + 5 >= 100 ? 100 : player.energy + 5
+
             }
             return updatedPlayer
           })

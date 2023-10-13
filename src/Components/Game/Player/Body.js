@@ -602,7 +602,7 @@ class Body extends GameplayComponent {
         if ( inputs.jump ) {
             if (this.distanceToGround < 2.1 && this.distanceToGround !== null) {
                 this.velocity.y = Avern.Config.player.jumpHeight
-                this.emitSignal("spend_energy", {cost: 2})
+                this.emitSignal("spend_energy", {cost: 0.5})
             }
         }
 

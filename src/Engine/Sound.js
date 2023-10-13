@@ -12,6 +12,7 @@ import drink from '../../assets/audio/drink.mp3'
 import bayonet from '../../assets/audio/bayonet.wav'
 import pickup from '../../assets/audio/pickup.wav'
 import page from '../../assets/audio/page-flip.mp3'
+import drain from '../../assets/audio/drain.mp3'
  
 class Sound {
     constructor() {

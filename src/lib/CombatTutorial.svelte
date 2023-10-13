@@ -20,13 +20,14 @@
             <p>Press {#if $config.leftHanded}<span>F</span>{:else}<span>J</span>{/if} to load your rifle.</p>
             <p>Once you've loaded the rifle, press {#if $config.leftHanded}<span>F</span>{:else}<span>J</span>{/if} again to fire.</p>
             <p>Performing actions cost energy.</p>
+            <p>Some actions, like the bayonet slash {#if $config.leftHanded}<span>D</span>{:else}<span>K</span>{/if}, do not require loading, but cost a great deal more energy.</p>
+            <p>Energy recovers gradually over time. It can also be recovered by dealing or receiving damage, defeating enemies, or eating Fruit.</p>
+            <p>This tutorial can be viewed from the Pause Menu {#if $config.leftHanded}<span>M</span>{:else}<span>C</span>{/if} at any time.</p>
           </div>
         <div>
           <video src="showing-combat.mov" muted loop autoplay></video>
         </div>
       </div>
-      <p>Hover the cursor over the <span>Keyboard Map</span> to see what other attacks are available.</p>
-      <p>This tutorial can be viewed from the Pause Menu at any time.</p>
       <button on:click={closeTutorial} style="margin-top: 20px;">Close</button>
     </div>
 

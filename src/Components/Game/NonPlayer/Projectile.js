@@ -55,7 +55,7 @@ class Projectile extends GameplayComponent {
                   // immediately remove
                   Avern.State.scene.remove(projectile.mesh)
                   this.projectiles = this.projectiles.filter(pro => pro != projectile)
-                } else if (projectile.position.distanceTo(projectile.initialPosition) > 20) {
+                } else if (projectile.position.distanceTo(projectile.initialPosition) > 40) {
                     Avern.State.scene.remove(projectile.mesh)
                     this.projectiles = this.projectiles.filter(pro => pro != projectile)
                 }              
@@ -70,6 +70,7 @@ class Projectile extends GameplayComponent {
 
         switch(signalName) {
           case "launch_projectile":
+            console.log("Receive projectile")
             const initialPosition = new THREE.Vector3( 
                 this.gameObject.transform.position.x, 
                 this.gameObject.transform.position.y+1, 

@@ -43,8 +43,8 @@ class Enemy extends GameplayComponent {
     this.orderContainer.classList.add("order-container")
     document.body.appendChild(this.orderContainer)
 
-    this.initialHealth = 65
-    this.health = 65
+    this.initialHealth = 100
+    this.health = 100
 
     this.prevAngle = null
     this.originalSpawnPoint = spawnPoint
@@ -56,7 +56,7 @@ class Enemy extends GameplayComponent {
 
     this.behavior = this.startingBehavior
     this.velocity = new THREE.Vector3( 0, 0, 0 );
-    this.speed = 4
+    this.speed = 5
     // this.targetGroup = Avern.PATHFINDING.getGroup(Avern.pathfindingZone, spawnPoint.position);
     this.lerpFactor = 0.2
     // this.originNode = Avern.PATHFINDING.getClosestNode(spawnPoint.position, Avern.pathfindingZone, this.targetGroup)
@@ -162,14 +162,17 @@ class Enemy extends GameplayComponent {
           this.attack = this.mixer.clipAction(
             THREE.AnimationClip.findByName(this.clips, "SHOOT")
           )
-          this.actionRange = 18
-          this.crucialFrame = 75
+          this.rangeWidth = 24
+
+          this.actionRange = 45
+          this.crucialFrame = 80
           break;
         case "sword":
           this.attack = this.mixer.clipAction(
             THREE.AnimationClip.findByName(this.clips, "SLASH")
           )
           this.attack.setDuration(2.5)
+          this.rangeWidth = 4
 
           this.actionRange = 3
           this.crucialFrame = 18
@@ -193,7 +196,6 @@ class Enemy extends GameplayComponent {
       this.tempRight = new THREE.Vector3()
       this.tempFront = new THREE.Vector3()
 
-      this.rangeWidth = 4
 
       this.tempLeft.copy(this.leftDirection).multiplyScalar(this.rangeWidth)
       this.tempRight.copy(this.rightDirection).multiplyScalar(this.rangeWidth)
@@ -373,11 +375,12 @@ class Enemy extends GameplayComponent {
 
         if (Math.floor(this.action.time * 30) >= this.crucialFrame && !this.crucialFrameSent) {
           this.crucialFrameSent = true;
-
+          console.log("CRUCAL FRAME SENT", this.checkTarget())
           if(!Avern.State.playerDead && this.checkTarget()) {
+            console.log("Check target pass")
             switch(this.enemyType) {
               case "sword":
-                this.emitSignal("monster_attack", {damage: 20, percentage: 0.5})
+                this.emitSignal("monster_attack", {damage: 25, percentage: 0.5})
                 break;
               case "bow":
                 const projectileDestination = new THREE.Vector3().copy(Avern.Player.transform.position)
@@ -385,7 +388,7 @@ class Enemy extends GameplayComponent {
                 this.emitSignal("launch_projectile", {
                   destination: projectileDestination,
                   radius: 1,
-                  speed: 20,
+                  speed: 33,
                 })
                 break;
             }
@@ -526,6 +529,14 @@ class Enemy extends GameplayComponent {
   }
   handleDeath() {
     this.behavior = "die_lol"
+    Avern.Store.player.update(player => {
+      const updatedPlayer = {
+        ...player,
+        energy: player.energy + 15 >= 100 ? 100 : player.energy + 15
+
+      }
+      return updatedPlayer
+    })
     this.onSignal("clear_target")
     this.emitSignal("clear_target", {visible: false, dead: true, id: this.gameObject.name})
     this.orderContainer.remove()
@@ -633,6 +644,15 @@ class Enemy extends GameplayComponent {
           damageNumber.innerHTML = Math.floor(data.damage)
           this.numbersContainer.appendChild(damageNumber)
           setTimeout(()=>damageNumber.remove(), 2000)
+
+          Avern.Store.player.update(player => {
+            const updatedPlayer = {
+              ...player,
+              energy: player.energy + 5 >= 100 ? 100 : player.energy + 5
+      
+            }
+            return updatedPlayer
+          })
 
           if (this.health <= 0) {
             this.handleDeath()
