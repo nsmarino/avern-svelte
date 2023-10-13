@@ -583,6 +583,7 @@ class Loader {
     
         player: { 
             flasks: 5,
+            fruit: 2,
             hp: 100,
             maxHp: 100,
             energy: 100,

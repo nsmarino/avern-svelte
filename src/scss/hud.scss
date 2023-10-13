@@ -288,7 +288,7 @@
 
 .action-inventory {
   position: absolute;
-  top: 8px;
+  top: -8px;
   left: 0;
   display: flex;
   flex-direction: column;
@@ -315,7 +315,7 @@
   .flask-count span {
     color: white;
     font-family: var(--serif);
-    font-size: 90%;
+    font-size: 80%;
     line-height: 1;
     letter-spacing: 0.08em;
   }

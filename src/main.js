@@ -143,7 +143,10 @@ function startMenu() {
 	// }
 	// document.addEventListener("click", showMenu)
 
-	document.querySelector(".new-game").addEventListener("click", showInitialConfig)
+	document.querySelector(".new-game").addEventListener("click", ()=>{
+		init(false)	
+		clearChildren()
+	})
 	document.querySelector(".config-left").addEventListener("click", () => showIntro("left"))
 	document.querySelector(".config-right").addEventListener("click", () => showIntro("right"))
 	// document.querySelector(".show-credits").addEventListener("click", showCredits)

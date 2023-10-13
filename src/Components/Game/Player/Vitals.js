@@ -51,7 +51,6 @@ class Vitals extends GameplayComponent {
                   flasks: player.flasks - 1,
                   hp: player.maxHp
                 }
-                console.log(updatedPlayer)
                 return updatedPlayer
               })
             } else {
@@ -61,7 +60,30 @@ class Vitals extends GameplayComponent {
                   flasks: player.flasks - 1,
                   hp: player.hp + 30
                 }
-                console.log(updatedPlayer)
+
+                return updatedPlayer
+              })
+            }
+          }
+          break;
+        case "eat_fruit":
+          if (get(Avern.Store.player).fruit > 0) {
+            if (get(Avern.Store.player).energy + 50 > get(Avern.Store.player).maxEnergy) {
+              Avern.Store.player.update(player => {
+                const updatedPlayer = {
+                  ...player,
+                  fruit: player.fruit - 1,
+                  energy: player.maxEnergy
+                }
+                return updatedPlayer
+              })
+            } else {
+              Avern.Store.player.update(player => {
+                const updatedPlayer = {
+                  ...player,
+                  fruit: player.fruit - 1,
+                  energy: player.energy + 50
+                }
 
                 return updatedPlayer
               })

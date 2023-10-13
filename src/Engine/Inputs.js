@@ -163,6 +163,17 @@ class Inputs {
                 trackUp: false,
 
             },
+
+            fruit: {
+                code: "KeyR",
+                name: "R",
+                pressed: false,
+
+                onlyOnce: true,
+                trackWasPressed: false,
+                trackUp: false,
+
+            },
         
             turn: {
                 code: "Semicolon",
@@ -344,6 +355,16 @@ class Inputs {
                 trackUp: false,
 
             },
+
+            fruit: {
+                code: "KeyU",
+                pressed: false,
+
+                onlyOnce: true,
+                trackWasPressed: false,
+                trackUp: false,
+
+            },
         
             turn: {
                 code: "KeyA",
@@ -418,6 +439,7 @@ class Inputs {
 
             reset: false,
             flask: false,
+            fruit: false,
 
             turn: false,
             turnWasPressed:false,

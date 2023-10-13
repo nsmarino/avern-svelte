@@ -12,7 +12,7 @@ import drink from '../../assets/audio/drink.mp3'
 import bayonet from '../../assets/audio/bayonet.wav'
 import pickup from '../../assets/audio/pickup.wav'
 import page from '../../assets/audio/page-flip.mp3'
-import drain from '../../assets/audio/drain.mp3'
+import eat from '../../assets/audio/eat.mp3'
  
 class Sound {
     constructor() {
@@ -72,6 +72,11 @@ class Sound {
         this.drinkHandler.id = "drink-fx"
         this.drinkHandler.src = drink
         this.drinkHandler.volume = 0.1
+
+        this.eatHandler = document.createElement("audio") // button fx for main menu
+        this.eatHandler.id = "eat-fx"
+        this.eatHandler.src = eat
+        this.eatHandler.volume = 0.1
 
         this.bayonetHandler = document.createElement("audio") // button fx for main menu
         this.bayonetHandler.id = "bayonet-fx"
