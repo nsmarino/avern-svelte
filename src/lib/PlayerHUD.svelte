@@ -9,8 +9,11 @@
             <div class="health"><div class="inner-health" style="width: {($player.hp / $player.maxHp) * 100}%"></div></div>
           </div>
           <div class="energy-bar">
-            <div class="energy"><div class="inner-energy" style="width: {($player.energy / $player.maxEnergy) * 100}%"></div></div>
-          </div>
+            <div class="energy">
+              <div class="inner-energy" style="width: {($player.energy / $player.maxEnergy) * 100}%"></div></div>
+              <div style="position:absolute; left: 4px; font-size: 8px;">{Math.floor($player.energy)}</div>
+
+            </div>
         </div>
         <!-- Top Right -->
         <div class="xp">

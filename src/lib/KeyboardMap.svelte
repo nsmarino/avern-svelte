@@ -67,7 +67,7 @@
               <p>The mountain water is fresh and clear. How else could the fortress endure?</p>
             </div>
           </div>
-          <div id="fruit" class="fruit input-key">
+          <div id="fruit" class="fruit input-key" style="width: 32px; height: 32px;">
             <div class="key-inner">
               <span>{$config.leftHanded ? "R" : "U"}</span>
               <img class="svg" src={fruit} alt="">
@@ -75,15 +75,16 @@
             <div class="action-active-indicator"></div>
             <div class="action-tooltip">
               <h3>Eat fruit</h3>
-              <p>Delicious oasis fruit that restores energy.</p>
+              <p>Delicious oasis fruit that restores energy. Hard to find.</p>
             </div>
           </div>
         </div>
 
         <div class="main-row">
+          
           {#each $actions as action}
           {#if action.assignment <= 4 && action.assignment !== null}
-            <div id="action{action.assignment}" class="equipment-action input-key {action.assignment}" class:primed={action.primed}>
+            <div id="action{action.assignment}" class="equipment-action input-key {action.assignment}" class:primed={action.primed} class:noenergy={(action.cost > $player.energy) || action.locked}>
               <div class="key-inner">
                 <span>{$config.leftHanded ? action.inputKeyLeft : action.inputKeyRight}</span>
                 <img class="svg" src={action.image} alt="">

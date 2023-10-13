@@ -589,7 +589,7 @@ class Body extends GameplayComponent {
                 perpendicularVector.normalize().multiplyScalar(delta).multiplyScalar(-4);
                 deltaVector.add(perpendicularVector);
             } else if (!this.targeting) {
-                transform.rotateY(0.007)
+                transform.rotateY(0.006)
             }
         }
             
@@ -600,7 +600,7 @@ class Body extends GameplayComponent {
                 perpendicularVector.normalize().multiplyScalar(delta).multiplyScalar(4);
                 deltaVector.add(perpendicularVector);
             } else if (!this.targeting) {
-                transform.rotateY(-0.007)
+                transform.rotateY(-0.006)
             }
         }
 

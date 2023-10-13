@@ -716,11 +716,11 @@ class Loader {
 			const loader = new YUKA.NavMeshLoader();
       // console.log("Yuka navmesh loader:", loader)
       const navmesh = await loader.load(file)
-      const shownav = await new GLTFLoader().loadAsync(file)
+      // const shownav = await new GLTFLoader().loadAsync(file)
 
-      Avern.State.scene.add(shownav.scene)
-      console.log(shownav.scene.children[0].material.wireframe = true)
-      console.log("NAVMESH FROM YUKA", navmesh)
+      // Avern.State.scene.add(shownav.scene)
+      // console.log(shownav.scene.children[0].material.wireframe = true)
+      // console.log("NAVMESH FROM YUKA", navmesh)
       return navmesh
       // loader.load( yukaPaths ).then( ( navigationMesh ) => {
       //   console.log(navigationMesh)
@@ -751,6 +751,7 @@ class Loader {
         if (c.userData.gltfExtensions?.EXT_collections?.collections) {
           switch(c.userData.gltfExtensions.EXT_collections.collections[0]) {
             case "enemies":
+              if (!c.userData.label) return;
               const enemy = Avern.GameObjects.createGameObject(scene, c.name)                        
               enemy.addComponent(Enemy, c)
               if (c.userData.label==="bow") enemy.addComponent(Projectile)

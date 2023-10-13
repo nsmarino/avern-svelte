@@ -1,7 +1,6 @@
 class Inputs {
     constructor() {
         this.leftHanded=window.avernKeyboardConfig==="left"
-        console.log("here is lefty", this.leftHanded)
         this.leftHandedConfig = {
             forward: {
                 code: "KeyI",

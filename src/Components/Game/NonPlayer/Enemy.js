@@ -19,9 +19,24 @@ class Enemy extends GameplayComponent {
     super(gameObject)
     this.gameObject = gameObject
     this.gameObject.transform.position.copy(spawnPoint.position)
+
+    // Array of vectors for enemy to patrol thru
+    this.patrolPoints = []
+    this.patrolIndex = 0
+
+    if (spawnPoint.children.length > 0) {
+      for (const child of spawnPoint.children) {
+        const worldPos = child.getWorldPosition(new THREE.Vector3())
+        this.patrolPoints.push(worldPos)
+      }
+      this.gameObject.transform.position.copy(this.patrolPoints[0])
+      this.startingBehavior = "patrol"
+    } else {
+      this.gameObject.transform.position.copy(spawnPoint.position)
+      this.startingBehavior = "idle"
+    }
   
     this.enemyType = spawnPoint.userData.label
-    this.startingBehavior = spawnPoint.userData.behavior || "idle"
     this.HELPER = Avern.PATHFINDINGHELPER
     Avern.State.scene.add(this.HELPER)
 
@@ -56,7 +71,8 @@ class Enemy extends GameplayComponent {
 
     this.behavior = this.startingBehavior
     this.velocity = new THREE.Vector3( 0, 0, 0 );
-    this.speed = 5
+    this.patrolSpeed = 2
+    this.pursueSpeed = 5
     // this.targetGroup = Avern.PATHFINDING.getGroup(Avern.pathfindingZone, spawnPoint.position);
     this.lerpFactor = 0.2
     // this.originNode = Avern.PATHFINDING.getClosestNode(spawnPoint.position, Avern.pathfindingZone, this.targetGroup)
@@ -123,13 +139,12 @@ class Enemy extends GameplayComponent {
       this.clips = this.gltf.animations
       switch (this.startingBehavior) {
         case "wander":
+        case "patrol":
+        case "pursue":
           this.action = this.mixer.clipAction(THREE.AnimationClip.findByName(this.clips, "WALK"))
           break;
         case "idle":
           this.action = this.mixer.clipAction(THREE.AnimationClip.findByName(this.clips, "IDLE"))
-          break;
-        case "pursue":
-          this.action = this.mixer.clipAction(THREE.AnimationClip.findByName(this.clips, "WALK"))
           break;
       }
 
@@ -367,6 +382,9 @@ class Enemy extends GameplayComponent {
       case "wander":
           // this.followWanderPath(delta)
           break;
+      case "patrol":
+          this.followPatrolPath(delta)
+          break;
       case "pursue":
           this.followPursuePath(delta)
           break;
@@ -375,9 +393,7 @@ class Enemy extends GameplayComponent {
 
         if (Math.floor(this.action.time * 30) >= this.crucialFrame && !this.crucialFrameSent) {
           this.crucialFrameSent = true;
-          console.log("CRUCAL FRAME SENT", this.checkTarget())
           if(!Avern.State.playerDead && this.checkTarget()) {
-            console.log("Check target pass")
             switch(this.enemyType) {
               case "sword":
                 this.emitSignal("monster_attack", {damage: 25, percentage: 0.5})
@@ -431,41 +447,75 @@ class Enemy extends GameplayComponent {
     }
   }
 
-  followWanderPath(deltaTime) {
-    if ( !this.path || !(this.path||[]).length ) {
-      this.resetPath()
-      return;
-    }
+  // followWanderPath(deltaTime) {
+  //   if ( !this.path || !(this.path||[]).length ) {
+  //     this.resetPath()
+  //     return;
+  //   }
   
-    let targetPosition = this.path[ 0 ];
-    this.velocity = targetPosition.clone().sub( this.gameObject.transform.position );
-    this.updateRotationToFacePoint(this.gameObject.transform, targetPosition, this.lerpFactor)
+  //   let targetPosition = this.path[ 0 ];
+  //   this.velocity = targetPosition.clone().sub( this.gameObject.transform.position );
+  //   this.updateRotationToFacePoint(this.gameObject.transform, targetPosition, this.lerpFactor)
   
-    if (this.velocity.lengthSq() > 0.1) {
-      this.velocity.normalize();
-      // Move to next waypoint
-      this.gameObject.transform.position.add( this.velocity.multiplyScalar( deltaTime * this.speed ) );
-    } else {
-      // Remove node from the path we calculated
-      this.path.shift();
-    }
-  }
-  resetPath() {
-    // console.log("reset path")
-    const targetGroup = Avern.PATHFINDING.getGroup(Avern.pathfindingZone, this.gameObject.transform.position);
+  //   if (this.velocity.lengthSq() > 0.1) {
+  //     this.velocity.normalize();
+  //     // Move to next waypoint
+  //     this.gameObject.transform.position.add( this.velocity.multiplyScalar( deltaTime * this.speed ) );
+  //   } else {
+  //     // Remove node from the path we calculated
+  //     this.path.shift();
+  //   }
+  // }
+  // resetPath() {
+  //   const targetGroup = Avern.PATHFINDING.getGroup(Avern.pathfindingZone, this.gameObject.transform.position);
 
-    const closestNode = Avern.PATHFINDING.getClosestNode(this.gameObject.transform.position, Avern.pathfindingZone, targetGroup)
-    const randomNode = this.getWanderTarget(this.originNode.centroid, Avern.pathfindingZone, targetGroup)
-    const path = Avern.PATHFINDING.findPath(closestNode.centroid, randomNode, Avern.pathfindingZone, targetGroup);
-    this.path = path
-  }
-  getWanderTarget(origin, zone, group) {
-    let randomNode = Avern.PATHFINDING.getRandomNode(zone, group)
-    const distance = origin.distanceTo(randomNode)
-    if (distance > this.maxWanderDistance) {
-      randomNode = this.getWanderTarget(origin, zone, group)
-    }
-    return randomNode
+  //   const closestNode = Avern.PATHFINDING.getClosestNode(this.gameObject.transform.position, Avern.pathfindingZone, targetGroup)
+  //   const randomNode = this.getWanderTarget(this.originNode.centroid, Avern.pathfindingZone, targetGroup)
+  //   const path = Avern.PATHFINDING.findPath(closestNode.centroid, randomNode, Avern.pathfindingZone, targetGroup);
+  //   this.path = path
+  // }
+  // getWanderTarget(origin, zone, group) {
+  //   let randomNode = Avern.PATHFINDING.getRandomNode(zone, group)
+  //   const distance = origin.distanceTo(randomNode)
+  //   if (distance > this.maxWanderDistance) {
+  //     randomNode = this.getWanderTarget(origin, zone, group)
+  //   }
+  //   return randomNode
+  // }
+
+  followPatrolPath(deltaTime) {
+    const destination = this.patrolPoints[this.patrolIndex]
+    // console.log("Distance to destination", this.gameObject.transform.position.distanceTo(destination))
+    if (!destination) return
+    if (this.gameObject.transform.position.distanceTo(destination) < 0.5) {
+        // console.log("Index stuff", this.patrolPoints[this.patrolIndex + 1] ? this.patrolIndex + 1 : 0)
+        // console.log("Reached destination")
+        this.patrolIndex = this.patrolPoints[this.patrolIndex + 1] ? this.patrolIndex + 1 : 0
+        
+        return
+    } 
+
+      if (!this.path || this.path.length===0) {
+          const path = Avern.yukaNavmesh.findPath(new YUKA.Vector3().copy(this.gameObject.transform.position), new YUKA.Vector3().copy(destination))
+          this.path = path
+      }
+      if (!this.path || this.path.length===0) return;
+      let targetPos = this.path[0];
+
+      if (!targetPos) return
+      this.velocity = new THREE.Vector3().copy(targetPos.clone().sub( this.gameObject.transform.position ));
+      console.log(this.velocity)
+      this.updateRotationToFacePoint(this.gameObject.transform, targetPos, this.lerpFactor)
+      if (this.velocity.lengthSq() > 0.1 ) {
+        this.velocity.normalize();
+        
+      // Move to next waypoint
+        this.gameObject.transform.position.add( this.velocity.multiplyScalar( deltaTime * this.patrolSpeed ) );
+        const closestPoint = findClosestPointOnMeshToPoint(Avern.State.env, this.gameObject.transform.position)
+        if ( closestPoint) this.gameObject.transform.position.copy(closestPoint)          
+      } else {
+        this.path.shift();
+      }
   }
 
   followPursuePath(deltaTime) {
@@ -474,29 +524,14 @@ class Enemy extends GameplayComponent {
     const groundRaycast = new THREE.Raycaster(playerPosition, new THREE.Vector3(0, -1, 0))
     groundRaycast.firstHitOnly = true
     const destination = groundRaycast.intersectObject(Avern.State.collider)[0] ? groundRaycast.intersectObject(Avern.State.collider)[0].point : null
-    // const destination = Avern.Player.transform.position
 
-    // console.log(destination)
     if (!destination) return
-    // const destination = new THREE.Vector3(Avern.Player.transform.position.x, Avern.Player.transform.position.y-1.8,Avern.Player.transform.position.z) 
     if (this.checkTarget() && this.gameObject.transform.position.distanceTo(destination) < this.actionRange) {
         this.behavior = "attack"
         this.fadeIntoAction(this.attack, 0)
         return
     } else {
-        // Set path anytime player moves:
         if (this.prevPlayerPosition.distanceTo(destination) > 0.05 || !this.path) {
-            // const targetGroup = Avern.PATHFINDING.getGroup(Avern.pathfindingZone, this.gameObject.transform.position);
-            // const closestNode = Avern.PATHFINDING.getClosestNode(this.gameObject.transform.position, Avern.pathfindingZone, targetGroup)
-            // const destinationNode = Avern.PATHFINDING.getClosestNode(destination, Avern.pathfindingZone, targetGroup)
-            // const path = Avern.PATHFINDING.findPath(closestNode.centroid, destinationNode.centroid, Avern.pathfindingZone, 0);
-            // if (path) {
-            //   this.HELPER.setPlayerPosition(this.gameObject.transform.position)
-            //   this.HELPER.setTargetPosition(destination)
-            //   this.HELPER.setPath(path)
-            // }
-            // console.log("From", new YUKA.Vector3().copy(this.gameObject.transform.position))
-            // console.log("To", new YUKA.Vector3().copy(destination))
             const path = Avern.yukaNavmesh.findPath(new YUKA.Vector3().copy(this.gameObject.transform.position), new YUKA.Vector3().copy(destination))
             this.path = path
         }
@@ -505,34 +540,27 @@ class Enemy extends GameplayComponent {
         let targetPosition = this.path[1];
 
         if (!this.path[1]) return
-        // this.mesh.position.copy(this.path[1])
         this.velocity = new THREE.Vector3().copy(targetPosition.clone().sub( this.gameObject.transform.position ));
         this.updateRotationToFacePoint(this.gameObject.transform, targetPosition, this.lerpFactor)
-
-          // console.log("here is this.vel", this.velocity, this.velocity.lengthSq())
         if (this.velocity.lengthSq() > 0.1 ) {
           this.velocity.normalize();
           // Move to next waypoint
-          this.gameObject.transform.position.add( this.velocity.multiplyScalar( deltaTime * this.speed ) );
+          this.gameObject.transform.position.add( this.velocity.multiplyScalar( deltaTime * this.pursueSpeed ) );
           const closestPoint = findClosestPointOnMeshToPoint(Avern.State.env, this.gameObject.transform.position)
-          // console.log(closestPoint)
-          if ( closestPoint) this.gameObject.transform.position.copy(closestPoint)
-          // const targetGroup = Avern.PATHFINDING.getGroup(Avern.pathfindingZone, this.gameObject.transform.position);
-          // const closest = Avern.PATHFINDING.getClosestNode(this.gameObject.transform.position, Avern.pathfindingZone, targetGroup)
-          // this.gameObject.transform.position.lerp(new THREE.Vector3( this.gameObject.transform.position.x, closest.centroid.y, this.gameObject.transform.position.z ), 0.6)
-          
+          if ( closestPoint) this.gameObject.transform.position.copy(closestPoint)          
         } else {
           this.path.shift();
         }
         this.prevPlayerPosition.copy(destination)
     }
   }
+
   handleDeath() {
     this.behavior = "die_lol"
     Avern.Store.player.update(player => {
       const updatedPlayer = {
         ...player,
-        energy: player.energy + 15 >= 100 ? 100 : player.energy + 15
+        energy: player.energy + 15 >= 100 ? 100 : player.energy + 25
 
       }
       return updatedPlayer
@@ -626,7 +654,7 @@ class Enemy extends GameplayComponent {
           Avern.Sound.thudHandler.currentTime = 0.1
           Avern.Sound.thudHandler.play()   
 
-          if (this.behavior === "wander") {
+          if (this.behavior === "wander" || this.behavior === "patrol") {
             this.path = null
             this.behavior = "pursue"
           }
@@ -645,14 +673,14 @@ class Enemy extends GameplayComponent {
           this.numbersContainer.appendChild(damageNumber)
           setTimeout(()=>damageNumber.remove(), 2000)
 
-          Avern.Store.player.update(player => {
-            const updatedPlayer = {
-              ...player,
-              energy: player.energy + 5 >= 100 ? 100 : player.energy + 5
+          // Avern.Store.player.update(player => {
+          //   const updatedPlayer = {
+          //     ...player,
+          //     energy: player.energy + 5 >= 100 ? 100 : player.energy + 5
       
-            }
-            return updatedPlayer
-          })
+          //   }
+          //   return updatedPlayer
+          // })
 
           if (this.health <= 0) {
             this.handleDeath()
@@ -722,8 +750,8 @@ class Enemy extends GameplayComponent {
     // Avern.State.scene.add( this.arrow );
 
     const intersects = raycaster.intersectObjects([this.colliderCapsule.body, Avern.State.collider], false);
-    const obstructed = intersects[0] && intersects[0].object.name !== "worldCollider"
-    const visible = frustum.intersectsObject(this.colliderCapsule.body)
+    const obstructed = intersects[0] && intersects[0].object.name === "worldCollider"
+    const visible = frustum.intersectsObject(this.colliderCapsule.body) && (intersects[0] && intersects[0].object.name !== "worldCollider")
 
     return { x, y, distanceToCamera, visible, obstructed };
   }

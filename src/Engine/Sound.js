@@ -1,5 +1,5 @@
 import intro from '../../assets/audio/intro.mp3'
-import exploration from '../../assets/audio/fse--paths.mp3'
+import exploration from '../../assets/audio/swamp.mp3'
 import testRun from '../../assets/audio/Dirt_Jogging.mp3'
 import gunshot from '../../assets/audio/pistol.mp3'
 import shotgun from '../../assets/audio/pistol.mp3'

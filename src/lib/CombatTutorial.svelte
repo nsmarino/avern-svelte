@@ -21,7 +21,7 @@
             <p>Once you've loaded the rifle, press {#if $config.leftHanded}<span>F</span>{:else}<span>J</span>{/if} again to fire.</p>
             <p>Performing actions cost energy.</p>
             <p>Some actions, like the bayonet slash {#if $config.leftHanded}<span>D</span>{:else}<span>K</span>{/if}, do not require loading, but cost a great deal more energy.</p>
-            <p>Energy recovers gradually over time. It can also be recovered by dealing or receiving damage, defeating enemies, or eating Fruit.</p>
+            <p>Energy recovers gradually over time. You also recover energy when you receive damage, defeat enemies, or eat Fruit.</p>
             <p>This tutorial can be viewed from the Pause Menu {#if $config.leftHanded}<span>M</span>{:else}<span>C</span>{/if} at any time.</p>
           </div>
         <div>
