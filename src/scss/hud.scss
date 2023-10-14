@@ -83,8 +83,8 @@
 }
   .input-key {
     border-radius: 8px;
-    width: 40px;
-    height: 40px;
+    width: 50px;
+    height: 50px;
     padding: 2px;
     background: var(--avern-input-border-gradient);
     position: relative;
@@ -118,7 +118,7 @@
       left: 2px;
       right: 2px;
       bottom: 2px;
-      border-radius: 8px;
+      border-radius: 5px;
       opacity: 0;
       transition: all 0.2s;
     }
@@ -279,13 +279,28 @@
 }
 .input-key.active {
   filter: brightness(200%);
-  transform: translateY(4px);
+  transform: translateY(2px);
   transition: transform 0.2s ease-in-out;
 }
 
-.input-key.locked, .input-key.noenergy {
-  opacity: 0.4;
+.equipment-action {
+  // border: 1px solid var(--avern-blue);
 }
+.input-key.locked {
+  opacity: 0.1;
+  // border: 1px solid transparent;
+}
+.input-key.oom {
+  opacity: 0.5;
+  filter: blur(3px);
+  // border: 1px solid transparent;
+}
+.equipment-action.locked {
+  opacity: 0.1 !important;
+
+  // border: 1px solid transparent;
+}
+
 
 .action-inventory {
   position: absolute;

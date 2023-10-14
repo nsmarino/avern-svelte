@@ -22,10 +22,18 @@
   }
 }
 .tutorial {
-  max-width: 600px;
+  max-width: 800px;
   padding: 40px;
   color: white;
   opacity: 0.8;
+}
+.energy-example {
+  display: inline-block;
+  width: 60px !important;
+  height: 5px;
+  border-radius: 0 !important;
+  background-color: var(--avern-gold) !important;
+  border: 2px solid var(--avern-grey) !important;
 }
 .menu-pane .config-button {
   background: none;

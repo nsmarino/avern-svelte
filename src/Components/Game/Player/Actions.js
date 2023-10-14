@@ -98,7 +98,7 @@ class Actions extends GameplayComponent {
                 // eslint-disable-next-line no-case-declarations
                 flashPosition = Avern.Player.getComponent(Body).rifleMesh.getWorldPosition(new THREE.Vector3())
                 flashPosition.y += 1
-                this.emitSignal("particle_fx", { position: flashPosition, duration: 20 })
+                this.emitSignal("particle_fx", { position: flashPosition, duration: 20, color: "0xFFFFFF" })
                 Avern.Sound.gunshotHandler.currentTime = 0.2
                 Avern.Sound.gunshotHandler.play()        
                 break;
@@ -113,11 +113,11 @@ class Actions extends GameplayComponent {
                 Avern.Sound.gunshotHandler.play()        
                 break;
             case "bayonet_slash":
-                    this.emitSignal("receive_direct_attack", {damage: action.baseDamage, range: action.range })
+                    this.emitSignal("receive_direct_attack", {damage: action.baseDamage, range: action.range,})
                     // eslint-disable-next-line no-case-declarations
                     flashPosition = Avern.Player.getComponent(Body).rifleMesh.getWorldPosition(new THREE.Vector3())
                     flashPosition.y += 1
-                    this.emitSignal("particle_fx", { position: flashPosition, duration: 20 })     
+                    this.emitSignal("particle_fx", { position: flashPosition, duration: 20, color: "0xFF0000" })     
                 break;
             case "rifle_club":
                     this.emitSignal("receive_direct_attack", {damage: action.baseDamage, range: action.range })

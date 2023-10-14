@@ -6,13 +6,14 @@ import GameplayComponent from '../../_Component';
 import { generateCapsuleCollider, checkCapsuleCollision, distancePointToLine, randomIntFromInterval } from '../../../helpers';
 import Body from '../Player/Body';
 import FollowCamera from '../Player/FollowCamera';
-import zombieBow from "../../../../assets/monsters/zombie-bow-2.gltf"
-import zombieSword from "../../../../assets/monsters/zombie-sword-2.gltf"
+import zombieBow from "../../../../assets/monsters/bow-large.gltf"
+import zombieSword from "../../../../assets/monsters/sword-large.gltf"
 import Vitals from '../Player/Vitals';
 import Actions from '../Player/Actions';
 import ItemOnMap from './ItemOnMap';
 import Targeting from '../Player/Targeting';
 import Notices from '../../Interface/Notices';
+import {get} from 'svelte/store'
 
 class Enemy extends GameplayComponent {
   constructor(gameObject, spawnPoint) {
@@ -72,7 +73,7 @@ class Enemy extends GameplayComponent {
     this.behavior = this.startingBehavior
     this.velocity = new THREE.Vector3( 0, 0, 0 );
     this.patrolSpeed = 2
-    this.pursueSpeed = 5
+    this.pursueSpeed = 3.5
     // this.targetGroup = Avern.PATHFINDING.getGroup(Avern.pathfindingZone, spawnPoint.position);
     this.lerpFactor = 0.2
     // this.originNode = Avern.PATHFINDING.getClosestNode(spawnPoint.position, Avern.pathfindingZone, this.targetGroup)
@@ -160,10 +161,6 @@ class Enemy extends GameplayComponent {
       this.death.setLoop(THREE.LoopOnce)
       this.death.clampWhenFinished = true
 
-      this.reactSmall = this.mixer.clipAction(
-          THREE.AnimationClip.findByName(this.clips, "REACT_SMALL")
-      )
-      this.reactSmall.setLoop(THREE.LoopOnce)
 
       this.reactLarge = this.mixer.clipAction(
           THREE.AnimationClip.findByName(this.clips, "REACT_LARGE")
@@ -190,7 +187,7 @@ class Enemy extends GameplayComponent {
           this.rangeWidth = 4
 
           this.actionRange = 3
-          this.crucialFrame = 18
+          this.crucialFrame = 24
           break;
       }
       this.attack.setLoop(THREE.LoopOnce)
@@ -275,12 +272,13 @@ class Enemy extends GameplayComponent {
 
       // chance of dropping item
       const randomInt = randomIntFromInterval(1,4)
-      if (randomInt===1) {
+      if (randomInt===1 && (get(Avern.Store.player).flasks < 5)) {
         // OUTDATED:
-        // const itemOnMap = Avern.GameObjects.createGameObject(Avern.State.scene, `${this.gameObject.name}-item`)
-        // const itemContent = Avern.Content.itemsOnMap.find(i => i.label === "healing-flask")
-        // itemOnMap.addComponent(ItemOnMap, this.gameObject.transform, itemContent)
-        // itemOnMap.getComponent(ItemOnMap).attachObservers()
+        const itemOnMap = Avern.GameObjects.createGameObject(Avern.State.scene, `${this.gameObject.name}-item`)
+        const itemContent = Avern.Content.items.find(i => i.label === "healing-flask")
+        console.log("Item content to be added to gameObject:", itemContent)
+        itemOnMap.addComponent(ItemOnMap, this.gameObject.transform, itemContent)
+        itemOnMap.getComponent(ItemOnMap).attachObservers()
       }
 
       setTimeout(() => {
@@ -439,8 +437,11 @@ class Enemy extends GameplayComponent {
 
       if (Avern.Player) {
         const visionCollision = checkCapsuleCollision({ segment: Avern.Player.getComponent(Body).tempSegment, radius: Avern.Player.getComponent(Body).radius}, this.visionCapsule)
-        if (visionCollision.isColliding && (this.behavior=="wander" || this.behavior=="idle")) {
+        if (visionCollision.isColliding && (this.behavior=="wander" || this.behavior=="idle" || this.behavior=="patrol")) {
           if (this.behavior=="idle") this.fadeIntoAction(this.walk, 0.1)
+          Avern.Sound.alertHandler.currentTime = 0
+          Avern.Sound.alertHandler.play()   
+
           this.behavior="pursue"
         }
       }
@@ -485,11 +486,8 @@ class Enemy extends GameplayComponent {
 
   followPatrolPath(deltaTime) {
     const destination = this.patrolPoints[this.patrolIndex]
-    // console.log("Distance to destination", this.gameObject.transform.position.distanceTo(destination))
     if (!destination) return
     if (this.gameObject.transform.position.distanceTo(destination) < 0.5) {
-        // console.log("Index stuff", this.patrolPoints[this.patrolIndex + 1] ? this.patrolIndex + 1 : 0)
-        // console.log("Reached destination")
         this.patrolIndex = this.patrolPoints[this.patrolIndex + 1] ? this.patrolIndex + 1 : 0
         
         return
@@ -504,7 +502,6 @@ class Enemy extends GameplayComponent {
 
       if (!targetPos) return
       this.velocity = new THREE.Vector3().copy(targetPos.clone().sub( this.gameObject.transform.position ));
-      console.log(this.velocity)
       this.updateRotationToFacePoint(this.gameObject.transform, targetPos, this.lerpFactor)
       if (this.velocity.lengthSq() > 0.1 ) {
         this.velocity.normalize();
@@ -557,10 +554,13 @@ class Enemy extends GameplayComponent {
 
   handleDeath() {
     this.behavior = "die_lol"
+    Avern.Sound.enemyDieHandler.currentTime = 0
+    Avern.Sound.enemyDieHandler.play()   
+
     Avern.Store.player.update(player => {
       const updatedPlayer = {
         ...player,
-        energy: player.energy + 15 >= 100 ? 100 : player.energy + 25
+        energy: player.energy + 25 >= 100 ? 100 : player.energy + 25
 
       }
       return updatedPlayer
@@ -643,10 +643,7 @@ class Enemy extends GameplayComponent {
         break;
       case("receive_direct_attack"):
         if (this.isTargeted===true) {
-          // if ((this.gameObject.transform.position.y < Avern.Player.transform.position.y - 2) || (this.gameObject.transform.position.y > Avern.Player.transform.position.y)) {
-          //   this.emitSignal("show_notice", {notice: "You must be on the same elevation as the target", color: "red", delay: 2000})
-          //   return
-          // } else 
+
           if (Avern.Player.transform.position.distanceTo(this.gameObject.transform.position) >= data.range) {
             this.emitSignal("show_notice", {notice: "Out of range", color: "red", delay: 2000})
             return
@@ -657,10 +654,15 @@ class Enemy extends GameplayComponent {
           if (this.behavior === "wander" || this.behavior === "patrol") {
             this.path = null
             this.behavior = "pursue"
-          }
+            Avern.Sound.alertHandler.currentTime = 0
+            Avern.Sound.alertHandler.play()   
+            }
           if (this.behavior=="idle") {
             this.path = null
             this.behavior = "pursue"
+            Avern.Sound.alertHandler.currentTime = 0
+            Avern.Sound.alertHandler.play()   
+
 
             this.fadeIntoAction(this.walk, 0.1)
           }
@@ -673,21 +675,14 @@ class Enemy extends GameplayComponent {
           this.numbersContainer.appendChild(damageNumber)
           setTimeout(()=>damageNumber.remove(), 2000)
 
-          // Avern.Store.player.update(player => {
-          //   const updatedPlayer = {
-          //     ...player,
-          //     energy: player.energy + 5 >= 100 ? 100 : player.energy + 5
-      
-          //   }
-          //   return updatedPlayer
-          // })
-
           if (this.health <= 0) {
             this.handleDeath()
           } else {
-            this.reactLarge.reset();
-            this.reactLarge.fadeIn(0.2);
-            this.reactLarge.play();
+            if (this.behavior !== "attack") {
+              this.reactLarge.reset();
+              this.reactLarge.fadeIn(0.2);
+              this.reactLarge.play();
+            }
           }
         }
         break;
@@ -793,7 +788,6 @@ function findClosestPointOnMeshToPoint(mesh, point) {
       const distance = point.distanceTo(intersectionPoint);
       // Update closest point and distance if this intersection is closer
       if (distance < closestDistance) {
-        // console.log("Distance", distance, "Closest distance", closestDistance)
         closestDistance = distance;
         closestPoint = intersectionPoint.clone();
       }

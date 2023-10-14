@@ -1,10 +1,11 @@
 import sanityClient from "../sanityClient"
 
-import demoCourtyard from "../../assets/levels/demo-courtyard.gltf"
+import demoCourtyard from "../../assets/levels/new-try.gltf"
 import demoCliffs from "../../assets/levels/demo-cliffs.gltf"
 import demoSwamp from "../../assets/levels/demo-swamp.gltf"
 import yukaPaths from "../../assets/levels/my-navmesh.gltf"
 import yukaLevel from "../../assets/levels/my-level.gltf"
+import newTry from "../../assets/levels/new-try.gltf"
 import {writable, derived, get} from "svelte/store"
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
@@ -59,7 +60,7 @@ class Loader {
 
       // 'content' should only be interested in what's present the actual scene file. the Store is used to determine what actually spawns in the game
       Avern.Content = {
-        baseFile: yukaLevel,
+        baseFile: demoCliffs,
         items:[
           {
             label: "rear-entrance",
@@ -84,6 +85,13 @@ class Loader {
             item: {
               name: "Healing Flask",
               category: "flask"
+            }
+          },
+          {
+            label: "fruit",
+            item: {
+              name: "Fruit",
+              category: "fruit"
             }
           }
         ],
@@ -417,7 +425,7 @@ class Loader {
                 description: "You eyes narrow and time seems to slow. Causes additional bleed damage.",
                 primeLength: 1.75,
                 baseDamage: 35,
-                cost: 18,
+                cost: 22,
                 isInstant: false,
                 range: 40,
                 primed: false,
@@ -435,7 +443,7 @@ class Loader {
                 caption: "Affixing bayonet",
                 primeLength: 0.6,
                 isInstant: true,
-                cost: 33,
+                cost: 40,
                 baseDamage: 40,
                 modifier:0.15,
                 range: 5,
@@ -626,7 +634,7 @@ class Loader {
         // simple array of interactions and notices
         log: [],
         openingRemarksVisible: false,
-        combatTutorialVisible:  false,
+        combatTutorialVisible:  true,
         endOfDemoVisible: false,
         openingRemarksShown: true,
         combatTutorialShown:  false,
@@ -865,14 +873,12 @@ class Loader {
           Avern.Content.baseFile=demoCourtyard
           break;
         case "cliffs-start": 
-          // Avern.Content.baseFile=simple2
-          // if (!get(Avern.Store.combatTutorialShown)) {
-          //   setTimeout(() => {
-          //     Avern.Store.combatTutorialVisible.set(true)
-          //     Avern.Store.combatTutorialShown.set(true)
-          //   }, 3000)
-          // }
-          // break;
+          if (!get(Avern.Store.combatTutorialShown)) {
+            setTimeout(() => {
+              Avern.Store.combatTutorialVisible.set(true)
+              Avern.Store.combatTutorialShown.set(true)
+            }, 3000)
+          }
         case "cliffs-end": 
           Avern.Content.baseFile=demoCliffs
           break;

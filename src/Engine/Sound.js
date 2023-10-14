@@ -13,6 +13,9 @@ import bayonet from '../../assets/audio/bayonet.wav'
 import pickup from '../../assets/audio/pickup.wav'
 import page from '../../assets/audio/page-flip.mp3'
 import eat from '../../assets/audio/eat.mp3'
+import alert from '../../assets/audio/alert.wav'
+import enemyDie from '../../assets/audio/enemy-die.wav'
+import projectile from '../../assets/audio/projectile.wav'
  
 class Sound {
     constructor() {
@@ -57,6 +60,21 @@ class Sound {
         this.thudHandler.id = "thud-fx"
         this.thudHandler.src = thud
         this.thudHandler.volume = 0.03
+
+        this.alertHandler = document.createElement("audio") // button fx for main menu
+        this.alertHandler.id = "alert-fx"
+        this.alertHandler.src = alert
+        this.alertHandler.volume = 0.1
+
+        this.projectileHandler = document.createElement("audio") // button fx for main menu
+        this.projectileHandler.id = "projectile-fx"
+        this.projectileHandler.src = projectile
+        this.projectileHandler.volume = 0.1
+
+        this.enemyDieHandler = document.createElement("audio") // button fx for main menu
+        this.enemyDieHandler.id = "enemy-die-fx"
+        this.enemyDieHandler.src = enemyDie
+        this.enemyDieHandler.volume = 0.03
 
         this.readyHandler = document.createElement("audio") // button fx for main menu
         this.readyHandler.id = "ready-fx"

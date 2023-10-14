@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import GameplayComponent from '../_Component';
 import {RGBELoader} from "three/addons/loaders/RGBELoader.js"
-import hdrUrl from "../../../assets/environment/belfast.hdr"
+import hdrUrl from "../../../assets/environment/Quarry.hdr"
 
 class Lights extends GameplayComponent {
     constructor(gameObject) {

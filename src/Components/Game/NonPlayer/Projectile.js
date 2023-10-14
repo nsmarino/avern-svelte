@@ -71,6 +71,9 @@ class Projectile extends GameplayComponent {
         switch(signalName) {
           case "launch_projectile":
             console.log("Receive projectile")
+            Avern.Sound.projectileHandler.currentTime = 0
+            Avern.Sound.projectileHandler.play()   
+
             const initialPosition = new THREE.Vector3( 
                 this.gameObject.transform.position.x, 
                 this.gameObject.transform.position.y+1, 

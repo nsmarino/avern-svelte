@@ -31,17 +31,17 @@ class ParticleFX extends GameplayComponent {
         this.particleGeometry.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
 
         // Create a material for the particles
-        var particleMaterial = new THREE.PointsMaterial({
+        this.particleMaterial = new THREE.PointsMaterial({
             color: 0xFFFFFF,
-            size: 0.1,
+            size: .6,
             transparent: true,
-            opacity: 0.5,
+            opacity: .6,
             visible: false
         });
 
 
         // Create a particle system from the buffer geometry and material
-        this.particleSystem = new THREE.Points(this.particleGeometry, particleMaterial);
+        this.particleSystem = new THREE.Points(this.particleGeometry, this.particleMaterial);
         gameObject.transform.add(this.particleSystem)
 
     }
@@ -94,6 +94,8 @@ class ParticleFX extends GameplayComponent {
 
         switch(signalName) {
           case "particle_fx":
+            console.log("Incoming data.color", data.color)
+            this.particleMaterial.color.setHex(data.color)
             this.activate(data.position)
 
             setTimeout(() => {

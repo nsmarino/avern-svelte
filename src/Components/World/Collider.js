@@ -16,7 +16,8 @@ class Collider extends GameplayComponent {
         const levelGeometry = new THREE.Scene()
         for (const mesh of geometryMeshes) {
             mesh.receiveShadow = true
-            mesh.material.side = THREE.DoubleSide
+            console.log(mesh.name)
+            if (mesh.name !== 'Ground') mesh.material.side = THREE.FrontSide
             levelGeometry.add(mesh)
         }
         environment = levelGeometry

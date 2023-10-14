@@ -177,7 +177,7 @@ class Body extends GameplayComponent {
                 id: "shoot",
                 anim: this.setUpAnim(clips, "KNEEL_AND_FIRE_RIFLE", false, true, 3.5),
                 crucialFrame: 50,
-                canInterrupt: true,
+                canInterrupt: false,
             }
             this.fire = {
                 id: "fire",
@@ -195,7 +195,7 @@ class Body extends GameplayComponent {
                 id: "slash",
                 anim: this.setUpAnim(clips, "SLASH", false, true, 1),
                 crucialFrame: 30,
-                canInterrupt: true,
+                canInterrupt: false,
             }
             this.shotgun = {
                 id: "shotgun",
