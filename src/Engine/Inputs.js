@@ -513,7 +513,6 @@ class Inputs {
         return this.inputs
     }
     update() {
-        console.log("Interact", this.inputs.interact)
         for (const property in this.config) {
             if (this.config[property].pressed && this.config[property].onlyOnce) this.inputs[property] = false
             if (this.config[property].pressed && this.config[property].trackWasPressed) this.inputs[`${property}WasPressed`] = false

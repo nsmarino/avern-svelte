@@ -11,6 +11,8 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import yoshuaHaystack from "../../assets/npcs/yoshua_haystack.gltf"
 import gatekeeperDismayed from "../../assets/npcs/fse--gatekeeper.gltf"
+import goatEating from "../../assets/npcs/fse--gatekeeper.gltf"
+import smithmasterStanding from "../../assets/npcs/fse--gatekeeper.gltf"
 
 import { Pathfinding, PathfindingHelper } from 'three-pathfinding';
 import * as YUKA from "yuka"
@@ -274,7 +276,24 @@ class Loader {
                     type: "dialogue",
                     text: "Thank you, child! How proud I am of you.",
                     image: gatekeeperPortrait,
-                    label: "Relieved gatekeeper",
+                    label: "Gatekeeper",
+                  },
+                  {
+                    type: "narration",
+                    text: "The gatekeeper still seems pretty upset. Perhaps the Smithmaster has yelled at him again.",
+                    image: gatekeeperPortrait,
+                    label: "Gatekeeper",
+                  }
+                ]
+              },
+              {
+                prompt: "Talk to the gatekeeper",
+                nodes: [
+                  {
+                    type: "narration",
+                    text: "The gatekeeper still seems pretty upset. Perhaps the Smithmaster has yelled at him again.",
+                    image: gatekeeperPortrait,
+                    label: "Gatekeeper",
                   }
                 ]
               },
@@ -289,7 +308,7 @@ class Loader {
             worldConditions: [
               {id:"keyRetrieved", value:true}
             ],
-            model: yoshuaHaystack,
+            model: smithmasterStanding,
             anim: "SIT",
 
             content: [
@@ -316,6 +335,17 @@ class Loader {
                   },
                 ]
               },
+              {
+                prompt: "Talk to the smithmaster",
+                nodes: [
+                  {
+                    type: "dialogue",
+                    text: "Those goats of yours have been been screeching since the sun rose. Run along and see what the matter is with them -- they keep me from my work.",
+                    image: smithmasterPortrait,
+                    label: "Smithmaster",
+                  },
+                ]
+              },
             ],
           },
           {
@@ -327,7 +357,7 @@ class Loader {
             worldConditions: [
               {id:"keyRetrieved", value:false}
             ],
-            model: yoshuaHaystack,
+            model: goatEating,
             anim: "SIT",
 
             content: [
@@ -403,6 +433,17 @@ class Loader {
                   },
                 ]
               },
+              {
+                prompt: "Talk to Esthel",
+                nodes: [
+                  {
+                    type: "dialogue",
+                    text: "You have freed me from my captors. I thank you, castrate. Bring me to my brother.",
+                    image: esthelPortrait,
+                    label: "Esthel",
+                  },
+                ]
+              },
             ],
           },
         ],
@@ -421,8 +462,8 @@ class Loader {
                 id: "shoot_from_distance",
                 label: "Precision Shot",
                 caption: "Loading rifle",
-                image: aimedShot,
-                description: "You eyes narrow and time seems to slow. Causes additional bleed damage.",
+                image: muzzleBlast,
+                description: "You eyes narrow and time seems to slow. You kneel and take careful aim.",
                 primeLength: 1.75,
                 baseDamage: 35,
                 cost: 22,
@@ -432,8 +473,8 @@ class Loader {
                 assignment: null,
                 primeAnimation: "load",
                 animation: "shoot",
-                primaryModifier: "Faith",
-                secondaryModifier: "Cruelty",
+                primaryModifier: "Load: 1.75",
+                secondaryModifier: "Energy Cost: 22",
               },
               {
                 id: "bayonet_slash",
@@ -451,8 +492,8 @@ class Loader {
                 assignment: null,
                 primeAnimation: "load",
                 animation: "slash",
-                primaryModifier: "Faith",
-                secondaryModifier: "Cruelty",
+                primaryModifier: "Load: 0",
+                secondaryModifier: "Energy Cost: 40",
               },
               {
                 id: "rapid_fire",
@@ -462,7 +503,7 @@ class Loader {
                 primeLength: 1,
                 baseDamage: 20,
                 cost: 10,
-                image: muzzleBlast,
+                image: aimedShot,
                 range: 30,
                 primed: false,
                 isInstant: false,
@@ -869,7 +910,9 @@ class Loader {
       switch(toLabel) {
         case "courtyard-path": 
         case "courtyard-gate": 
-        case "player-restart": 
+        case "player-restart":
+          Avern.Sound.playSceneMusic("courtyard")
+
           Avern.Content.baseFile=demoCourtyard
           break;
         case "cliffs-start": 
@@ -880,9 +923,11 @@ class Loader {
             }, 3000)
           }
         case "cliffs-end": 
+          Avern.Sound.playSceneMusic("cliffs", 0.1)
           Avern.Content.baseFile=demoCliffs
           break;
         case "swamp-start": 
+        Avern.Sound.playSceneMusic("swamp", 0.1)
           Avern.Content.baseFile=demoSwamp
           break;
       }

@@ -14,7 +14,7 @@
     <div>
       <p>This concludes the gameplay demo of <span>FORTRESS SHEPHERD EUNUCH</span>.</p>
       <p>The game remains under active development. Updates and development logs are available on <a href="https://avern-systems.itch.io/fse" target="_blank">itch.io</a> and <a href="https://www.instagram.com/yard_gfx/" target="_blank">instagram</a>.</p>
-      <p>Thank you for playing! If you wish, you can return to the Cliffs area to try out the dagger that Yoshua gave you.</p>
+      <p>Thank you for playing!</p>
       <button on:click={closeTutorial}>Close</button>
     </div>
   </div>

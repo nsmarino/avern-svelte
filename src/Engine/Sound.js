@@ -1,5 +1,20 @@
+
+
+
+
+// OST:
 import intro from '../../assets/audio/intro.mp3'
-import exploration from '../../assets/audio/swamp.mp3'
+import courtyard from "../../assets/audio/ost/courtyard.mp3"
+import cliffs from "../../assets/audio/ost/cliffs.mp3"
+import swamp from '../../assets/audio/ost/swamp.mp3'
+
+// firstHallway
+// wanderingAroundOutside
+// cliffs
+
+
+
+// SOUND FX:
 import testRun from '../../assets/audio/Dirt_Jogging.mp3'
 import gunshot from '../../assets/audio/pistol.mp3'
 import shotgun from '../../assets/audio/pistol.mp3'
@@ -19,15 +34,24 @@ import projectile from '../../assets/audio/projectile.wav'
  
 class Sound {
     constructor() {
+
+        this.ost = {
+            intro,
+            courtyard,
+            cliffs,
+            swamp,
+        }
         this.introHandler = document.createElement("audio")
-        this.introHandler.src = intro
+        this.introHandler.src = this.ost.intro
         this.introHandler.loop = true
         this.introHandler.volume = 0.1
 
         this.musicHandler = document.createElement("audio")
-        this.musicHandler.src = exploration
+        this.musicHandler.src = this.ost.courtyard
         this.musicHandler.loop = true
-        this.musicHandler.volume = 0.1
+        this.musicHandler.volume = 0.01
+        // this.playSceneMusic("courtyard")
+
         
         this.fxHandler = document.createElement("audio")
         this.fxHandler.id = "fx"
@@ -128,8 +152,17 @@ class Sound {
     }
 
     init() {
-
+        console.log("Does this init run lol")
     }
+
+    playSceneMusic(scene,volume) {
+        this.musicHandler.src = this.ost[scene]
+        this.musicHandler.currentTime = 0
+        this.musicHandler.volume = volume
+
+        this.musicHandler.play()   
+    }
+
 }
 
 export default Sound

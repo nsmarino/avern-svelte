@@ -138,9 +138,7 @@ class Interaction extends GameplayComponent {
         Avern.State.worldUpdateLocked = false
         Avern.Store.interaction.set({active: false, node: {}})
         this.contentIndex = 0
-        console.log(this.interactionsIndex)
         if (this.interactions.content[this.interactionsIndex+1]) {
-            console.log(this.interactions.content[this.interactionsIndex+1])
             this.content= this.interactions.content[this.interactionsIndex+1].nodes
             this.prompt= this.interactions.content[this.interactionsIndex+1].prompt
             Avern.Store.ongoingInteractions.update(ong => {
@@ -148,12 +146,11 @@ class Interaction extends GameplayComponent {
                 return ong
             })
             this.interactionsIndex+=1
-        } else {
-            if (!get(Avern.Store.endOfDemoShown) && this.interactions.label==="yoshua-haystack") {
+            if (!get(Avern.Store.endOfDemoShown) && this.interactions.label==="esthel-captive") {
                 setTimeout(() => {
                   Avern.Store.endOfDemoVisible.set(true)
                   Avern.Store.endOfDemoShown.set(true)
-                }, 2000)
+                }, 40)
               }
         }
 

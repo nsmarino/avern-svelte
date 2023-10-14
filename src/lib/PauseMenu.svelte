@@ -82,7 +82,7 @@
       {#if $combatTutorialShown}
         <h3>Combat</h3>
         <div class="demo-container">
-          <p>Defend yourself with the <span>Goatherd's Rifle.</span> If you don't have one, go talk to the Gatekeeper.</p>
+          <p>Defend yourself with the Goatherd's Rifle. If you don't have one, go talk to the Gatekeeper.</p>
           <p>Target an enemy with {#if $config.leftHanded }<span>G</span>{:else}<span>H</span>{/if}.</p>
           <p>Press {#if $config.leftHanded}<span>F</span>{:else}<span>J</span>{/if} to load your rifle.</p>
           <p>Once you've loaded the rifle, press {#if $config.leftHanded}<span>F</span>{:else}<span>J</span>{/if} again to fire.</p>
