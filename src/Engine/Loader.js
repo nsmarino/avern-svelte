@@ -62,7 +62,7 @@ class Loader {
 
       // 'content' should only be interested in what's present the actual scene file. the Store is used to determine what actually spawns in the game
       Avern.Content = {
-        baseFile: demoCliffs,
+        baseFile: demoCourtyard,
         items:[
           {
             label: "rear-entrance",
@@ -910,7 +910,7 @@ class Loader {
           }
         case "cliffs-end": 
           Avern.Sound.playSceneMusic("cliffs", 0.1)
-          Avern.Content.baseFile=demoCourtyard
+          Avern.Content.baseFile=demoCliffs
           break;
         case "swamp-start": 
         Avern.Sound.playSceneMusic("swamp", 0.1)
