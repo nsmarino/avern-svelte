@@ -74,6 +74,10 @@ function startMenu() {
 	const showIntro = (dominantHand) => {
 		Avern.Sound.introHandler.play()
 
+		document.querySelector(".skip-intro").addEventListener("click", () => {
+			showTitleCard()
+		})
+
 		window.avernKeyboardConfig = dominantHand
 		gsap.set(".initial-config", { display: "none"})
 		gsap.set(".intro", { display: 'block'})
@@ -110,7 +114,7 @@ function startMenu() {
 			document.querySelector(".start-key-indicator").innerText = window.avernKeyboardConfig === "left" ? "H" : "G"
 			gsap.to(".start-key-indicator", { opacity: 1, duration: 1, y: 0, pointerEvents: "auto"  })
 			document.addEventListener("keydown", handleTitleKeyDown)
-		}, 4000)
+		}, 1500)
 	}
 
 	function handleTitleKeyDown(e) {
@@ -173,6 +177,8 @@ async function init(useSavedGame) {
 		target: document.getElementById('app'),
 	})
 	Avern.GameObjects.attachObservers() // Listen for signals from other gameObjects' components.
+	Avern.Inputs.inputs.interact=false
+
 	render()
 }
 

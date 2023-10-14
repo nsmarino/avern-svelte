@@ -194,6 +194,18 @@
           justify-content: center;
           height: 20px; */
         }
+        .start-menu .skip-intro {
+          position: fixed;
+          left: 33%;
+          bottom: 40%;
+          color: var(--avern-tan);
+          font-size: 8px;
+          border-bottom: 1px solid var(--avern-tan);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          }
         .start-menu .intro-text-container .nextCard {
           animation: 1s ease-in-out fadeup;
         }
@@ -400,6 +412,7 @@
       <div class="intro" style="display: none; opacity: 0; transform: translateY(40px); pointer-events: none;">
         <div class="next-card-key"></div>
         <div class="intro-text-container"></div>
+        <div class="skip-intro">Skip Introduction</div>
       </div>
 
       <div class="title-card" style="display: none; opacity: 0; transform: translateY(40px); pointer-events: none;">

@@ -33,12 +33,12 @@
   }
 
   const filesTab = writable("root")
-  const infoTab = writable("log")
+  const infoTab = writable("tutorial")
 
   onDestroy(()=> {
     console.log("On destroy?")
     filesTab.set("root")
-    infoTab.set("log")
+    // infoTab.set("log")
   })
   function updateKeyboardConfig(isLeft){
       if (isLeft) {
@@ -82,20 +82,21 @@
       {#if $combatTutorialShown}
         <h3>Combat</h3>
         <div class="demo-container">
+          <p>Defend yourself with the <span>Goatherd's Rifle.</span> If you don't have one, go talk to the Gatekeeper.</p>
           <p>Target an enemy with {#if $config.leftHanded }<span>G</span>{:else}<span>H</span>{/if}.</p>
           <p>Press {#if $config.leftHanded}<span>F</span>{:else}<span>J</span>{/if} to load your rifle.</p>
           <p>Once you've loaded the rifle, press {#if $config.leftHanded}<span>F</span>{:else}<span>J</span>{/if} again to fire.</p>
-          <p>The yellow bar in the top left corner of the screen shows your Energy. Each attack costs a certain amount of energy.</p>
-          <p>Hover the cursor over the Keyboard Map to see what other attacks are available.</p>
+          <p>Actions cost energy <span class="energy-example"></span>, which recovers gradually over time. You also recover energy when you receive damage, defeat enemies, or eat Fruit.</p>
+          <p>Some actions, like the bayonet slash {#if $config.leftHanded}<span>D</span>{:else}<span>K</span>{/if}, do not require loading, but cost a great deal more energy.</p>
       </div>
       {/if}
         {#if $openingRemarksShown}
         <div>
           <h3>Opening Remarks</h3>
-          <p><span>FORTRESS SHEPHERD EUNUCH</span> is primarily played with both hands on the keyboard. Hover the cursor over the <span>Keyboard Map</span> below to learn more.</p>
-          <p>Keyboard controls are available for both left-handed and right-handed players. This can be changed at any time from the Pause Menu.</p>
-          <p>It is now the early morning.</p>
-        </div>
+          <p><span>FORTRESS SHEPHERD EUNUCH</span> is primarily played with both hands on the keyboard.
+          <p>You can hover the cursor over the in-game <span>KEYBOARD MAP</span> to learn more.</p>
+          <p>Keyboard configurations have been designed for both left-handed and right-handed players. This can be changed at any time from the <span>PAUSE MENU</span>.</p>
+          </div>
         {/if}
     </div>
   {/if}

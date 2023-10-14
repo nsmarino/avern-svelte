@@ -60,7 +60,7 @@ class Loader {
 
       // 'content' should only be interested in what's present the actual scene file. the Store is used to determine what actually spawns in the game
       Avern.Content = {
-        baseFile: demoCliffs,
+        baseFile: demoCourtyard,
         items:[
           {
             label: "rear-entrance",
@@ -634,7 +634,7 @@ class Loader {
         // simple array of interactions and notices
         log: [],
         openingRemarksVisible: false,
-        combatTutorialVisible:  true,
+        combatTutorialVisible:  false,
         endOfDemoVisible: false,
         openingRemarksShown: true,
         combatTutorialShown:  false,

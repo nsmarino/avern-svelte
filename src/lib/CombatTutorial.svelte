@@ -12,7 +12,7 @@
   <div class="menu-pane tutorial">
     <h2 class="menu-heading">Combat</h2>
     <div>
-      <p>Defend yourself with the <span>Goatherd's Rifle.</span></p>
+      <p>Defend yourself with the <span>Goatherd's Rifle.</span> If you don't have one, go talk to the Gatekeeper.</p>
 
       <div class="demo-container">
         <div>
