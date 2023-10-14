@@ -29,6 +29,7 @@ import pickup from '../../assets/audio/pickup.wav'
 import page from '../../assets/audio/page-flip.mp3'
 import eat from '../../assets/audio/eat.mp3'
 import alert from '../../assets/audio/alert.wav'
+import alert2 from '../../assets/audio/alert2.mp3'
 import enemyDie from '../../assets/audio/enemy-die.wav'
 import projectile from '../../assets/audio/projectile.wav'
  
@@ -89,6 +90,11 @@ class Sound {
         this.alertHandler.id = "alert-fx"
         this.alertHandler.src = alert
         this.alertHandler.volume = 0.1
+
+        this.alert2Handler = document.createElement("audio") // button fx for main menu
+        this.alert2Handler.id = "alert2-fx"
+        this.alert2Handler.src = alert2
+        this.alert2Handler.volume = 0.1
 
         this.projectileHandler = document.createElement("audio") // button fx for main menu
         this.projectileHandler.id = "projectile-fx"

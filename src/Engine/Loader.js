@@ -1,18 +1,18 @@
 import sanityClient from "../sanityClient"
 
-import demoCourtyard from "../../assets/levels/new-try.gltf"
+import demoCourtyard from "../../assets/levels/demo-courtyard.gltf"
 import demoCliffs from "../../assets/levels/demo-cliffs.gltf"
 import demoSwamp from "../../assets/levels/demo-swamp.gltf"
 import yukaPaths from "../../assets/levels/my-navmesh.gltf"
-import yukaLevel from "../../assets/levels/my-level.gltf"
-import newTry from "../../assets/levels/new-try.gltf"
+// import yukaLevel from "../../assets/levels/my-level.gltf"
+// import newTry from "../../assets/levels/new-try.gltf"
 import {writable, derived, get} from "svelte/store"
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import yoshuaHaystack from "../../assets/npcs/yoshua_haystack.gltf"
 import gatekeeperDismayed from "../../assets/npcs/fse--gatekeeper.gltf"
-import goatEating from "../../assets/npcs/fse--gatekeeper.gltf"
-import smithmasterStanding from "../../assets/npcs/fse--gatekeeper.gltf"
+import goatEating from "../../assets/npcs/fse--goat.gltf"
+import smithmasterStanding from "../../assets/npcs/fse--smithmaster.gltf"
 
 import { Pathfinding, PathfindingHelper } from 'three-pathfinding';
 import * as YUKA from "yuka"
@@ -62,7 +62,7 @@ class Loader {
 
       // 'content' should only be interested in what's present the actual scene file. the Store is used to determine what actually spawns in the game
       Avern.Content = {
-        baseFile: demoCourtyard,
+        baseFile: demoCliffs,
         items:[
           {
             label: "rear-entrance",
@@ -266,7 +266,7 @@ class Loader {
               {id:"keyRetrieved", value:true}
             ],
             model: gatekeeperDismayed,
-            anim: "STAND",
+            anim: "SIT",
 
             content: [
               {
@@ -309,7 +309,7 @@ class Loader {
               {id:"keyRetrieved", value:true}
             ],
             model: smithmasterStanding,
-            anim: "SIT",
+            anim: "STAND",
 
             content: [
               {
@@ -358,7 +358,7 @@ class Loader {
               {id:"keyRetrieved", value:false}
             ],
             model: goatEating,
-            anim: "SIT",
+            anim: "EAT",
 
             content: [
               {
@@ -551,6 +551,7 @@ class Loader {
                 image: weaponImg,
                 primeLength: 1,
                 baseDamage: 25,
+                locked: true,
                 range: 5,
                 primed: false,
                 assignment: null,
@@ -567,6 +568,8 @@ class Loader {
                 image: weaponImg,
                 primeLength: 1,
                 baseDamage: 25,
+                locked: true,
+
                 range: 5,
                 primed: false,
                 assignment: null,
@@ -584,6 +587,8 @@ class Loader {
                 primeLength: 1,
                 baseDamage: 25,
                 range: 5,
+                locked: true,
+
                 primed: false,
                 assignment: null,
                 primeAnimation: "withdraw",
@@ -599,6 +604,8 @@ class Loader {
                 image: weaponImg,
                 secondary: "",
                 primeLength: 1,
+                locked: true,
+
                 baseDamage: 25,
                 range: 5,
                 primed: false,
@@ -763,34 +770,13 @@ class Loader {
 
     async initNavmesh(file) {
 			const loader = new YUKA.NavMeshLoader();
-      // console.log("Yuka navmesh loader:", loader)
       const navmesh = await loader.load(file)
+
       // const shownav = await new GLTFLoader().loadAsync(file)
-
       // Avern.State.scene.add(shownav.scene)
-      // console.log(shownav.scene.children[0].material.wireframe = true)
-      // console.log("NAVMESH FROM YUKA", navmesh)
-      return navmesh
-      // loader.load( yukaPaths ).then( ( navigationMesh ) => {
-      //   console.log(navigationMesh)
-      //   Avern.yukaNavmesh = navigationMesh
-      // })
+      // shownav.scene.children[0].material.wireframe = true
 
-      // const navmesh = baseFile.children.filter(child=> child.isMesh && child.userData.gltfExtensions.EXT_collections.collections[0]==="navmesh")[0]
-      // if (!navmesh) return;
-      // Avern.pathfindingZone = baseFile.name
-      // Avern.PATHFINDING.setZoneData(Avern.pathfindingZone, Pathfinding.createZone(navmesh.geometry));
-      // // visualize:
-      // for (const vert of Avern.PATHFINDING.zones[baseFile.name].vertices) {
-      //     const indicatorSize = 0.1 
-      //     const geometry = new THREE.BoxGeometry( indicatorSize,indicatorSize,indicatorSize); 
-      //     const material = new THREE.MeshBasicMaterial( {color: 0x000000} ); 
-      //     const cube = new THREE.Mesh( geometry, material ); 
-      //     cube.position.copy(vert)
-      //     scene.add( cube );
-      // }
-      // navmesh.visible = false
-      // scene.add(navmesh)
+      return navmesh
     }
 
     initNonPlayerFromBaseFile(baseFile, scene) {
@@ -817,7 +803,7 @@ class Loader {
               const from = Avern.GameObjects.createGameObject(scene, c.userData.label)  
               from.transform.position.copy(c.position)
               from.transform.rotation.copy(c.rotation)
-              console.log(c.userData.label, c.rotation.y)
+              // console.log(c.userData.label, c.rotation.y)
               break;
 
             case "interactions":
@@ -899,7 +885,7 @@ class Loader {
     }
 
     async switchScene(toLabel){
-      console.log(toLabel)
+      // console.log(toLabel)
       gsap.to(".mask", { opacity: 0, duration: 2, delay: 2})
       gsap.to(".mask svg", { opacity: 0, duration: 2, delay: 1})
       gsap.to(".mask p", { opacity: 0, duration: 2, delay: 1 })
@@ -911,7 +897,7 @@ class Loader {
         case "courtyard-path": 
         case "courtyard-gate": 
         case "player-restart":
-          Avern.Sound.playSceneMusic("courtyard")
+          Avern.Sound.playSceneMusic("courtyard", 0.01)
 
           Avern.Content.baseFile=demoCourtyard
           break;
@@ -924,7 +910,7 @@ class Loader {
           }
         case "cliffs-end": 
           Avern.Sound.playSceneMusic("cliffs", 0.1)
-          Avern.Content.baseFile=demoCliffs
+          Avern.Content.baseFile=demoCourtyard
           break;
         case "swamp-start": 
         Avern.Sound.playSceneMusic("swamp", 0.1)

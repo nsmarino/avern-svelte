@@ -20,7 +20,6 @@ class Connection extends GameplayComponent {
         this.gameObject.transform.position.copy(spawnPoint.position)
 
         this.destination = spawnPoint.userData.label
-        console.log("Destination of connection", this.destination)
         this.transitionStarted = false
 
         const initFromGLTF = async () => {
@@ -56,7 +55,6 @@ class Connection extends GameplayComponent {
 
     startTransition() {
         this.transitionStarted = true
-        console.log("Start transition to", this.destination)
         // let url = ""
         // switch(this.destination){
         //     case "staging_1":

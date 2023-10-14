@@ -27,14 +27,14 @@ class Vitals extends GameplayComponent {
         case "casting_start":
           break;
         case "spend_energy":
-          console.log("Cost:", data.cost)
+          // console.log("Cost:", data.cost)
             Avern.Store.player.update(player => {
-              console.log(player)
+              // console.log(player)
               const updatedPlayer = {
                 ...player,
                 energy: player.energy - data.cost <= 0 ? 0 : player.energy - data.cost
               }
-              console.log(updatedPlayer.energy)
+              // console.log(updatedPlayer.energy)
               return updatedPlayer
             })
           break;
@@ -92,7 +92,7 @@ class Vitals extends GameplayComponent {
           break;
 
         case "monster_attack":
-          console.log("Receive monster attack, lowering HP and raising energy:")
+          // console.log("Receive monster attack, lowering HP and raising energy:")
           Avern.Store.player.update(player => {
             const updatedPlayer = {
               ...player,
@@ -102,7 +102,7 @@ class Vitals extends GameplayComponent {
             }
             return updatedPlayer
           })
-          console.log("HERE IS HP AFTER UPDATE?", get(Avern.Store.player).hp)
+          // console.log("HERE IS HP AFTER UPDATE?", get(Avern.Store.player).hp)
           if (get(Avern.Store.player).hp <= 0) {
               this.emitSignal("player_death")
               Avern.Sound.thudHandler.currentTime = 0.02

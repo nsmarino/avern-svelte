@@ -59,7 +59,7 @@ class Interaction extends GameplayComponent {
             const clips = this.gltf.animations
 
             this.idle = this.mixer.clipAction(
-                THREE.AnimationClip.findByName(clips, "SIT")
+                THREE.AnimationClip.findByName(clips, interactions.anim)
             )
 
             this.action = this.idle
@@ -150,7 +150,7 @@ class Interaction extends GameplayComponent {
                 setTimeout(() => {
                   Avern.Store.endOfDemoVisible.set(true)
                   Avern.Store.endOfDemoShown.set(true)
-                }, 40)
+                }, 1000)
               }
         }
 

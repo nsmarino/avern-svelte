@@ -245,6 +245,7 @@ class Enemy extends GameplayComponent {
       // );
       // this.gameObject.transform.parent.add(this.mesh3)
         this.gameObject.transform.rotation.y = spawnPoint.rotation.y
+        if (this.enemyType==="bow")console.log(spawnPoint.rotation.y, spawnPoint.rotation.z)
 
     }
     initFromGLTF()
@@ -439,8 +440,14 @@ class Enemy extends GameplayComponent {
         const visionCollision = checkCapsuleCollision({ segment: Avern.Player.getComponent(Body).tempSegment, radius: Avern.Player.getComponent(Body).radius}, this.visionCapsule)
         if (visionCollision.isColliding && (this.behavior=="wander" || this.behavior=="idle" || this.behavior=="patrol")) {
           if (this.behavior=="idle") this.fadeIntoAction(this.walk, 0.1)
-          Avern.Sound.alertHandler.currentTime = 0
-          Avern.Sound.alertHandler.play()   
+
+          if (this.enemyType=="sword") {
+            Avern.Sound.alert2Handler.currentTime = .4
+            Avern.Sound.alert2Handler.play()   
+            } else {
+              Avern.Sound.alertHandler.currentTime = 0
+              Avern.Sound.alertHandler.play()   
+            }
 
           this.behavior="pursue"
         }
@@ -654,14 +661,24 @@ class Enemy extends GameplayComponent {
           if (this.behavior === "wander" || this.behavior === "patrol") {
             this.path = null
             this.behavior = "pursue"
-            Avern.Sound.alertHandler.currentTime = 0
-            Avern.Sound.alertHandler.play()   
+            if (this.enemyType=="sword") {
+              Avern.Sound.alert2Handler.currentTime = 0.4
+              Avern.Sound.alert2Handler.play()   
+              } else {
+                Avern.Sound.alertHandler.currentTime = 0
+                Avern.Sound.alertHandler.play()   
+              }
             }
           if (this.behavior=="idle") {
             this.path = null
             this.behavior = "pursue"
-            Avern.Sound.alertHandler.currentTime = 0
-            Avern.Sound.alertHandler.play()   
+            if (this.enemyType=="sword") {
+              Avern.Sound.alert2Handler.currentTime = 0.4
+              Avern.Sound.alert2Handler.play()   
+              } else {
+                Avern.Sound.alertHandler.currentTime = 0
+                Avern.Sound.alertHandler.play()   
+              }   
 
 
             this.fadeIntoAction(this.walk, 0.1)
