@@ -64,7 +64,7 @@
             <div class="action-active-indicator"></div>
             <div class="action-tooltip">
               <h3>Drink healing flask</h3>
-              <p>The mountain water is fresh and clear. How else could the fortress endure?</p>
+              <p>Regain health. Refills to 5 whenever you return to the Courtyard.</p>
             </div>
           </div>
           <div id="fruit" class="fruit input-key" style="width: 32px; height: 32px;" class:oom={$player.fruit===0}>
@@ -75,7 +75,7 @@
             <div class="action-active-indicator"></div>
             <div class="action-tooltip">
               <h3>Eat fruit</h3>
-              <p>Delicious oasis fruit that restores energy. Hard to find.</p>
+              <p>Delicious oasis fruit that restores energy. Can be found in the environment or purchased from the Smithmaster.</p>
             </div>
           </div>
         </div>

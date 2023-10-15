@@ -885,7 +885,7 @@ class Loader {
     }
 
     async switchScene(toLabel){
-      // console.log(toLabel)
+      console.log("Go to", toLabel)
       gsap.to(".mask", { opacity: 0, duration: 2, delay: 2})
       gsap.to(".mask svg", { opacity: 0, duration: 2, delay: 1})
       gsap.to(".mask p", { opacity: 0, duration: 2, delay: 1 })
@@ -896,10 +896,19 @@ class Loader {
       switch(toLabel) {
         case "courtyard-path": 
         case "courtyard-gate": 
+        case "haystack": 
         case "player-restart":
           Avern.Sound.playSceneMusic("courtyard", 0.05)
 
           Avern.Content.baseFile=demoCourtyard
+          Avern.Store.player.update(player =>
+            {
+              const updatedPlayer = {
+                ...player,
+                flasks: 5
+              }
+              return updatedPlayer
+            })
           break;
         case "cliffs-start": 
           if (!get(Avern.Store.combatTutorialShown)) {
@@ -913,6 +922,7 @@ class Loader {
           Avern.Content.baseFile=demoCliffs
           break;
         case "swamp-start": 
+        console.log("Headin to swamp start!")
         Avern.Sound.playSceneMusic("swamp", 0.1)
           Avern.Content.baseFile=demoSwamp
           break;

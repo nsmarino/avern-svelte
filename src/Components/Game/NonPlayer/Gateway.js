@@ -11,6 +11,7 @@ import Body from '../Player/Body';
 
 class Gateway extends GameplayComponent {
     constructor(gameObject, spawnPoint, content) {
+        console.log(content)
         super(gameObject)
         this.gameObject = gameObject
         this.content = content
