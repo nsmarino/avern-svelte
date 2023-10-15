@@ -62,7 +62,7 @@ class Loader {
 
       // 'content' should only be interested in what's present the actual scene file. the Store is used to determine what actually spawns in the game
       Avern.Content = {
-        baseFile: demoCourtyard,
+        baseFile: demoCliffs,
         items:[
           {
             label: "rear-entrance",
@@ -772,9 +772,9 @@ class Loader {
 			const loader = new YUKA.NavMeshLoader();
       const navmesh = await loader.load(file)
 
-      // const shownav = await new GLTFLoader().loadAsync(file)
-      // Avern.State.scene.add(shownav.scene)
-      // shownav.scene.children[0].material.wireframe = true
+      const shownav = await new GLTFLoader().loadAsync(file)
+      Avern.State.scene.add(shownav.scene)
+      shownav.scene.children[0].material.wireframe = true
 
       return navmesh
     }
