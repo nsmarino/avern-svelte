@@ -897,7 +897,7 @@ class Loader {
         case "courtyard-path": 
         case "courtyard-gate": 
         case "player-restart":
-          Avern.Sound.playSceneMusic("courtyard", 0.01)
+          Avern.Sound.playSceneMusic("courtyard", 0.05)
 
           Avern.Content.baseFile=demoCourtyard
           break;
