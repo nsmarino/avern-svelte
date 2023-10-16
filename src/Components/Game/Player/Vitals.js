@@ -97,7 +97,7 @@ class Vitals extends GameplayComponent {
             const updatedPlayer = {
               ...player,
               hp: player.hp - data.damage,
-              energy: player.energy + 5 >= 100 ? 100 : player.energy + 5
+              energy: player.energy + 7.5 >= 100 ? 100 : player.energy + 7.5
 
             }
             return updatedPlayer

@@ -6,7 +6,7 @@
 import intro from '../../assets/audio/intro.mp3'
 import courtyard from "../../assets/audio/ost/courtyard.mp3"
 import cliffs from "../../assets/audio/ost/cliffs.mp3"
-import swamp from '../../assets/audio/ost/swamp.mp3'
+import swamp from '../../assets/audio/ost/hub.mp3'
 
 // firstHallway
 // wanderingAroundOutside
