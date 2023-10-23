@@ -4,8 +4,6 @@ import demoCourtyard from "../../assets/levels/demo-courtyard.gltf"
 import demoCliffs from "../../assets/levels/demo-cliffs.gltf"
 import demoSwamp from "../../assets/levels/demo-swamp.gltf"
 import yukaPaths from "../../assets/levels/my-navmesh.gltf"
-// import yukaLevel from "../../assets/levels/my-level.gltf"
-// import newTry from "../../assets/levels/new-try.gltf"
 import {writable, derived, get} from "svelte/store"
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
@@ -27,6 +25,7 @@ import propelSelf from "../../assets/ui/propel-self.svg"
 THREE.Mesh.prototype.raycast = acceleratedRaycast;
 
 import Enemy from "../Components/Game/NonPlayer/Enemy";
+import Targetable from "../Components/Game/NonPlayer/Targetable";
 import Projectile from "../Components/Game/NonPlayer/Projectile";
 
 import Interaction from "../Components/Game/NonPlayer/Interaction";
@@ -34,7 +33,7 @@ import Interaction from "../Components/Game/NonPlayer/Interaction";
 // import Fountain from "../Components/Game/NonPlayer/Fountain";
 import ItemOnMap from "../Components/Game/NonPlayer/ItemOnMap";
 import WeaponOnMap from "../Components/Game/NonPlayer/WeaponOnMap";
-import Gateway from "../Components/Game/NonPlayer/Gateway";
+import Door from "../Components/Game/NonPlayer/Door";
 import Connection from "../Components/Game/NonPlayer/Connection";
 
 import Collider from "../Components/World/Collider";
@@ -615,7 +614,7 @@ class Loader {
         ],
         enemies:[
         ],
-        gates:[
+        doors:[
           {
             label: "rear-entrance",
             prompt: "Open rear door of gatehouse",
@@ -784,6 +783,8 @@ class Loader {
               if (!c.userData.label) return;
               const enemy = Avern.GameObjects.createGameObject(scene, c.name)                        
               enemy.addComponent(Enemy, c)
+              enemy.canBeTargeted = true
+              enemy.addComponent(Targetable, true, 1)
               if (c.userData.label==="bow") enemy.addComponent(Projectile)
               break;
 
@@ -798,7 +799,6 @@ class Loader {
               const from = Avern.GameObjects.createGameObject(scene, c.userData.label)  
               from.transform.position.copy(c.position)
               from.transform.rotation.copy(c.rotation)
-              // console.log(c.userData.label, c.rotation.y)
               break;
 
             case "interactions":
@@ -812,6 +812,9 @@ class Loader {
                 if (shouldSpawnInteraction) {
                   const interaction = Avern.GameObjects.createGameObject(scene, c.name)
                   interaction.addComponent(Interaction, c, interactionContent)
+                  interaction.canBeTargeted = true
+                  interaction.addComponent(Targetable, false, 1)
+    
                 }                
               }
               break;
@@ -846,10 +849,10 @@ class Loader {
               break;
 
             case "doors":
-              const gateContent = Avern.Content.gates.find(g => g.label === c.userData.label)
+              const doorContent = Avern.Content.doors.find(g => g.label === c.userData.label)
               if (c.userData.label === "rear-entrance" && currentWorldEvents.gateUnlocked) return
-              const gateway = Avern.GameObjects.createGameObject(scene, c.name)
-              gateway.addComponent(Gateway, c, gateContent)
+              const door = Avern.GameObjects.createGameObject(scene, c.name)
+              door.addComponent(Door, c, doorContent)
               break;
 
             default:

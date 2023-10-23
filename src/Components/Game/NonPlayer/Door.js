@@ -9,9 +9,8 @@ import GameplayComponent from '../../_Component';
 import Notices from '../../Interface/Notices';
 import Body from '../Player/Body';
 
-class Gateway extends GameplayComponent {
+class Door extends GameplayComponent {
     constructor(gameObject, spawnPoint, content) {
-        console.log(content)
         super(gameObject)
         this.gameObject = gameObject
         this.content = content
@@ -83,4 +82,4 @@ class Gateway extends GameplayComponent {
     }
 }
 
-export default Gateway
+export default Door

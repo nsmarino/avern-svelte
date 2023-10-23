@@ -94,6 +94,8 @@ class Interaction extends GameplayComponent {
                 this.emitSignal("capsule_collide", {collision, capsule: this.colliderCapsule})
               }
             }
+            this.emitSignal("has_collider", {collider: this.colliderCapsule, offsetY: 2})
+
           }
     }
 
@@ -159,6 +161,11 @@ class Interaction extends GameplayComponent {
 
 
     attachObservers(parent) {
+        for (const component of parent.components) {
+            if (!(component instanceof Interaction)) {
+              this.addObserver(component)
+            }
+          }
         this.addObserver(Avern.Player.getComponent(Body))
     
     }

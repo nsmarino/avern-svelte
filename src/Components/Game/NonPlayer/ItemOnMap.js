@@ -7,7 +7,6 @@ import Notices from '../../Interface/Notices';
 
 class ItemOnMap extends GameplayComponent {
     constructor(gameObject, spawnPoint, content) {
-        console.log(spawnPoint, content)
         super(gameObject)
         this.gameObject=gameObject
         this.prompt = "Pick up item"

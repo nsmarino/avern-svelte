@@ -5,7 +5,7 @@ function removeArrayElement(array, element) {
     if (ndx >= 0) {
       array.splice(ndx, 1);
     }
-  }
+}
 
 class SafeArray {
     constructor() {
@@ -217,10 +217,11 @@ function distancePointToLine(point, line, parent) {
     return distance;
 }
 
-function getScreenCoordinatesAndDistance(gameObject) {
+function getScreenCoordinatesAndDistance(gameObject, collider, offsetY) {
     const position = new THREE.Vector3();
     const cameraPosition = new THREE.Vector3();
     position.copy(gameObject.transform.position);
+    position.y+=offsetY
     position.project(Avern.State.camera);
   
     const halfWidth = window.innerWidth / 2;
@@ -230,9 +231,21 @@ function getScreenCoordinatesAndDistance(gameObject) {
     const y = -(position.y * halfHeight) + halfHeight;
 
     const distanceToCamera = gameObject.transform.position.distanceTo(Avern.State.camera.getWorldPosition(cameraPosition));
+    const frustum = new THREE.Frustum()
+    const matrix = new THREE.Matrix4().multiplyMatrices(Avern.State.camera.projectionMatrix, Avern.State.camera.matrixWorldInverse)
+    frustum.setFromProjectionMatrix(matrix)
 
-    return { x, y, distanceToCamera };
-  }
+    const towardsTarget = gameObject.transform.position.clone()
+    towardsTarget.y += offsetY/2
+    towardsTarget.sub(Avern.Player.transform.position.clone());
+    const raycaster = new THREE.Raycaster(Avern.Player.transform.position, towardsTarget.normalize());
+
+    const intersects = raycaster.intersectObjects([collider.body, Avern.State.collider], false);
+    const obstructed = intersects[0] && intersects[0].object.name === "worldCollider"
+    const visible = frustum.intersectsObject(collider.body) && (intersects[0] && intersects[0].object.name !== "worldCollider")
+
+    return { x, y, distanceToCamera, visible, obstructed };
+}
 
 function calculateDamageByDistance(baseDamage, distance, maxDistance, exponent=2) {
     
@@ -243,8 +256,68 @@ function calculateDamageByDistance(baseDamage, distance, maxDistance, exponent=2
     const calculatedDamage = Math.min(baseDamage / Math.pow(scaledDistance, exponent),35);
     
     return calculatedDamage;
-  }
+}
 
+function findClosestPointOnMeshToPoint(mesh, point) {
+// Create two raycast directions: +Y and -Y
+const raycastDirections = [new THREE.Vector3(0, 1, 0), new THREE.Vector3(0, -1, 0)];
+
+// Initialize variables to store the closest distance and point
+let closestDistance = Number.POSITIVE_INFINITY;
+let closestPoint = new THREE.Vector3();
+
+// Loop through the raycast directions
+for (const direction of raycastDirections) {
+    const raycaster = new THREE.Raycaster(point, direction);
+    const intersects = raycaster.intersectObject(mesh);
+    if (intersects.length > 0) {
+    // The ray intersects the mesh, get the closest intersection point
+    const intersectionPoint = intersects[0].point;
+
+    // Calculate the distance between the intersection point and the original point
+    const distance = point.distanceTo(intersectionPoint);
+    // Update closest point and distance if this intersection is closer
+    if (distance < closestDistance) {
+        closestDistance = distance;
+        closestPoint = intersectionPoint.clone();
+    }
+    }
+}
+if (closestDistance == Number.POSITIVE_INFINITY) return null
+return closestPoint;
+}
+
+function updateRotationToFacePoint(object, targetPoint, lerpFactor) {
+    // Calculate the direction from the object's position to the target point
+    var direction = targetPoint.clone().sub(object.position);
+    
+    // Calculate the angle between the direction vector and the positive Z-axis
+    var targetAngle = Math.atan2(direction.x, direction.z);
+    
+    // Wrap both angles to the range [-π, π] for proper interpolation
+    var currentAngle = object.rotation.y;
+    if (currentAngle > Math.PI) {
+      currentAngle -= 2 * Math.PI;
+    } else if (currentAngle < -Math.PI) {
+      currentAngle += 2 * Math.PI;
+    }
+    
+    // Calculate the angular distance between current and target angles
+    var angularDistance = targetAngle - currentAngle;
+    
+    // Choose the shortest angular distance (clockwise or counterclockwise)
+    if (angularDistance > Math.PI) {
+      angularDistance -= 2 * Math.PI;
+    } else if (angularDistance < -Math.PI) {
+      angularDistance += 2 * Math.PI;
+    }
+    
+    // Apply lerp to interpolate between the current angle and the target angle
+    var newAngle = currentAngle + angularDistance * lerpFactor;
+    
+    // Update the rotation of the object
+    object.rotation.y = newAngle;
+}
 export { 
     generateCapsuleCollider, 
     checkCapsuleCollision, 
@@ -253,6 +326,8 @@ export {
     getSine, 
     randomIntFromInterval,
     calculateDamageByDistance,
+    findClosestPointOnMeshToPoint,
     getScreenCoordinatesAndDistance,
+    updateRotationToFacePoint,
     SafeArray 
 }

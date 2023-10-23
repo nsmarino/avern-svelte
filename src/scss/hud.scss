@@ -428,7 +428,10 @@
   justify-content: center;
   align-items: center;
   transition: background 0.1s ease;
-
+  &.friendly {
+    background: var(--avern-off-black);
+    color: white;
+  }
   &.targeted {
     color: var(--avern-off-black);
     background: var(--avern-green);

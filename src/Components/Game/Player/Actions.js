@@ -319,6 +319,7 @@ class Actions extends GameplayComponent {
             break;
           case "active_target":
             this.targeting = true
+            console.log("Recive data canBeAttacked", data)
             this.targetCanBeAttacked = data.canBeAttacked
 
             break;

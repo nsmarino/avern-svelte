@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 
 import GameplayComponent from '../../_Component';
-import Enemy from '../NonPlayer/Enemy';
+import Targetable from '../NonPlayer/Targetable';
 import Body from "./Body"
 import FollowCamera from "./FollowCamera"
 import Actions from "./Actions"
@@ -45,24 +45,6 @@ class Targeting extends GameplayComponent {
         this.triangleC.position.copy(this.gameObject.transform.position).add(this.tempRight).add(this.tempFront);
         this.gameObject.transform.add(this.triangleC)
 
-        // this.mesh = new THREE.Mesh(
-        //     new THREE.SphereGeometry(),
-        //     new THREE.MeshBasicMaterial()
-        // );
-        // this.gameObject.transform.parent.add(this.mesh)
-
-        // this.mesh2 = new THREE.Mesh(
-        //     new THREE.SphereGeometry(),
-        //     new THREE.MeshBasicMaterial()
-        // );
-        // this.gameObject.transform.parent.add(this.mesh2)
-
-        // this.mesh3 = new THREE.Mesh(
-        //     new THREE.SphereGeometry(),
-        //     new THREE.MeshBasicMaterial()
-        // );
-        // this.gameObject.transform.parent.add(this.mesh3)
-
         this.targetInRange = false
 
     }
@@ -83,20 +65,12 @@ class Targeting extends GameplayComponent {
             .sort((a, b) => a[1].losDistance - b[1].losDistance)
 
         if (this.targetIndex===null && this.losArray[0])this.emitSignal("closest_los", {id: this.losArray[0][0]})
-        // const targetsArrayByLos = losArray.map(i => {
-        //     const targetOrder = targetsArray.indexOf(i)
-        //     i[1] = {...i[1], order: targetOrder+1}
-        //     return i
-        // })        
-        // this.mapOfLosTargets = new Map(targetsArrayByLos)
 
         this.emitSignal("ordered_targets", { targets: this.mapOfOrderedTargets })
 
         const inputs = Avern.Inputs.getInputs()
         if (inputs.setTarget && !Avern.State.worldUpdateLocked) {
             this.setTargetFromInputKey(true)
-        } else if (inputs.primaryClick && !Avern.State.worldUpdateLocked) {
-            // this.setTargetFromClick(inputs.primaryClick)
         } else if (inputs.prevTarget && !Avern.State.worldUpdateLocked) {
             this.setTargetFromInputKey(false)
 
@@ -156,7 +130,6 @@ class Targeting extends GameplayComponent {
     onSignal(signalName, data={}) {
         switch(signalName) {
             case "target_visible":
-                console.log("HI target", data)
                 if (data.visible && data.losDistance < 40) {
                     this.targetsMap.set(data.id, {proximity: data.proximity, y:data.y, order: null, losDistance: data.losDistance})
                 } else {
@@ -174,9 +147,9 @@ class Targeting extends GameplayComponent {
                     this.losArray = Array.from(this.targetsMap)
                         .sort((a, b) => a[1].losDistance - b[1].losDistance)
                     this.targetIndex = null
-                    setTimeout(() => {
-                        this.setTargetFromInputKey(true)
-                    }, 300)
+                    // setTimeout(() => {
+                    //     this.setTargetFromInputKey(true)
+                    // }, 300)
                 }
                 break;
             case "targeted_object":
@@ -187,8 +160,8 @@ class Targeting extends GameplayComponent {
     }
 
     attachObservers(parent) {
-        for (const enemy of Avern.State.Enemies) {
-            this.addObserver(enemy.getComponent(Enemy))
+        for (const gO of Avern.GameObjects.gameObjects.array) {
+            if (gO.canBeTargeted) this.addObserver(gO.getComponent(Targetable))
         }
         this.addObserver(parent.getComponent(Body))
         this.addObserver(parent.getComponent(FollowCamera))
@@ -197,8 +170,3 @@ class Targeting extends GameplayComponent {
 }
 
 export default Targeting
-
-// next steps:
-// 1. can init target from right side as well
-// 2. first target should be the one closest to the player vision line, not target_1 (indicate by coloring the order tag)
-// 3. auto-target enemy closest to player vision line when currently targeted enemy dies

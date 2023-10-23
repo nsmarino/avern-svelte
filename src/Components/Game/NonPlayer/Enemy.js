@@ -3,7 +3,13 @@ import gsap from "gsap"
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import * as YUKA from "yuka"
 import GameplayComponent from '../../_Component';
-import { generateCapsuleCollider, checkCapsuleCollision, distancePointToLine, randomIntFromInterval } from '../../../helpers';
+import { 
+  generateCapsuleCollider, 
+  checkCapsuleCollision, 
+  randomIntFromInterval,
+  findClosestPointOnMeshToPoint,
+  updateRotationToFacePoint,
+} from '../../../helpers';
 import Body from '../Player/Body';
 import FollowCamera from '../Player/FollowCamera';
 import zombieBow from "../../../../assets/monsters/bow-large.gltf"
@@ -12,7 +18,6 @@ import Vitals from '../Player/Vitals';
 import Actions from '../Player/Actions';
 import ItemOnMap from './ItemOnMap';
 import Targeting from '../Player/Targeting';
-import Notices from '../../Interface/Notices';
 import {get} from 'svelte/store'
 
 class Enemy extends GameplayComponent {
@@ -38,8 +43,6 @@ class Enemy extends GameplayComponent {
     }
   
     this.enemyType = spawnPoint.userData.label
-    this.HELPER = Avern.PATHFINDINGHELPER
-    Avern.State.scene.add(this.HELPER)
 
     this.bar = document.createElement("div")
     this.innerBar = document.createElement("div")
@@ -55,9 +58,8 @@ class Enemy extends GameplayComponent {
     this.numbersContainer.classList.add("numbers-container")
     document.body.appendChild(this.numbersContainer)
 
-    this.orderContainer = document.createElement("div")
-    this.orderContainer.classList.add("order-container")
-    document.body.appendChild(this.orderContainer)
+    this.isTargeted = false
+
     switch(this.enemyType) {
       case "bow":
         this.initialHealth = 60
@@ -73,17 +75,12 @@ class Enemy extends GameplayComponent {
     this.originalSpawnPoint = spawnPoint
 
     Avern.State.Enemies.push(this.gameObject)
-    this.gameObject.transform.canBeTargeted = true
-
-    this.isTargeted = false
 
     this.behavior = this.startingBehavior
     this.velocity = new THREE.Vector3( 0, 0, 0 );
     this.patrolSpeed = 2
     this.pursueSpeed = 3.5
-    // this.targetGroup = Avern.PATHFINDING.getGroup(Avern.pathfindingZone, spawnPoint.position);
     this.lerpFactor = 0.2
-    // this.originNode = Avern.PATHFINDING.getClosestNode(spawnPoint.position, Avern.pathfindingZone, this.targetGroup)
     this.path = null
     this.maxWanderDistance = 15
     this.prevPlayerPosition = new THREE.Vector3()
@@ -129,17 +126,8 @@ class Enemy extends GameplayComponent {
         this.visionEnd,
         this.visionRadius
       )
-      // this.gameObject.transform.add(this.visionCapsule.spine)
       this.visionStartWorldPos = new THREE.Vector3()
       this.visionEndWorldPos = new THREE.Vector3()
-
-      const torusGeometry = new THREE.TorusGeometry( 1, 0.02, 12, 40 ); 
-      const torusMaterial = new THREE.MeshBasicMaterial( { color: 0x56FBA1 } ); 
-      this.ring = new THREE.Mesh( torusGeometry, torusMaterial );
-      this.ring.rotation.x = Math.PI / 2
-      this.ring.position.y+=1
-      this.gameObject.transform.add( this.ring );
-      this.ring.visible = false
 
       // Anims
       this.mixer = new THREE.AnimationMixer( this.gltf.scene );
@@ -204,7 +192,6 @@ class Enemy extends GameplayComponent {
 
       this.fadeIntoAction(this.action,0)
 
-      // Abstract this out once functional:
       this.targetingTriangle = new THREE.Triangle()
 
       this.frontDirection = new THREE.Vector3(0, 0, -1); // Negative Z direction for front
@@ -214,7 +201,6 @@ class Enemy extends GameplayComponent {
       this.tempLeft = new THREE.Vector3()
       this.tempRight = new THREE.Vector3()
       this.tempFront = new THREE.Vector3()
-
 
       this.tempLeft.copy(this.leftDirection).multiplyScalar(this.rangeWidth)
       this.tempRight.copy(this.rightDirection).multiplyScalar(this.rangeWidth)
@@ -231,29 +217,7 @@ class Enemy extends GameplayComponent {
       this.triangleC = new THREE.Object3D()
       this.gameObject.transform.add(this.triangleC)
       this.triangleC.position.add(this.tempRight).add(this.tempFront);
-
-
-      // TO BE USED FOR FIXING ISSUES WITH ENEMY ATTACK TRIANGLES:
-      // this.mesh = new THREE.Mesh(
-      //     new THREE.SphereGeometry(),
-      //     new THREE.MeshBasicMaterial()
-      // );
-      // this.gameObject.transform.parent.add(this.mesh)
-
-      // this.mesh2 = new THREE.Mesh(
-      //     new THREE.SphereGeometry(),
-      //     new THREE.MeshBasicMaterial()
-      // );
-      // this.gameObject.transform.parent.add(this.mesh2)
-
-      // this.mesh3 = new THREE.Mesh(
-      //     new THREE.SphereGeometry(),
-      //     new THREE.MeshBasicMaterial()
-      // );
-      // this.gameObject.transform.parent.add(this.mesh3)
-        this.gameObject.transform.rotation.y = spawnPoint.rotation.y
-        if (this.enemyType==="bow")console.log(spawnPoint.rotation.y, spawnPoint.rotation.z)
-
+      this.gameObject.transform.rotation.y = spawnPoint.rotation.y
     }
     initFromGLTF()
   }
@@ -278,13 +242,11 @@ class Enemy extends GameplayComponent {
     }
     if (e.action == this.death) {
 
-      // chance of dropping item
+      // chance of dropping healing flask
       const randomInt = randomIntFromInterval(1,3)
       if (randomInt===1 && (get(Avern.Store.player).flasks < 5)) {
-        // OUTDATED:
         const itemOnMap = Avern.GameObjects.createGameObject(Avern.State.scene, `${this.gameObject.name}-item`)
         const itemContent = Avern.Content.items.find(i => i.label === "healing-flask")
-        console.log("Item content to be added to gameObject:", itemContent)
         itemOnMap.addComponent(ItemOnMap, this.gameObject.transform, itemContent)
         itemOnMap.getComponent(ItemOnMap).attachObservers()
       }
@@ -294,6 +256,7 @@ class Enemy extends GameplayComponent {
       }, 1000)
     }
   }
+  
   removeFromScene() {
     this.gameObject.removeFromScene()
     this.gameObject.sleep = true
@@ -311,82 +274,11 @@ class Enemy extends GameplayComponent {
     return this.targetingTriangle.containsPoint(targetPosition)
   }
 
-  updateRotationToFacePoint(object, targetPoint, lerpFactor) {
-    // Calculate the direction from the object's position to the target point
-    var direction = targetPoint.clone().sub(object.position);
-    
-    // Calculate the angle between the direction vector and the positive Z-axis
-    var targetAngle = Math.atan2(direction.x, direction.z);
-    
-    // Wrap both angles to the range [-π, π] for proper interpolation
-    var currentAngle = object.rotation.y;
-    if (currentAngle > Math.PI) {
-      currentAngle -= 2 * Math.PI;
-    } else if (currentAngle < -Math.PI) {
-      currentAngle += 2 * Math.PI;
-    }
-    
-    // Calculate the angular distance between current and target angles
-    var angularDistance = targetAngle - currentAngle;
-    
-    // Choose the shortest angular distance (clockwise or counterclockwise)
-    if (angularDistance > Math.PI) {
-      angularDistance -= 2 * Math.PI;
-    } else if (angularDistance < -Math.PI) {
-      angularDistance += 2 * Math.PI;
-    }
-    
-    // Apply lerp to interpolate between the current angle and the target angle
-    var newAngle = currentAngle + angularDistance * lerpFactor;
-    
-    // Update the rotation of the object
-    object.rotation.y = newAngle;
-}
-
   update(delta){
     if (Avern.State.worldUpdateLocked == true) return
 
-    if (this.colliderCapsule) {
-      const { x, y, distanceToCamera, visible } = this.getScreenCoordinatesAndDistance();
-      const losDistance = Avern.Player.getComponent(Body).visionCapsule ? distancePointToLine(this.gameObject.transform.position, Avern.Player.getComponent(Body).visionCapsule.segment, Avern.Player.transform) : null
-
-      if (!this.dead) this.emitSignal("target_visible", {
-        visible, 
-        id: this.gameObject.name, 
-        proximity: x,
-        y,
-        losDistance
-      })
-      if(this.isTargeted) this.emitSignal("targeted_object", { object: this.gameObject, })
-
-      if (visible) {
-        const minDistance = 10; // Minimum distance for scaling
-        const maxDistance = 100; // Maximum distance for scaling
-        const scaleFactor = THREE.MathUtils.clamp(
-          1 - (distanceToCamera - minDistance) / (maxDistance - minDistance),
-          0.1, // Minimum scale factor
-          1  // Maximum scale factor
-        );
-    
-        const translateX = x;
-        const translateY = y;
-        this.bar.style.display="block"
-        this.bar.style.transform = `translate(-50%, -50%) translate(${translateX}px, ${translateY}px) scale(${scaleFactor})`;
-        this.numbersContainer.style.display="block"
-        this.numbersContainer.style.transform = `translate(50%, 50%) translate(${translateX}px, ${translateY}px) scale(${scaleFactor})`;
-      } else {
-        this.bar.style.display="none"
-        this.numbersContainer.style.display="none"
-      }      
-    }
-
-
-
     switch(this.behavior) {
       case "idle":
-          break;
-      case "wander":
-          // this.followWanderPath(delta)
           break;
       case "patrol":
           this.followPatrolPath(delta)
@@ -395,7 +287,7 @@ class Enemy extends GameplayComponent {
           this.followPursuePath(delta)
           break;
       case "attack":
-        if (!this.crucialFrameSent) this.updateRotationToFacePoint(this.gameObject.transform, Avern.Player.transform.position, this.lerpFactor)
+        if (!this.crucialFrameSent) updateRotationToFacePoint(this.gameObject.transform, Avern.Player.transform.position, this.lerpFactor)
 
         if (Math.floor(this.action.time * 30) >= this.crucialFrame && !this.crucialFrameSent) {
           this.crucialFrameSent = true;
@@ -421,6 +313,7 @@ class Enemy extends GameplayComponent {
 
     if (this.mixer) this.mixer.update(delta)
     if (this.behavior=="die_lol") return
+
     if (this.colliderCapsule) {
       this.capsuleBottom.getWorldPosition(this.startWorldPos)
       this.capsuleTop.getWorldPosition(this.endWorldPos)
@@ -434,6 +327,7 @@ class Enemy extends GameplayComponent {
           this.emitSignal("capsule_collide", {collision, capsule: this.colliderCapsule})
         }
       }
+      this.emitSignal("has_collider", {collider: this.colliderCapsule, offsetY: 2})
     }
 
     if (this.visionCapsule) {
@@ -462,48 +356,11 @@ class Enemy extends GameplayComponent {
     }
   }
 
-  // followWanderPath(deltaTime) {
-  //   if ( !this.path || !(this.path||[]).length ) {
-  //     this.resetPath()
-  //     return;
-  //   }
-  
-  //   let targetPosition = this.path[ 0 ];
-  //   this.velocity = targetPosition.clone().sub( this.gameObject.transform.position );
-  //   this.updateRotationToFacePoint(this.gameObject.transform, targetPosition, this.lerpFactor)
-  
-  //   if (this.velocity.lengthSq() > 0.1) {
-  //     this.velocity.normalize();
-  //     // Move to next waypoint
-  //     this.gameObject.transform.position.add( this.velocity.multiplyScalar( deltaTime * this.speed ) );
-  //   } else {
-  //     // Remove node from the path we calculated
-  //     this.path.shift();
-  //   }
-  // }
-  // resetPath() {
-  //   const targetGroup = Avern.PATHFINDING.getGroup(Avern.pathfindingZone, this.gameObject.transform.position);
-
-  //   const closestNode = Avern.PATHFINDING.getClosestNode(this.gameObject.transform.position, Avern.pathfindingZone, targetGroup)
-  //   const randomNode = this.getWanderTarget(this.originNode.centroid, Avern.pathfindingZone, targetGroup)
-  //   const path = Avern.PATHFINDING.findPath(closestNode.centroid, randomNode, Avern.pathfindingZone, targetGroup);
-  //   this.path = path
-  // }
-  // getWanderTarget(origin, zone, group) {
-  //   let randomNode = Avern.PATHFINDING.getRandomNode(zone, group)
-  //   const distance = origin.distanceTo(randomNode)
-  //   if (distance > this.maxWanderDistance) {
-  //     randomNode = this.getWanderTarget(origin, zone, group)
-  //   }
-  //   return randomNode
-  // }
-
   followPatrolPath(deltaTime) {
     const destination = this.patrolPoints[this.patrolIndex]
     if (!destination) return
     if (this.gameObject.transform.position.distanceTo(destination) < 0.5) {
         this.patrolIndex = this.patrolPoints[this.patrolIndex + 1] ? this.patrolIndex + 1 : 0
-        
         return
     } 
 
@@ -516,7 +373,7 @@ class Enemy extends GameplayComponent {
 
       if (!targetPos) return
       this.velocity = new THREE.Vector3().copy(targetPos.clone().sub( this.gameObject.transform.position ));
-      this.updateRotationToFacePoint(this.gameObject.transform, targetPos, this.lerpFactor)
+      updateRotationToFacePoint(this.gameObject.transform, targetPos, this.lerpFactor)
       if (this.velocity.lengthSq() > 0.1 ) {
         this.velocity.normalize();
         
@@ -552,7 +409,7 @@ class Enemy extends GameplayComponent {
 
         if (!this.path[1]) return
         this.velocity = new THREE.Vector3().copy(targetPosition.clone().sub( this.gameObject.transform.position ));
-        this.updateRotationToFacePoint(this.gameObject.transform, targetPosition, this.lerpFactor)
+        updateRotationToFacePoint(this.gameObject.transform, targetPosition, this.lerpFactor)
         if (this.velocity.lengthSq() > 0.1 ) {
           this.velocity.normalize();
           // Move to next waypoint
@@ -570,18 +427,9 @@ class Enemy extends GameplayComponent {
     this.behavior = "die_lol"
     Avern.Sound.enemyDieHandler.currentTime = 0
     Avern.Sound.enemyDieHandler.play()   
-
-    // Avern.Store.player.update(player => {
-    //   const updatedPlayer = {
-    //     ...player,
-    //     energy: player.energy + 25 >= 100 ? 100 : player.energy + 25
-
-    //   }
-    //   return updatedPlayer
-    // })
+    // This should only emit signal (perhaps a more specific enemy_death signal?); target logic should be handled in "Targetable" component
     this.onSignal("clear_target")
     this.emitSignal("clear_target", {visible: false, dead: true, id: this.gameObject.name})
-    this.orderContainer.remove()
     Avern.State.Enemies = Avern.State.Enemies.filter(enem => enem.name !== this.gameObject.name)
     this.dead = true
     Avern.Store.player.update(player => {
@@ -597,71 +445,32 @@ class Enemy extends GameplayComponent {
     switch(signalName) {
       case "set_target":
         if (data.id !== this.gameObject.name && this.isTargeted) {
-          // clear target
-          this.orderContainer.classList.remove("targeted")
           this.isTargeted = false
-          this.ring.visible = false
           gsap.set(this.bar, { opacity: 0})
         } else if (data.id === this.gameObject.name) {
-          Avern.Sound.targetHandler.currentTime = 0
-          Avern.Sound.targetHandler.play()
           this.isTargeted = true
-          this.ring.visible = true
           gsap.set(this.bar, { opacity: 1})
-          this.orderContainer.classList.add("targeted")
-          this.emitSignal("active_target", { object: this.gameObject, canBeAttacked: true,})
         }
         break;
-      case "ordered_targets":
-        if(data.targets.get(this.gameObject.name)){
-          this.orderContainer.style.display = "flex"
-          this.orderContainer.innerHTML = data.targets.get(this.gameObject.name).order
-          this.orderContainer.style.transform = `translate(-50%, -150%) translate(${data.targets.get(this.gameObject.name).proximity}px, ${data.targets.get(this.gameObject.name).y}px )`;
-        } else {
-          this.orderContainer.style.display = "none"
-          this.orderContainer.innerHTML = ""
-        }
-        break;
-      case "closest_los":
-        if (data.id === this.gameObject.name && !this.orderContainer.classList.contains("targeted")) this.orderContainer.classList.add("targeted")
-        if (data.id !== this.gameObject.name && this.orderContainer.classList.contains("targeted")) this.orderContainer.classList.remove("targeted")
-        break;
-      case "entered_range":
-        // this.ring.material.color.setHex( 0x56FBA1 );
-        break;
-      case "exited_range":
-        // this.ring.material.color.setHex( 0xD20000 );
-        break;  
-      case "landmine_detonated":
-        if (this.gameObject.transform.position.distanceTo(data.position) < data.radius) {
-          if (this.behavior === "wander") {
-            this.path = null
-            this.behavior = "pursue"
-          }
-          this.health -= data.damage
-          this.innerBar.style.width = this.health > 0 ? `${(this.health / this.initialHealth) * 100}%` : 0
 
-          const damageNumber = document.createElement('span')
-          damageNumber.innerHTML = Math.floor(data.damage)
-          this.numbersContainer.appendChild(damageNumber)
-          setTimeout(()=>damageNumber.remove(), 2000)
-      
-          if (this.health <= 0) {
-            this.handleDeath()
-          } else {
-            this.reactLarge.reset();
-            this.reactLarge.fadeIn(0.2);
-            this.reactLarge.play();
-          }
-        }
+      case "targeted_object":
+        const minDistance = 10; // Minimum distance for scaling
+        const maxDistance = 100; // Maximum distance for scaling
+        const scaleFactor = THREE.MathUtils.clamp(
+          1 - (data.distanceToCamera - minDistance) / (maxDistance - minDistance),
+          0.1, // Minimum scale factor
+          1  // Maximum scale factor
+        );
+        const translateX = data.x;
+        const translateY = data.y;
+        this.bar.style.display="block"
+        this.bar.style.transform = `translate(-50%, -50%) translate(${translateX}px, ${translateY}px) scale(${scaleFactor})`;
+        this.numbersContainer.style.display="block"
+        this.numbersContainer.style.transform = `translate(50%, 50%) translate(${translateX}px, ${translateY}px) scale(${scaleFactor})`;
         break;
-      case("receive_direct_attack"):
+
+      case "receive_direct_attack":
         if (this.isTargeted===true) {
-
-          // if (Avern.Player.transform.position.distanceTo(this.gameObject.transform.position) >= data.range) {
-          //   this.emitSignal("show_notice", {notice: "Out of range", color: "red", delay: 2000})
-          //   return
-          // }
           Avern.Sound.thudHandler.currentTime = 0.1
           Avern.Sound.thudHandler.play()   
 
@@ -669,13 +478,12 @@ class Enemy extends GameplayComponent {
             Avern.Store.player.update(player => {
               const updatedPlayer = {
                 ...player,
-                energy: player.energy + 15 >= 100 ? 100 : player.energy + 15
+                energy: player.energy + 20 >= 100 ? 100 : player.energy + 20
         
               }
               return updatedPlayer
             })            
           }
-
 
           if (this.behavior === "wander" || this.behavior === "patrol") {
             this.path = null
@@ -698,11 +506,8 @@ class Enemy extends GameplayComponent {
                 Avern.Sound.alertHandler.currentTime = 0
                 Avern.Sound.alertHandler.play()   
               }   
-
-
             this.fadeIntoAction(this.walk, 0.1)
           }
-
           this.health -= data.damage
           this.innerBar.style.width = this.health > 0 ? `${(this.health / this.initialHealth) * 100}%` : 0
 
@@ -723,7 +528,6 @@ class Enemy extends GameplayComponent {
         }
         break;
       case "reset_stage":
-
         if (this.dead) {
           Avern.State.scene.add(this.gameObject.transform)
           Avern.State.Enemies.push(this.gameObject)
@@ -741,50 +545,13 @@ class Enemy extends GameplayComponent {
         if (this.startingBehavior=="idle")this.fadeIntoAction(this.idle, 0.1)
         
         this.emitSignal("clear_target", {visible: false, id: this.gameObject.name})
-
         break;
+
       case "clear_target":
         this.isTargeted = false
-        this.ring.visible = false
-        this.orderContainer.classList.remove("targeted")
         gsap.set(this.bar, { opacity: 0})
         break;
     }
-  }
-  getScreenCoordinatesAndDistance() {
-    const position = new THREE.Vector3();
-    const cameraPosition = new THREE.Vector3();
-    position.copy(this.gameObject.transform.position);
-    position.y+=2
-    position.project(Avern.State.camera);
-  
-    const halfWidth = window.innerWidth / 2;
-    const halfHeight = window.innerHeight / 2;
-  
-    const x = (position.x * halfWidth) + halfWidth;
-    const y = -(position.y * halfHeight) + halfHeight;
-
-    const distanceToCamera = this.gameObject.transform.position.distanceTo(Avern.State.camera.getWorldPosition(cameraPosition));
-    const frustum = new THREE.Frustum()
-    const matrix = new THREE.Matrix4().multiplyMatrices(Avern.State.camera.projectionMatrix, Avern.State.camera.matrixWorldInverse)
-    frustum.setFromProjectionMatrix(matrix)
-
-    // enemy raycasts toward player
-    // is its first collision with the player? if not there is something in the way
-    const towardsEnemy = this.gameObject.transform.position.clone()
-    towardsEnemy.y += 1
-    towardsEnemy.sub(Avern.Player.transform.position.clone());
-    const raycaster = new THREE.Raycaster(Avern.Player.transform.position, towardsEnemy.normalize());
-
-    // Avern.State.scene.remove ( this.arrow );
-    // this.arrow = new THREE.ArrowHelper( raycaster.ray.direction, raycaster.ray.origin, 100, 0.5 * 0xffffff );
-    // Avern.State.scene.add( this.arrow );
-
-    const intersects = raycaster.intersectObjects([this.colliderCapsule.body, Avern.State.collider], false);
-    const obstructed = intersects[0] && intersects[0].object.name === "worldCollider"
-    const visible = frustum.intersectsObject(this.colliderCapsule.body) && (intersects[0] && intersects[0].object.name !== "worldCollider")
-
-    return { x, y, distanceToCamera, visible, obstructed };
   }
 
   attachObservers(parent) {
@@ -798,37 +565,7 @@ class Enemy extends GameplayComponent {
     this.addObserver(Avern.Player.getComponent(FollowCamera))
     this.addObserver(Avern.Player.getComponent(Vitals))
     this.addObserver(Avern.Player.getComponent(Actions))
-    this.addObserver(Avern.Interface.getComponent(Notices))
   }
 }
 
 export default Enemy
-
-function findClosestPointOnMeshToPoint(mesh, point) {
-  // Create two raycast directions: +Y and -Y
-  const raycastDirections = [new THREE.Vector3(0, 1, 0), new THREE.Vector3(0, -1, 0)];
-
-  // Initialize variables to store the closest distance and point
-  let closestDistance = Number.POSITIVE_INFINITY;
-  let closestPoint = new THREE.Vector3();
-
-  // Loop through the raycast directions
-  for (const direction of raycastDirections) {
-    const raycaster = new THREE.Raycaster(point, direction);
-    const intersects = raycaster.intersectObject(mesh);
-    if (intersects.length > 0) {
-      // The ray intersects the mesh, get the closest intersection point
-      const intersectionPoint = intersects[0].point;
-
-      // Calculate the distance between the intersection point and the original point
-      const distance = point.distanceTo(intersectionPoint);
-      // Update closest point and distance if this intersection is closer
-      if (distance < closestDistance) {
-        closestDistance = distance;
-        closestPoint = intersectionPoint.clone();
-      }
-    }
-  }
-  if (closestDistance == Number.POSITIVE_INFINITY) return null
-  return closestPoint;
-}

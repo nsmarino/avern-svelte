@@ -80,25 +80,18 @@ class FollowCamera extends GameplayComponent {
 
         switch(signalName) {
           case "targeted_object":
+            // console.log("Targeted object,", data.object.transform.position)
             if (!this.targeting) return
             data.object.transform.getWorldPosition(this.targetVector)
             this.targetVector.y+=1
             this.playerCameraPlaceholder.getWorldPosition(this.cameraPosVector)
-            const distanceThreshold = 0.1
-            const distanceFromCurrentCameraTargetToUpdatedCameraTarget = this.cameraTarget.position.distanceTo(this.targetVector);
-            // if (distanceFromCurrentCameraTargetToUpdatedCameraTarget > distanceThreshold) {
-                this.cameraTarget.position.lerp(this.targetVector, this.targetLerp)
-                this.camera.position.lerp(this.cameraPosVector, this.cameraLerp)
-            // } else {
-            //     this.cameraTarget.position.copy(this.targetVector)
-            //     this.camera.position.copy(this.cameraPosVector)
-            // }
+            this.cameraTarget.position.lerp(this.targetVector, this.targetLerp)
+            this.camera.position.lerp(this.cameraPosVector, this.cameraLerp)
             this.camera.lookAt(this.cameraTarget.position)    
-
-            // data.object.transform.getWorldPosition(this.cameraTarget.position)
-
             break;
+
           case "active_target":
+            console.log("Received active target")
             this.targeting=true
             this.playerCameraTarget.rotation.set(0,0,0)
 
@@ -109,17 +102,10 @@ class FollowCamera extends GameplayComponent {
         }
     }
     
-    // attachObservers(parent) {
-
-    // }
     isCameraViewBlocked(targetPosition, cameraPosition, collider) {
 
         const towardsCamera = cameraPosition.clone().sub(targetPosition);
         const raycaster = new THREE.Raycaster(targetPosition, towardsCamera.normalize());
-
-        // Avern.State.scene.remove ( this.arrow );
-        // this.arrow = new THREE.ArrowHelper( raycaster.ray.direction, raycaster.ray.origin, 100, 0.5 * 0xffffff );
-        // Avern.State.scene.add( this.arrow );
 
         const intersects = raycaster.intersectObject(collider, true);
 
@@ -131,12 +117,6 @@ class FollowCamera extends GameplayComponent {
 
         return false; // Camera view is partially blocked
     }
-
-    // pointAlongLine(origin, target, distance) {
-    //     const direction = new THREE.Vector3().subVectors(target, origin).normalize();
-    //     const point = new THREE.Vector3().copy(origin).addScaledVector(direction, distance);
-    //     return point;
-    // }
 }
 
 export default FollowCamera

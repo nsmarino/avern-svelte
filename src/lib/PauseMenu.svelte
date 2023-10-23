@@ -16,7 +16,6 @@
   const combatTutorialShown = Avern.Store.combatTutorialShown
   const endOfDemoShown = Avern.Store.endOfDemoShown
   function saveGame() {
-    console.log("SAVE GAME")
     const copyOfStore = {}
     for (const entry in Avern.Store) {
       // 'actions' is derived from Store.weapons so should not be saved to localStorage
@@ -54,7 +53,9 @@
               leftHanded: isLeft
           }
           return updatedSt
-        })    
+        })
+        Avern.Store.pauseMenu.set(false)
+        Avern.State.worldUpdateLocked = false
       }
 
 </script>
