@@ -852,7 +852,11 @@ class Loader {
               const doorContent = Avern.Content.doors.find(g => g.label === c.userData.label)
               if (c.userData.label === "rear-entrance" && currentWorldEvents.gateUnlocked) return
               const door = Avern.GameObjects.createGameObject(scene, c.name)
+
               door.addComponent(Door, c, doorContent)
+              door.canBeTargeted = true
+              door.addComponent(Targetable, false, 5)
+
               break;
 
             default:

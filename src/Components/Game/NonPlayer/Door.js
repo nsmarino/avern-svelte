@@ -42,6 +42,7 @@ class Door extends GameplayComponent {
             if (collision.isColliding) {
               this.emitSignal("capsule_collide", {collision, capsule: this.colliderCapsule})
             }
+            this.emitSignal("has_collider", {collider: this.colliderCapsule, offsetY: 4})
         }
     }
 
@@ -79,6 +80,11 @@ class Door extends GameplayComponent {
     attachObservers(parent) {
         this.addObserver(Avern.Player.getComponent(Body))
         this.addObserver(Avern.Interface.getComponent(Notices))
+        for (const component of parent.components) {
+            if (!(component instanceof Door)) {
+              this.addObserver(component)
+            }
+          }
     }
 }
 
