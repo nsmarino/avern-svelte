@@ -58,9 +58,16 @@ class Enemy extends GameplayComponent {
     this.orderContainer = document.createElement("div")
     this.orderContainer.classList.add("order-container")
     document.body.appendChild(this.orderContainer)
-
-    this.initialHealth = 100
-    this.health = 100
+    switch(this.enemyType) {
+      case "bow":
+        this.initialHealth = 60
+        this.health = 60
+            break;
+      case "sword":
+        this.initialHealth = 100
+        this.health = 100
+        break;
+    }
 
     this.prevAngle = null
     this.originalSpawnPoint = spawnPoint
@@ -272,7 +279,7 @@ class Enemy extends GameplayComponent {
     if (e.action == this.death) {
 
       // chance of dropping item
-      const randomInt = randomIntFromInterval(1,4)
+      const randomInt = randomIntFromInterval(1,3)
       if (randomInt===1 && (get(Avern.Store.player).flasks < 5)) {
         // OUTDATED:
         const itemOnMap = Avern.GameObjects.createGameObject(Avern.State.scene, `${this.gameObject.name}-item`)
@@ -350,7 +357,7 @@ class Enemy extends GameplayComponent {
         y,
         losDistance
       })
-      if(this.isTargeted) this.emitSignal("targeted_object", {object: this.gameObject})
+      if(this.isTargeted) this.emitSignal("targeted_object", { object: this.gameObject, })
 
       if (visible) {
         const minDistance = 10; // Minimum distance for scaling
@@ -564,14 +571,14 @@ class Enemy extends GameplayComponent {
     Avern.Sound.enemyDieHandler.currentTime = 0
     Avern.Sound.enemyDieHandler.play()   
 
-    Avern.Store.player.update(player => {
-      const updatedPlayer = {
-        ...player,
-        energy: player.energy + 25 >= 100 ? 100 : player.energy + 25
+    // Avern.Store.player.update(player => {
+    //   const updatedPlayer = {
+    //     ...player,
+    //     energy: player.energy + 25 >= 100 ? 100 : player.energy + 25
 
-      }
-      return updatedPlayer
-    })
+    //   }
+    //   return updatedPlayer
+    // })
     this.onSignal("clear_target")
     this.emitSignal("clear_target", {visible: false, dead: true, id: this.gameObject.name})
     this.orderContainer.remove()
@@ -587,7 +594,7 @@ class Enemy extends GameplayComponent {
   }
 
   onSignal(signalName, data={}) {
-    switch(signalName){
+    switch(signalName) {
       case "set_target":
         if (data.id !== this.gameObject.name && this.isTargeted) {
           // clear target
@@ -602,7 +609,7 @@ class Enemy extends GameplayComponent {
           this.ring.visible = true
           gsap.set(this.bar, { opacity: 1})
           this.orderContainer.classList.add("targeted")
-          this.emitSignal("active_target", { object: this.gameObject})
+          this.emitSignal("active_target", { object: this.gameObject, canBeAttacked: true,})
         }
         break;
       case "ordered_targets":
@@ -651,12 +658,24 @@ class Enemy extends GameplayComponent {
       case("receive_direct_attack"):
         if (this.isTargeted===true) {
 
-          if (Avern.Player.transform.position.distanceTo(this.gameObject.transform.position) >= data.range) {
-            this.emitSignal("show_notice", {notice: "Out of range", color: "red", delay: 2000})
-            return
-          }
+          // if (Avern.Player.transform.position.distanceTo(this.gameObject.transform.position) >= data.range) {
+          //   this.emitSignal("show_notice", {notice: "Out of range", color: "red", delay: 2000})
+          //   return
+          // }
           Avern.Sound.thudHandler.currentTime = 0.1
           Avern.Sound.thudHandler.play()   
+
+          if (data.generate === true) {
+            Avern.Store.player.update(player => {
+              const updatedPlayer = {
+                ...player,
+                energy: player.energy + 15 >= 100 ? 100 : player.energy + 15
+        
+              }
+              return updatedPlayer
+            })            
+          }
+
 
           if (this.behavior === "wander" || this.behavior === "patrol") {
             this.path = null

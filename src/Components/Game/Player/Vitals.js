@@ -12,11 +12,11 @@ class Vitals extends GameplayComponent {
     }
 
     update(delta) {
-      if (get(Avern.Store.player).energy <= get(Avern.Store.player).maxEnergy) {
+      if (get(Avern.Store.player).energy > 5) {
         Avern.Store.player.update(player => {
           const updatedPlayer = {
             ...player,
-            energy: player.energy+0.033
+            energy: player.energy-0.02
           }
           return updatedPlayer
         })
@@ -27,14 +27,11 @@ class Vitals extends GameplayComponent {
         case "casting_start":
           break;
         case "spend_energy":
-          // console.log("Cost:", data.cost)
             Avern.Store.player.update(player => {
-              // console.log(player)
               const updatedPlayer = {
                 ...player,
                 energy: player.energy - data.cost <= 0 ? 0 : player.energy - data.cost
               }
-              // console.log(updatedPlayer.energy)
               return updatedPlayer
             })
           break;

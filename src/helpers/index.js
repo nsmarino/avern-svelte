@@ -217,7 +217,22 @@ function distancePointToLine(point, line, parent) {
     return distance;
 }
 
+function getScreenCoordinatesAndDistance(gameObject) {
+    const position = new THREE.Vector3();
+    const cameraPosition = new THREE.Vector3();
+    position.copy(gameObject.transform.position);
+    position.project(Avern.State.camera);
+  
+    const halfWidth = window.innerWidth / 2;
+    const halfHeight = window.innerHeight / 2;
+  
+    const x = (position.x * halfWidth) + halfWidth;
+    const y = -(position.y * halfHeight) + halfHeight;
 
+    const distanceToCamera = gameObject.transform.position.distanceTo(Avern.State.camera.getWorldPosition(cameraPosition));
+
+    return { x, y, distanceToCamera };
+  }
 
 function calculateDamageByDistance(baseDamage, distance, maxDistance, exponent=2) {
     
@@ -238,5 +253,6 @@ export {
     getSine, 
     randomIntFromInterval,
     calculateDamageByDistance,
+    getScreenCoordinatesAndDistance,
     SafeArray 
 }

@@ -159,14 +159,23 @@
   .bottom-row {
     display: flex;
     align-items: center;
+    
+    .input-key:nth-child(2) {
+      margin-left: 40px;
+    }
+    
     .rightHanded & {
       flex-direction: row-reverse;
     }
   }
+  .offhand .bottom-row {
+    margin-left: 68px;
+  }
+
   .bottom-row .input-key {
     width: 32px;
     height: 32px;
-    margin: 8px 0 0 12px;
+    margin: 8px 0 0 0;
   }
 
   .input-key .key-inner {
@@ -214,10 +223,11 @@
   align-items: end;
   gap: 8px;
   margin-bottom: 8px;
-  margin-left: 48px;
+  margin-left: 118px;
   .rightHanded & {
     flex-direction: row-reverse;
-    margin-right: 82px;
+    margin-right: 134px;
+    margin-left: 0px;
   }
 }
  .equipped .top-row {
@@ -249,7 +259,7 @@
   gap: 8px;
   .rightHanded & {
     flex-direction: row-reverse;
-    #turn {
+    #cameraDown {
       order: 4;
     }
     #left {
@@ -290,7 +300,7 @@
   opacity: 0.1;
   // border: 1px solid transparent;
 }
-.input-key.oom {
+.oom {
   opacity: 0.5;
   filter: blur(3px);
   // border: 1px solid transparent;

@@ -464,17 +464,17 @@ class Loader {
                 caption: "Loading rifle",
                 image: muzzleBlast,
                 description: "You eyes narrow and time seems to slow. You kneel and take careful aim.",
-                primeLength: 1.75,
+                primeLength: 0,
                 baseDamage: 35,
-                cost: 22,
-                isInstant: false,
+                cost: 0,
+                isInstant: true,
                 range: 40,
                 primed: false,
                 assignment: null,
                 primeAnimation: "load",
                 animation: "shoot",
-                primaryModifier: "Load: 1.75",
-                secondaryModifier: "Energy Cost: 22",
+                // primaryModifier: "Load: 1.75",
+                // secondaryModifier: "Energy Cost: 22",
               },
               {
                 id: "bayonet_slash",
@@ -497,9 +497,9 @@ class Loader {
               },
               {
                 id: "rapid_fire",
-                label: "Impact Shot",
+                label: "Drill Shot",
                 caption: "Loading rifle",
-                description: "The sound of the rifle blast rings in your ears and the acrid smoke fills your nostrils. Causes slowdown.",
+                description: "Fire a high caliber projectile that drills through enemies. Costs no energy if multiple enemies are hit at once.",
                 primeLength: 1,
                 baseDamage: 20,
                 cost: 10,
@@ -515,13 +515,13 @@ class Loader {
                 secondaryModifier: "Bravado",
               },
               {
-                id: "rifle_club",
-                label: "Club with butt of rifle",
+                id: "gouge_with_bayonet",
+                label: "Gouge with bayonet",
                 description: "Stuns enemy for 3 seconds or until attacked.",
                 caption: "Shifting weight",
                 primeLength: 0.6,
                 image: propelSelf,
-                cost: 50,
+                cost: 105,
                 baseDamage: 0,
                 isInstant: true,
                 locked: true,
@@ -544,12 +544,12 @@ class Loader {
             primary: "Cruelty",
             actions: [
               {
-                id: "lose_yourself",
-                label: "Lose yourself in the blade",
-                caption: "Standing on the precipice",
-                description: "Give yourself over to the churning current inside the blade. Increases attack and reduces defense for 5 seconds.",
+                id: "XX",
+                label: "Sacrificial Lamb",
+                caption: "Preparing the ritual",
+                description: "Increases energy received from being damaged for 12 seconds. Chance to pulsate (energy to 100).",
                 image: weaponImg,
-                primeLength: 1,
+                primeLength: 2,
                 baseDamage: 25,
                 locked: true,
                 range: 5,
@@ -563,13 +563,11 @@ class Loader {
               {
                 id: "open_artery",
                 label: "Open artery",
-                caption: "Honing blade",
                 description: "Dart in with the blade. A steady stream of blood springs forth.",
                 image: weaponImg,
-                primeLength: 1,
+                isInstant: true,
                 baseDamage: 25,
                 locked: true,
-
                 range: 5,
                 primed: false,
                 assignment: null,
@@ -579,16 +577,15 @@ class Loader {
                 secondaryModifier: "Guile",
               },
               {
-                id: "Stun with pommel",
-                label: "Stun with pommel",
+                id: "parry",
+                label: "Parry with dagger",
                 caption: "Gathering strength",
-                description: "Bonk an enemy on the head, stunning them for 10 seconds or until they receive damage.",
+                description: "Enter pulsate if successful.",
                 image: weaponImg,
                 primeLength: 1,
                 baseDamage: 25,
                 range: 5,
                 locked: true,
-
                 primed: false,
                 assignment: null,
                 primeAnimation: "withdraw",
@@ -599,13 +596,11 @@ class Loader {
               {
                 id: "stab_in_frenzy",
                 label: "Stab in a frenzy",
-                caption: "Working up a thirst",
-                description: "Strike quickly, high chance of critical hit but reduces defense for 3 seconds.",
+                description: "Strike savagely multiple times. Must be in pulsate.",
                 image: weaponImg,
                 secondary: "",
                 primeLength: 1,
                 locked: true,
-
                 baseDamage: 25,
                 range: 5,
                 primed: false,
@@ -638,11 +633,11 @@ class Loader {
         scene: "url",
     
         player: { 
-            flasks: 5,
-            fruit: 2,
+            flasks: 0,
+            fruit: 0,
             hp: 100,
             maxHp: 100,
-            energy: 100,
+            energy: 0,
             maxEnergy: 100,
             level: 10,
             xp: 0,
@@ -905,7 +900,7 @@ class Loader {
             {
               const updatedPlayer = {
                 ...player,
-                flasks: 5
+                hp: player.maxHp
               }
               return updatedPlayer
             })

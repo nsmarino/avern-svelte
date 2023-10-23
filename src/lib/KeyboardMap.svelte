@@ -30,10 +30,10 @@
   </script>
   <div class="player-input" class:rightHanded={!$config.leftHanded} in:fade={{ duration: 250, delay: 300 }}>
 
-    {#if $actions.length > 0}
       <div class="equipped">
 
         <div class="action-inventory">
+
           <div class="flask-count">
             <div class="flask-count-inner">
               <svg viewBox="0 0 16 22" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -42,6 +42,7 @@
               <span>{ $player.flasks }</span>
             </div>
           </div>
+
           <div class="flask-count">
             <div class="flask-count-inner">
               <svg viewBox="0 0 28 21" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -81,7 +82,7 @@
         </div>
 
         <div class="main-row">
-          
+          {#if $actions.length > 0}
           {#each $actions as action}
           {#if action.assignment <= 4 && action.assignment !== null}
             <div id="action{action.assignment}" class="equipment-action input-key {action.assignment}" class:primed={action.primed} class:oom={(action.cost > $player.energy)} class:locked={action.locked}>
@@ -100,6 +101,9 @@
           {/if}
 
           {/each}
+          {:else}
+          <div style="width: 224px;"></div>
+          {/if}
 
           <div id="setTarget" class="target-key input-key">   
             <div class="key-inner">     
@@ -116,17 +120,19 @@
         </div>
         <div class="bottom-row">
           <div style="font-family:var(--serif); font-size: 12px; margin: auto;">[SHIFT] - Clear Target</div>
-          <div id="characterMenu" class="equipment input-key">
-            <div class="key-inner">
-            <span>{$config.leftHanded ? "c" : "m"}</span>
-            <img class="svg" src={equipment} alt="">
+          {#if $actions.length > 0}
+            <div id="characterMenu" class="equipment input-key">
+              <div class="key-inner">
+              <span>{$config.leftHanded ? "c" : "m"}</span>
+              <img class="svg" src={equipment} alt="">
+              </div>
+              <div class="action-active-indicator"></div>
+              <div class="action-tooltip">
+                <h3>Character Menu</h3>
+                <p>Select actions, view stats and examine items and weapons.</p>
+              </div>
             </div>
-            <div class="action-active-indicator"></div>
-            <div class="action-tooltip">
-              <h3>Character Menu</h3>
-              <p>Select actions, view stats and examine items and weapons.</p>
-            </div>
-          </div>
+          {/if}
           <div id="prevTarget" class="target-key input-key">   
             <div class="key-inner">     
               <span>{$config.leftHanded ? "V" : "N"}</span>
@@ -140,20 +146,9 @@
           </div>
         </div>
       </div>      
-    {/if}
 
     <div class="offhand">
       <div class="top-row">
-        <div id="cameraUp" class="camera-down input-key" style="width: 32px; height: 32px;">   
-          <div class="key-inner">     
-            <span>{$config.leftHanded ? "u" : "r"}</span>
-            <img class="svg" src={look} alt="">
-          </div>
-          <div class="action-active-indicator"></div>
-          <div class="action-tooltip">
-            <h3>Raise camera</h3>
-          </div>
-        </div>
 
         <div id="forward" class="forward input-key">
           <div class="key-inner">
@@ -165,6 +160,28 @@
         <div class="action-tooltip">
           <h3>Move forward</h3>
         </div>
+        </div>
+        <div id="turn" class="strafe input-key">
+          <div class="key-inner">
+
+          <span>{$config.leftHanded ? "O" : "W"}</span>
+          <img class="svg" src={spin} alt="">
+        </div>
+        <div class="action-active-indicator"></div>
+        <div class="action-tooltip">
+          <h3>Turn around</h3>
+          <p>Spin around to face the opposite direction.</p>
+        </div>
+        </div>
+        <div id="cameraUp" class="camera-down input-key" style="width: 32px; height: 32px;">   
+          <div class="key-inner">     
+            <span>{$config.leftHanded ? "P" : "q"}</span>
+            <img class="svg" src={look} alt="">
+          </div>
+          <div class="action-active-indicator"></div>
+          <div class="action-tooltip">
+            <h3>Raise camera</h3>
+          </div>
         </div>
       </div>
 
@@ -218,25 +235,9 @@
           <h3>Turn right</h3>
         </div>
         </div>
-
-        <div id="turn" class="strafe input-key">
-          <div class="key-inner">
-
-          <span>{$config.leftHanded ? ";" : "A"}</span>
-          <img class="svg" src={spin} alt="">
-        </div>
-        <div class="action-active-indicator"></div>
-        <div class="action-tooltip">
-          <h3>Turn around</h3>
-          <p>Spin around to face the opposite direction.</p>
-        </div>
-        </div>
-
-      </div>
-      <div class="bottom-row">
-        <div id="cameraDown" class="camera-down input-key">   
+        <div id="cameraDown" class="camera-down input-key" style="">   
           <div class="key-inner">     
-            <span>{$config.leftHanded ? "n" : "v"}</span>
+            <span>{$config.leftHanded ? ";" : "a"}</span>
             <img class="svg" src={look} alt="">
           </div>
           <div class="action-active-indicator"></div>
@@ -244,6 +245,9 @@
             <h3>Lower camera</h3>
           </div>
         </div>
+
+      </div>
+      <div class="bottom-row">
 
         <div id="pauseMenu" class="open-menu input-key">
           <div class="key-inner">

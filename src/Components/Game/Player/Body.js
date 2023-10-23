@@ -8,6 +8,7 @@ import Enemy from '../NonPlayer/Enemy';
 import Vitals from './Vitals';
 import Inventory from './Inventory';
 import gsap from "gsap"
+import {get} from "svelte/store"
 import {generateCapsuleCollider} from "../../../helpers"
 
 const RESET = "RESET"
@@ -23,6 +24,8 @@ class Body extends GameplayComponent {
         this.radius = 0.8
         this.velocity = new THREE.Vector3();
         this.transform = gameObject.transform
+
+        this.turnSpeed = 0.005
 
         this.targeting = false
 
@@ -328,7 +331,7 @@ class Body extends GameplayComponent {
 
         const inputs = Avern.Inputs.getInputs()
         if (!Avern.State.playerDead && !this.movementLocked) {
-            if (inputs.flask) {
+            if (inputs.flask && get(Avern.Store.player).flasks > 0) {
                 this.movementLocked = true
                 Avern.Sound.drinkHandler.currentTime = 0
                 Avern.Sound.drinkHandler.play()
@@ -575,7 +578,7 @@ class Body extends GameplayComponent {
         const strafeVector = new THREE.Vector3()
 
         if ( (inputs.forward && !this.movementLocked) || inputs.back && !this.movementLocked && this.backIsForwards) {
-            const forwardSpeed = this.targeting ? 6 : 12
+            const forwardSpeed = 12
             transform.getWorldDirection(inputVector).multiplyScalar(delta).multiplyScalar(forwardSpeed)
             deltaVector.add(inputVector)
         } else if ( inputs.back && !this.movementLocked ) {
@@ -589,7 +592,7 @@ class Body extends GameplayComponent {
                 perpendicularVector.normalize().multiplyScalar(delta).multiplyScalar(-4);
                 deltaVector.add(perpendicularVector);
             } else if (!this.targeting) {
-                transform.rotateY(0.006)
+                transform.rotateY(this.turnSpeed)
             }
         }
             
@@ -600,7 +603,7 @@ class Body extends GameplayComponent {
                 perpendicularVector.normalize().multiplyScalar(delta).multiplyScalar(4);
                 deltaVector.add(perpendicularVector);
             } else if (!this.targeting) {
-                transform.rotateY(-0.006)
+                transform.rotateY(-this.turnSpeed)
             }
         }
 

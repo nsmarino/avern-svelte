@@ -20,6 +20,8 @@ class Actions extends GameplayComponent {
         this.castingProgress = 0
 
         this.targeting = false
+        this.targetDistance = null
+        this.targetCanBeAttacked = false
 
         this.actionIndicator = null
         if (document.querySelector(".action-indicator")) {
@@ -49,27 +51,38 @@ class Actions extends GameplayComponent {
         }
     }
 
-    handleAction(action,inputs) {
+    handleAction(action, inputs) {
         if (!action) return
         if (action.locked) {
             this.emitSignal("show_notice", {notice: "Action locked", color: "yellow", delay: 2000})
             return;
         }
         if (action.primed || action.isInstant) {
-            if (get(Avern.Store.player).energy > action.cost) {
-                this.doAction(action)
-            } else {
+            console.log("action range", action, action.range)
+            if (get(Avern.Store.player).energy < action.cost) {
                 this.emitSignal("show_notice", {notice: "Not enough energy", color: "red", delay: 2000})
                 return;
+            } else if (!this.targeting) {
+                this.emitSignal("show_notice", {notice: "Action requires a target", color: "red", delay: 2000})
+                return;
+            } else if (!this.targetCanBeAttacked) {
+                this.emitSignal("show_notice", {notice: "You can't attack this target", color: "red", delay: 2000})
+                return;            
+            } else if (this.targetDistance && this.targetDistance > action.range) {
+                this.emitSignal("show_notice", {notice: "Out of range", color: "red", delay: 2000})
+                return;
+            } else {
+                this.doAction(action)
             }
-        } else if (this.casting && this.activeCast.id !== action.id) {
-            if (inputs.forward || inputs.back || (inputs.left && this.targeting) || (inputs.right && this.targeting)) return;
-            this.interruptCast()
-            this.startCast(action)
-        } else {
-            if (inputs.forward || inputs.back || (inputs.left && this.targeting) || (inputs.right && this.targeting)) return;
-            this.startCast(action)
         }
+        // } else if (this.casting && this.activeCast.id !== action.id) {
+        //     if (inputs.forward || inputs.back || (inputs.left && this.targeting) || (inputs.right && this.targeting)) return;
+        //     this.interruptCast()
+        //     this.startCast(action)
+        // } else {
+        //     if (inputs.forward || inputs.back || (inputs.left && this.targeting) || (inputs.right && this.targeting)) return;
+        //     this.startCast(action)
+        // }
     }
     doAction(action) {
         Avern.Store.weapons.update(weapons=> {
@@ -94,7 +107,7 @@ class Actions extends GameplayComponent {
         switch (action.id) {
             case "shoot_from_distance":
                 // if (!Avern.State.target) return
-                this.emitSignal("receive_direct_attack", {damage: action.baseDamage, range: action.range })
+                this.emitSignal("receive_direct_attack", {damage: action.baseDamage, range: action.range, generate: true })
                 // eslint-disable-next-line no-case-declarations
                 flashPosition = Avern.Player.getComponent(Body).rifleMesh.getWorldPosition(new THREE.Vector3())
                 flashPosition.y += 1
@@ -113,7 +126,7 @@ class Actions extends GameplayComponent {
                 Avern.Sound.gunshotHandler.play()        
                 break;
             case "bayonet_slash":
-                    this.emitSignal("receive_direct_attack", {damage: action.baseDamage, range: action.range,})
+                    this.emitSignal("receive_direct_attack", {damage: action.baseDamage, range: action.range, generate: false })
                     // eslint-disable-next-line no-case-declarations
                     flashPosition = Avern.Player.getComponent(Body).rifleMesh.getWorldPosition(new THREE.Vector3())
                     flashPosition.y += 1
@@ -306,6 +319,11 @@ class Actions extends GameplayComponent {
             break;
           case "active_target":
             this.targeting = true
+            this.targetCanBeAttacked = data.canBeAttacked
+
+            break;
+          case "targeted_object":
+            this.targetDistance = Avern.Player.transform.position.distanceTo(data.object.transform.position)
             break;
           case "clear_target":
             this.targeting = false

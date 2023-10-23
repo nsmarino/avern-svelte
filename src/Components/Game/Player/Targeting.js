@@ -156,6 +156,7 @@ class Targeting extends GameplayComponent {
     onSignal(signalName, data={}) {
         switch(signalName) {
             case "target_visible":
+                console.log("HI target", data)
                 if (data.visible && data.losDistance < 40) {
                     this.targetsMap.set(data.id, {proximity: data.proximity, y:data.y, order: null, losDistance: data.losDistance})
                 } else {

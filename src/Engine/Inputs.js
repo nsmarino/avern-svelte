@@ -175,7 +175,7 @@ class Inputs {
             },
         
             turn: {
-                code: "Semicolon",
+                code: "KeyO",
                 name: ";",
                 pressed: false,
 
@@ -183,27 +183,31 @@ class Inputs {
                 trackWasPressed: true,
                 trackUp: true,
             },
-            cameraUp: {
+            strafeLeft: {
                 code: "KeyU",
                 pressed: false,
                 onlyOnce: false,
                 trackWasPressed: true,
                 trackUp: true,
             },
-
-            cameraDown: {
-                code: "KeyN",
+            // strafeRight: {
+            //     code: "KeyO",
+            //     pressed: false,
+            //     onlyOnce: false,
+            //     trackWasPressed: true,
+            //     trackUp: true,
+            // },
+            cameraUp: {
+                code: "KeyP",
                 pressed: false,
                 onlyOnce: false,
                 trackWasPressed: true,
                 trackUp: true,
             },
-
-            cameraReset: {
-                code: "KeyO",
-                name: "N",
+            cameraDown: {
+                code: "Semicolon",
                 pressed: false,
-                onlyOnce: true,
+                onlyOnce: false,
                 trackWasPressed: true,
                 trackUp: true,
             },
@@ -366,7 +370,7 @@ class Inputs {
             },
         
             turn: {
-                code: "KeyA",
+                code: "KeyW",
                 pressed: false,
 
                 onlyOnce: false,
@@ -375,7 +379,7 @@ class Inputs {
             },
 
             cameraUp: {
-                code: "KeyR",
+                code: "KeyQ",
                 pressed: false,
                 onlyOnce: false,
                 trackWasPressed: true,
@@ -383,7 +387,7 @@ class Inputs {
             },
 
             cameraDown: {
-                code: "KeyV",
+                code: "KeyA",
                 pressed: false,
                 onlyOnce: false,
                 trackWasPressed: true,
@@ -420,8 +424,14 @@ class Inputs {
             leftWasPressed:false,
             leftWasLifted:false,
 
+            strafeLeftWasPressed:false,
+            strafeLeftWasLifted:false,
+
             rightWasPressed:false,
             rightWasLifted:false,
+
+            strafeRightWasPressed:false,
+            strafeRightWasLifted:false,
 
             interact:false,
             jump:false,
