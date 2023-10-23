@@ -17,6 +17,7 @@ import zombieSword from "../../../../assets/monsters/sword-large.gltf"
 import Vitals from '../Player/Vitals';
 import Actions from '../Player/Actions';
 import ItemOnMap from './ItemOnMap';
+import Targetable from './Targetable';
 import Targeting from '../Player/Targeting';
 import {get} from 'svelte/store'
 
@@ -249,6 +250,9 @@ class Enemy extends GameplayComponent {
         const itemContent = Avern.Content.items.find(i => i.label === "healing-flask")
         itemOnMap.addComponent(ItemOnMap, this.gameObject.transform, itemContent)
         itemOnMap.getComponent(ItemOnMap).attachObservers()
+        itemOnMap.canBeTargeted = true
+        itemOnMap.addComponent(Targetable, false, 2)
+        itemOnMap.getComponent(Targetable).attachObservers()
       }
 
       setTimeout(() => {

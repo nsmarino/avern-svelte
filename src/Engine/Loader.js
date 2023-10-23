@@ -794,6 +794,9 @@ class Loader {
             case "leave":
               const connection = Avern.GameObjects.createGameObject(scene, c.name)                        
               connection.addComponent(Connection, c)
+              connection.canBeTargeted = true
+              connection.addComponent(Targetable, false, 2)
+
               break;
             case "arrive":
               const from = Avern.GameObjects.createGameObject(scene, c.userData.label)  
@@ -830,6 +833,9 @@ class Loader {
                   if (shouldSpawnItem) {
                     const itemOnMap = Avern.GameObjects.createGameObject(scene, c.name)
                     itemOnMap.addComponent(ItemOnMap, c, itemContent)
+                    itemOnMap.canBeTargeted = true
+                    itemOnMap.addComponent(Targetable, false, 2)
+      
                   }                
                 }                
               break;

@@ -34,9 +34,7 @@ class Targetable extends GameplayComponent {
   
         this.orderContainer = document.createElement("div")
         this.orderContainer.classList.add("order-container")
-        if (!this.canBeAttacked) this.orderContainer.classList.add("friendly")
         document.body.appendChild(this.orderContainer)
-    
     }
 
     update() {

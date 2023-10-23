@@ -1,17 +1,12 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { generateCapsuleCollider, checkCapsuleCollision } from '../../../helpers';
-import gltf from '../../../../assets/environment/gateway.gltf'
+import gltf from '../../../../assets/environment/obelisk.gltf'
 import {get} from 'svelte/store'
 import gsap from "gsap"
 
 import GameplayComponent from '../../_Component';
 import Body from '../Player/Body';
-
-
-// import staging1 from '../../../../assets/staging-1.gltf'
-// import staging2 from '../../../../assets/staging-2.gltf'
-
 
 class Connection extends GameplayComponent {
     constructor(gameObject, spawnPoint) {
@@ -25,21 +20,24 @@ class Connection extends GameplayComponent {
         const initFromGLTF = async () => {
             this.gltf = await new GLTFLoader().loadAsync(gltf)
             this.gltf.scene.name = gameObject.name
+            this.gltf.scene.traverse(child => {
+                child.castShadow = true;
+                child.frustumCulled = false;
+            })
             gameObject.transform.add(this.gltf.scene)
+
 
             this.colliderCapsule = generateCapsuleCollider(
                 this.gltf.scene.getObjectByName("capsule-bottom"),
                 this.gltf.scene.getObjectByName("capsule-top"),
                 this.gltf.scene.getObjectByName("capsule-radius")
             )
-            // this.gameObject.transform.visible = false
-            const geometry = new THREE.BoxGeometry( 20,20,20); 
-            const material = new THREE.MeshBasicMaterial( {color: 0xFFFFFF} ); 
-            material.transparent = true
-            material.opacity = 0.3
-            const cube = new THREE.Mesh( geometry, material ); 
-            gameObject.transform.children[0].visible = false
-            gameObject.transform.add(cube)
+            gameObject.transform.add(this.colliderCapsule.body)
+            this.colliderCapsule.ring.visible=true
+            gameObject.transform.add(this.colliderCapsule.ring)
+            this.colliderCapsule.body.onPlayerLook = this.onPlayerLook.bind(this)
+            this.colliderCapsule.body.onPlayerAction = this.startTransition.bind(this)
+
         }
         initFromGLTF()
     }
@@ -47,30 +45,27 @@ class Connection extends GameplayComponent {
     update() {
         if (Avern.Player && this.colliderCapsule) {
             const collision = checkCapsuleCollision({ segment: Avern.Player.getComponent(Body).tempSegment, radius: Avern.Player.getComponent(Body).radius}, this.colliderCapsule)
-            if (collision.isColliding && !this.transitionStarted) {
-                this.startTransition()
+            if (collision.isColliding) {
+                this.emitSignal("capsule_collide", {collision, capsule: this.colliderCapsule})
             }
+            this.emitSignal("has_collider", {collider: this.colliderCapsule, offsetY: 2})
         }
     }
 
+    onPlayerLook() {
+        Avern.Store.prompt.set("Travel")
+    }
+
     startTransition() {
+        if (this.transitionStarted) return
         this.transitionStarted = true
-        // let url = ""
-        // switch(this.destination){
-        //     case "staging_1":
-        //         console.log("load staging 1")
-        //         url = staging1
-        //         break;
-        //     case "staging_2":
-        //         console.log("load staging 2")
-        //         url = staging2
-        //         break;
-        // }
 		gsap.to(".mask", { opacity: 1, duration: 1})
 		gsap.to(".mask svg", { opacity: 1, duration: 1})
 		gsap.to(".mask p", { opacity: 1, duration: 1})
         setTimeout(async () => {
             await Avern.Loader.switchScene(this.destination)
+            Avern.Store.prompt.set(null)
+
         }, 1000)
     }
 
@@ -83,6 +78,11 @@ class Connection extends GameplayComponent {
     }
     
     attachObservers(parent) {
+        for (const component of parent.components) {
+            if (!(component instanceof Connection)) {
+              this.addObserver(component)
+            }
+        }
         this.addObserver(Avern.Player.getComponent(Body))
     }
 }

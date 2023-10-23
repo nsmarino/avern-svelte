@@ -3,7 +3,12 @@ import gsap from "gsap"
 import GameplayComponent from '../../_Component';
 import InteractionOverlay from '../../Interface/InteractionOverlay';
 import Inventory from '../Player/Inventory';
+import Targeting from '../Player/Targeting';
+import Body from '../Player/Body';
 import Notices from '../../Interface/Notices';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { generateCapsuleCollider, checkCapsuleCollision } from '../../../helpers';
+import gltf from '../../../../assets/environment/obelisk.gltf'
 
 class ItemOnMap extends GameplayComponent {
     constructor(gameObject, spawnPoint, content) {
@@ -11,7 +16,7 @@ class ItemOnMap extends GameplayComponent {
         this.gameObject=gameObject
         this.prompt = "Pick up item"
 
-        this.content=content
+        this.content = content
         gameObject.transform.position.copy(spawnPoint.position)
         this.particleGeometry = new THREE.BufferGeometry();
         this.particleGeometryTwo = new THREE.BufferGeometry()
@@ -56,36 +61,67 @@ class ItemOnMap extends GameplayComponent {
             size: 0.11
         });
 
-            // Create a particle system from the buffer geometry and material
+        // Create a particle system from the buffer geometry and material
         this.particleSystem = new THREE.Points(this.particleGeometry, particleMaterial);
         this.particleSystemTwo = new THREE.Points(this.particleGeometryTwo, particleMaterialTwo);
         gameObject.transform.add(this.particleSystem)
         gameObject.transform.add(this.particleSystemTwo)
 
-        const points = [new THREE.Vector3(), new THREE.Vector3(0,3,0)]
-        const tubeGeometry = new THREE.TubeGeometry(
-            new THREE.CatmullRomCurve3(points),
-            12,// path segments
-            1,// THICKNESS
-            8, //Roundness of Tube
-            true //closed
-          );
-    
-        const tubeWireframe = new THREE.Mesh(
-            tubeGeometry,
-            new THREE.MeshStandardMaterial( { color: 0xFFFFFF } )
-        )
-        tubeWireframe.material.wireframe = true
-        tubeWireframe.visible = false
 
-        gameObject.transform.add(tubeWireframe)
-        tubeWireframe.onPlayerLook = this.onPlayerLook.bind(this)
-        tubeWireframe.onPlayerAction = this.onPlayerAction.bind(this)
+        // outdated:
+        // const points = [new THREE.Vector3(), new THREE.Vector3(0,3,0)]
+        // const tubeGeometry = new THREE.TubeGeometry(
+        //     new THREE.CatmullRomCurve3(points),
+        //     12,// path segments
+        //     1,// THICKNESS
+        //     8, //Roundness of Tube
+        //     true //closed
+        //   );
+    
+        // const tubeWireframe = new THREE.Mesh(
+        //     tubeGeometry,
+        //     new THREE.MeshStandardMaterial( { color: 0xFFFFFF } )
+        // )
+        // tubeWireframe.material.wireframe = true
+        // tubeWireframe.visible = false
+
+        // gameObject.transform.add(tubeWireframe)
+        // tubeWireframe.onPlayerLook = this.onPlayerLook.bind(this)
+        // tubeWireframe.onPlayerAction = this.onPlayerAction.bind(this)
+
+        const initFromGLTF = async () => {
+            this.gltf = await new GLTFLoader().loadAsync(gltf)
+            this.gltf.scene.name = gameObject.name
+
+
+            this.colliderCapsule = generateCapsuleCollider(
+                this.gltf.scene.getObjectByName("capsule-bottom"),
+                this.gltf.scene.getObjectByName("capsule-top"),
+                this.gltf.scene.getObjectByName("capsule-radius")
+            )
+            gameObject.transform.add(this.colliderCapsule.body)
+            this.colliderCapsule.ring.visible=true
+            gameObject.transform.add(this.colliderCapsule.ring)
+            this.colliderCapsule.body.onPlayerLook = this.onPlayerLook.bind(this)
+            this.colliderCapsule.body.onPlayerAction = this.onPlayerAction.bind(this)
+            this.gltf.scene.traverse(child => {
+                child.visible = false
+            })
+            gameObject.transform.add(this.gltf.scene)
+        }
+        initFromGLTF()
     }
 
     update(deltaTime) {
         this.animateParticleSystem(this.particleGeometry)
         this.animateParticleSystem(this.particleGeometryTwo)
+        if (Avern.Player && this.colliderCapsule) {
+            const collision = checkCapsuleCollision({ segment: Avern.Player.getComponent(Body).tempSegment, radius: Avern.Player.getComponent(Body).radius}, this.colliderCapsule)
+            if (collision.isColliding) {
+                this.emitSignal("capsule_collide", {collision, capsule: this.colliderCapsule})
+            }
+            this.emitSignal("has_collider", {collider: this.colliderCapsule, offsetY: 2})
+        }
     }
 
     animateParticleSystem(geometry){
@@ -136,6 +172,7 @@ class ItemOnMap extends GameplayComponent {
         Avern.Sound.itemHandler.currentTime=0
         Avern.Sound.itemHandler.play()
         this.emitSignal("item_pickup", { item: this.content.item })
+        this.emitSignal("clear_target", {visible: false, dead: true, id: this.gameObject.name})
         this.emitSignal("show_notice", { notice: `Picked up ${this.content.item.name}`, color: "yellow", delay: 5000})
        
         if (this.content.label==="rear-entrance") {Avern.Store.worldEvents.update(events => {
@@ -147,12 +184,19 @@ class ItemOnMap extends GameplayComponent {
             return updatedEvents
         })}
         this.gameObject.removeFromScene()
+        this.gameObject.sleep = true
     }
     
     attachObservers(parent) {
         this.addObserver(Avern.Player.getComponent(Inventory))
+        this.addObserver(Avern.Player.getComponent(Targeting))
         this.addObserver(Avern.Interface.getComponent(InteractionOverlay))
         this.addObserver(Avern.Interface.getComponent(Notices))
+        for (const component of parent.components) {
+            if (!(component instanceof ItemOnMap)) {
+              this.addObserver(component)
+            }
+        }
     }
 }
 
