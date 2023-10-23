@@ -12,7 +12,7 @@ class Vitals extends GameplayComponent {
     }
 
     update(delta) {
-      if (get(Avern.Store.player).energy > 5) {
+      if (get(Avern.Store.player).energy > 1) {
         Avern.Store.player.update(player => {
           const updatedPlayer = {
             ...player,
@@ -65,6 +65,9 @@ class Vitals extends GameplayComponent {
           break;
         case "eat_fruit":
           if (get(Avern.Store.player).fruit > 0) {
+            Avern.Sound.eatHandler.currentTime = 0
+            Avern.Sound.eatHandler.play()
+
             if (get(Avern.Store.player).energy + 50 > get(Avern.Store.player).maxEnergy) {
               Avern.Store.player.update(player => {
                 const updatedPlayer = {

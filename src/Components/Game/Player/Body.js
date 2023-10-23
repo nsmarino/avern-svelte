@@ -338,8 +338,6 @@ class Body extends GameplayComponent {
                 this.fadeIntoAction(this.drink,0.2, REPLACE)
             }
             if (inputs.fruit) {
-                Avern.Sound.eatHandler.currentTime = 0
-                Avern.Sound.eatHandler.play()
                 this.emitSignal("eat_fruit")
             }
             if (inputs.turnWasPressed) {
