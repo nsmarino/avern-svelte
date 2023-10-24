@@ -54,7 +54,6 @@ class Door extends GameplayComponent {
         const key = get(Avern.Store.items).find(i=>i.id===this.content.unlockedBy)
         if (key) {
             this.colliderIsActive = false
-            this.gameObject.transform.visible = false
             Avern.Store.worldEvents.update(events => {
                 const updatedEvents = {
                     ...events,
@@ -63,6 +62,10 @@ class Door extends GameplayComponent {
                 }
                 return updatedEvents
             })
+            this.emitSignal("clear_target", {visible: false, dead: true, id: this.gameObject.name})
+            this.gameObject.removeFromScene()
+            this.gameObject.sleep = true
+    
             this.emitSignal("show_notice", { notice: `Unlocked with ${key.name}`, color: "yellow", delay: 5000})
         } else {
             this.emitSignal("show_notice", { notice: `Locked`, color: "red", delay: 5000})

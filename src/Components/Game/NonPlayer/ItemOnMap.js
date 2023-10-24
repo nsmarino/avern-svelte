@@ -71,6 +71,7 @@ class ItemOnMap extends GameplayComponent {
             this.gltf = await new GLTFLoader().loadAsync(gltf)
             this.gltf.scene.name = gameObject.name
 
+
             this.colliderCapsule = generateCapsuleCollider(
                 this.gltf.scene.getObjectByName("capsule-bottom"),
                 this.gltf.scene.getObjectByName("capsule-top"),
