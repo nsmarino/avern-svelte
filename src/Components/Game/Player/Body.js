@@ -330,7 +330,7 @@ class Body extends GameplayComponent {
         }
 
         const inputs = Avern.Inputs.getInputs()
-        if (!Avern.State.playerDead && !this.movementLocked) {
+        if (!Avern.State.playerDead && !this.movementLocked && !Avern.State.worldUpdateLocked) {
             if (inputs.flask && get(Avern.Store.player).flasks > 0) {
                 this.movementLocked = true
                 Avern.Sound.drinkHandler.currentTime = 0
@@ -467,7 +467,7 @@ class Body extends GameplayComponent {
                 },6000)
                 break;
             case "capsule_collide":
-                this.onCapsuleCollide(data)
+                if (!Avern.State.worldUpdateLocked) this.onCapsuleCollide(data)
                 break;
             case "active_target":
                 console.log("Received active target")
@@ -484,7 +484,7 @@ class Body extends GameplayComponent {
                 this.transform.lookAt(lookVector)
                 break;
             case "world_collide":
-                if (!Avern.State.playerDead) this.onWorldCollide(data)
+                if (!Avern.State.playerDead && !Avern.State.worldUpdateLocked) this.onWorldCollide(data)
                 break;
         }
     }

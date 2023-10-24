@@ -766,9 +766,9 @@ class Loader {
 			const loader = new YUKA.NavMeshLoader();
       const navmesh = await loader.load(file)
 
-      const shownav = await new GLTFLoader().loadAsync(file)
-      Avern.State.scene.add(shownav.scene)
-      shownav.scene.children[0].material.wireframe = true
+      // const shownav = await new GLTFLoader().loadAsync(file)
+      // Avern.State.scene.add(shownav.scene)
+      // shownav.scene.children[0].material.wireframe = true
 
       return navmesh
     }
@@ -834,7 +834,7 @@ class Loader {
                     const itemOnMap = Avern.GameObjects.createGameObject(scene, c.name)
                     itemOnMap.addComponent(ItemOnMap, c, itemContent)
                     itemOnMap.canBeTargeted = true
-                    itemOnMap.addComponent(Targetable, false, 2)
+                    itemOnMap.addComponent(Targetable, false, 1 )
       
                   }                
                 }                

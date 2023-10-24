@@ -249,10 +249,10 @@ class Enemy extends GameplayComponent {
         const itemOnMap = Avern.GameObjects.createGameObject(Avern.State.scene, `${this.gameObject.name}-item`)
         const itemContent = Avern.Content.items.find(i => i.label === "healing-flask")
         itemOnMap.addComponent(ItemOnMap, this.gameObject.transform, itemContent)
-        itemOnMap.getComponent(ItemOnMap).attachObservers()
         itemOnMap.canBeTargeted = true
-        itemOnMap.addComponent(Targetable, false, 2)
-        itemOnMap.getComponent(Targetable).attachObservers()
+        itemOnMap.addComponent(Targetable, false, 1)
+        itemOnMap.getComponent(ItemOnMap).attachObservers(itemOnMap)
+        itemOnMap.getComponent(Targetable).attachObservers(itemOnMap)
       }
 
       setTimeout(() => {

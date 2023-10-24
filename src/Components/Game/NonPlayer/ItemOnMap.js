@@ -67,32 +67,9 @@ class ItemOnMap extends GameplayComponent {
         gameObject.transform.add(this.particleSystem)
         gameObject.transform.add(this.particleSystemTwo)
 
-
-        // outdated:
-        // const points = [new THREE.Vector3(), new THREE.Vector3(0,3,0)]
-        // const tubeGeometry = new THREE.TubeGeometry(
-        //     new THREE.CatmullRomCurve3(points),
-        //     12,// path segments
-        //     1,// THICKNESS
-        //     8, //Roundness of Tube
-        //     true //closed
-        //   );
-    
-        // const tubeWireframe = new THREE.Mesh(
-        //     tubeGeometry,
-        //     new THREE.MeshStandardMaterial( { color: 0xFFFFFF } )
-        // )
-        // tubeWireframe.material.wireframe = true
-        // tubeWireframe.visible = false
-
-        // gameObject.transform.add(tubeWireframe)
-        // tubeWireframe.onPlayerLook = this.onPlayerLook.bind(this)
-        // tubeWireframe.onPlayerAction = this.onPlayerAction.bind(this)
-
         const initFromGLTF = async () => {
             this.gltf = await new GLTFLoader().loadAsync(gltf)
             this.gltf.scene.name = gameObject.name
-
 
             this.colliderCapsule = generateCapsuleCollider(
                 this.gltf.scene.getObjectByName("capsule-bottom"),

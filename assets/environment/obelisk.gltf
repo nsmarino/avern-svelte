@@ -21,6 +21,9 @@
 					]
 				}
 			},
+			"extras":{
+				"EXTCollectionProperties":{}
+			},
 			"name":"Scene",
 			"nodes":[
 				0,
@@ -38,6 +41,9 @@
 						"geometry"
 					]
 				}
+			},
+			"extras":{
+				"TLM_ObjectProperties":{}
 			},
 			"mesh":0,
 			"name":"Cube",
@@ -109,6 +115,9 @@
 	"materials":[
 		{
 			"doubleSided":true,
+			"extras":{
+				"arm_cached":0
+			},
 			"name":"Material",
 			"pbrMetallicRoughness":{
 				"baseColorFactor":[
@@ -124,6 +133,9 @@
 	],
 	"meshes":[
 		{
+			"extras":{
+				"arm_cached":0
+			},
 			"name":"Cube.001",
 			"primitives":[
 				{
@@ -138,6 +150,9 @@
 			]
 		},
 		{
+			"extras":{
+				"arm_cached":0
+			},
 			"name":"Circle.001",
 			"primitives":[
 				{
@@ -151,6 +166,9 @@
 			]
 		},
 		{
+			"extras":{
+				"arm_cached":0
+			},
 			"name":"Circle.002",
 			"primitives":[
 				{
@@ -164,6 +182,9 @@
 			]
 		},
 		{
+			"extras":{
+				"arm_cached":0
+			},
 			"name":"Circle",
 			"primitives":[
 				{
