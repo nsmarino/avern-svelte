@@ -19,6 +19,7 @@ class Targetable extends GameplayComponent {
     constructor(gameObject, canBeAttacked, targetRingRadius) {
         super(gameObject)
 
+        this.dead = false
         this.gameObject = gameObject
         this.canBeAttacked = canBeAttacked || false
         this.isTargeted = false
@@ -62,21 +63,28 @@ class Targetable extends GameplayComponent {
                     this.isTargeted = false
                     this.ring.visible = false
                 } else {
+                    console.log(this.gameObject)
+
                     this.isTargeted = true
                     this.ring.visible = true
 
                     Avern.Sound.targetHandler.currentTime = 0
                     Avern.Sound.targetHandler.play()   
                     this.emitSignal("active_target", { object: this.gameObject, canBeAttacked: this.canBeAttacked})
-       
+    
                 }
                 this.emitSignal("set_target", { ...data, targeted: this.isTargeted })
 
             break;
+
             case "clear_target":
                 this.isTargeted = false
                 this.ring.visible = false
-                this.emitSignal("clear_target")
+                this.emitSignal("clear_target", { ...data })
+                if(data.dead) {
+                    this.dead = true
+                    this.orderContainer.remove()
+                }
             break;
             case "ordered_targets":
                 if(data.targets.get(this.gameObject.name)){

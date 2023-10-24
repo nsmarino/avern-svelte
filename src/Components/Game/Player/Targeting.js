@@ -87,6 +87,7 @@ class Targeting extends GameplayComponent {
         // const increment = next ? 1 : -1
         const targetIds = Array.from(this.mapOfOrderedTargets.keys())
         if (this.targetIndex === null) {
+            console.log("Target index was null", this.losArray)
             if (this.losArray[0]) this.emitSignal("set_target", { id: this.losArray[0][0] })
         } else {
             const indexToTarget = next ? targetIds[this.targetIndex] : targetIds[this.targetIndex-2]
@@ -125,7 +126,6 @@ class Targeting extends GameplayComponent {
     onSignal(signalName, data={}) {
         switch(signalName) {
             case "target_visible":
-                console.log(data.distanceToCamera)
                 if (data.visible && data.losDistance < 50 && data.distanceToCamera > 15) {
                     this.targetsMap.set(data.id, {proximity: data.proximity, y:data.y, order: null, losDistance: data.losDistance})
                 } else {
@@ -137,6 +137,7 @@ class Targeting extends GameplayComponent {
                 if (data.visible) {
                     this.targetsMap.set(data.id, {proximity: data.proximity, y:data.y, order: null})
                 } else {
+                    console.log("Delete from targetsMap")
                     this.targetsMap.delete(data.id)
                 }
                 if (data.dead) {
