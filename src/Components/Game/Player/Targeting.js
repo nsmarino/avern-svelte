@@ -5,6 +5,7 @@ import Targetable from '../NonPlayer/Targetable';
 import Body from "./Body"
 import FollowCamera from "./FollowCamera"
 import Actions from "./Actions"
+import Enemy from "../NonPlayer/Enemy"
     
 class Targeting extends GameplayComponent {
     constructor(gameObject, ) {
@@ -65,7 +66,6 @@ class Targeting extends GameplayComponent {
             .sort((a, b) => a[1].losDistance - b[1].losDistance)
 
         if (this.targetIndex===null && this.losArray[0])this.emitSignal("closest_los", {id: this.losArray[0][0]})
-
         this.emitSignal("ordered_targets", { targets: this.mapOfOrderedTargets })
 
         const inputs = Avern.Inputs.getInputs()
@@ -93,14 +93,9 @@ class Targeting extends GameplayComponent {
 
             if (indexToTarget){
                 this.emitSignal("set_target", {id: indexToTarget})
-                // this.targetIndex += increment
             }        
         }
-        // if(this.targetIndex === null && next) {
-        //     this.targetIndex = 0
-        // } else if (this.targetIndex === null && !next) {
-        //     this.targetIndex = targetIds.length + 1
-        // }
+
     }
 
     checkTarget(){
@@ -130,7 +125,8 @@ class Targeting extends GameplayComponent {
     onSignal(signalName, data={}) {
         switch(signalName) {
             case "target_visible":
-                if (data.visible && data.losDistance < 40) {
+                console.log(data.distanceToCamera)
+                if (data.visible && data.losDistance < 50 && data.distanceToCamera > 15) {
                     this.targetsMap.set(data.id, {proximity: data.proximity, y:data.y, order: null, losDistance: data.losDistance})
                 } else {
                     this.targetsMap.delete(data.id)
@@ -147,9 +143,6 @@ class Targeting extends GameplayComponent {
                     this.losArray = Array.from(this.targetsMap)
                         .sort((a, b) => a[1].losDistance - b[1].losDistance)
                     this.targetIndex = null
-                    // setTimeout(() => {
-                    //     this.setTargetFromInputKey(true)
-                    // }, 300)
                 }
                 break;
             case "targeted_object":

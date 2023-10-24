@@ -21,7 +21,6 @@ class Targetable extends GameplayComponent {
 
         this.gameObject = gameObject
         this.canBeAttacked = canBeAttacked || false
-        console.log("Can be attacked?", this.canBeAttacked)
         this.isTargeted = false
 
         const torusGeometry = new THREE.TorusGeometry( targetRingRadius, 0.02, 12, 40 ); 
@@ -45,14 +44,16 @@ class Targetable extends GameplayComponent {
         switch(signalName) {
             case "has_collider":
                 const { x, y, distanceToCamera, visible } = getScreenCoordinatesAndDistance(this.gameObject,data.collider, data.offsetY);
-                const losDistance = Avern.Player.getComponent(Body).visionCapsule ? distancePointToLine(this.gameObject.transform.position, Avern.Player.getComponent(Body).visionCapsule.segment, Avern.Player.transform) : null
-          
+                const losDistance = Avern.Player.transform.position.distanceTo(this.gameObject.transform.position)
+                // const losDistance = Avern.Player.getComponent(Body).visionCapsule ? distancePointToLine(this.gameObject.transform.position, Avern.Player.getComponent(Body).visionCapsule.segment, Avern.Player.transform) : null
+
                 if (!this.dead) this.emitSignal("target_visible", {
                   visible, 
                   id: this.gameObject.name, 
                   proximity: x,
                   y,
-                  losDistance
+                  losDistance,
+                  distanceToCamera
                 })
                 if(this.isTargeted) this.emitSignal("targeted_object", { object: this.gameObject, x, y, distanceToCamera })
                 break;

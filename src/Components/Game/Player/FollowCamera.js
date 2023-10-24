@@ -91,7 +91,6 @@ class FollowCamera extends GameplayComponent {
             break;
 
           case "active_target":
-            console.log("Received active target")
             this.targeting=true
             this.playerCameraTarget.rotation.set(0,0,0)
 

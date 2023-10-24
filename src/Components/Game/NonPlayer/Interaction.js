@@ -3,6 +3,7 @@ import { generateCapsuleCollider, checkCapsuleCollision } from '../../../helpers
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import GameplayComponent from '../../_Component';
 import Body from '../Player/Body';
+import Targeting from '../Player/Targeting';
 import {get} from "svelte/store"
 
 class Interaction extends GameplayComponent {
@@ -138,6 +139,7 @@ class Interaction extends GameplayComponent {
 
     clearInteraction() {
         Avern.State.worldUpdateLocked = false
+        this.emitSignal("clear_target", { visible: false})
         Avern.Store.interaction.set({active: false, node: {}})
         this.contentIndex = 0
         if (this.interactions.content[this.interactionsIndex+1]) {
@@ -148,7 +150,7 @@ class Interaction extends GameplayComponent {
                 return ong
             })
             this.interactionsIndex+=1
-            if (!get(Avern.Store.endOfDemoShown) && this.interactions.label==="esthel-captive") {
+            if (!get(Avern.Store.endOfDemoShown) && this.interactions.label==="yoshua-haystack") {
                 setTimeout(() => {
                   Avern.Store.endOfDemoVisible.set(true)
                   Avern.Store.endOfDemoShown.set(true)
@@ -167,6 +169,7 @@ class Interaction extends GameplayComponent {
             }
           }
         this.addObserver(Avern.Player.getComponent(Body))
+        this.addObserver(Avern.Player.getComponent(Targeting))
     
     }
 }

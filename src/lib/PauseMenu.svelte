@@ -61,8 +61,7 @@
 </script>
 
 <div id="game-menu" in:fly={{ easing: cubicOut, y: 10, duration: 200 }} out:fly={{ easing: cubicIn, y: -10, duration: 300 }}>
-  <!-- <button on:click={handleClick} class="status">Game Paused</button> -->
-
+  <div style="position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%);">CLOSE MENU: [{#if $config.leftHanded}<span>M</span>{:else}<span>C</span>{/if}]</div>
   <div class="menu-pane info-pane">
     <h2 class="menu-heading">Info</h2>
     <div class="tabs">
@@ -78,7 +77,7 @@
         <h3>End of Demo</h3>
         <p>This concludes the gameplay demo of <span>FORTRESS SHEPHERD EUNUCH</span>.</p>
         <p>The game remains under active development. Updates and development logs are available on <a href="https://avern-systems.itch.io/fse" target="_blank">itch.io</a> and <a href="https://www.instagram.com/yard_gfx/" target="_blank">instagram</a>.</p>
-        <p>Thank you for playing! If you wish, you can return to the Cliffs area to try out the dagger that Yoshua gave you.</p>
+        <p>Thank you for playing!</p>
       {/if}
       {#if $combatTutorialShown}
         <h3>Combat</h3>

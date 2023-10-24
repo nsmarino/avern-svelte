@@ -39,11 +39,8 @@ class Body extends GameplayComponent {
         this.crucialFrameSent = false
 
         if (to) {
-            console.log("SUCCESSFULLY PASSED", to, "TO PLAYER BODY")
             const spawnFrom = Avern.GameObjects.getGameObjectByName(to)
-            console.log(spawnFrom)
             this.transform.position.copy(spawnFrom.transform.position)
-            console.log("I will copy this rotation:", spawnFrom.transform.rotation.y)
             this.gameObject.transform.rotation.copy(spawnFrom.transform.rotation)
 
         } else {
@@ -470,11 +467,9 @@ class Body extends GameplayComponent {
                 if (!Avern.State.worldUpdateLocked) this.onCapsuleCollide(data)
                 break;
             case "active_target":
-                console.log("Received active target")
                 this.targeting = true
                 break;
             case "clear_target":
-                console.log("Received clear target")
                 this.targeting = false
                 break;
             case "targeted_object":

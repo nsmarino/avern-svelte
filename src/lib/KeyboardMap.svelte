@@ -173,7 +173,7 @@
           <p>Spin around to face the opposite direction.</p>
         </div>
         </div>
-        <div id="cameraUp" class="oom camera-down input-key" style="width: 32px; height: 32px;">   
+        <div id="cameraUp" class="camera-down input-key" style="width: 32px; height: 32px;">   
           <div class="key-inner">     
             <span>{$config.leftHanded ? "P" : "q"}</span>
             <img class="svg" src={look} alt="">
@@ -235,7 +235,7 @@
           <h3>Turn right</h3>
         </div>
         </div>
-        <div id="cameraDown" class="oom camera-down input-key" style="">   
+        <div id="cameraDown" class="camera-down input-key" style="">   
           <div class="key-inner">     
             <span>{$config.leftHanded ? ";" : "a"}</span>
             <img class="svg" src={look} alt="">
