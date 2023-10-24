@@ -150,7 +150,7 @@ class Interaction extends GameplayComponent {
                 return ong
             })
             this.interactionsIndex+=1
-            if (!get(Avern.Store.endOfDemoShown) && this.interactions.label==="yoshua-haystack") {
+            if (!get(Avern.Store.endOfDemoShown) && this.interactions.label==="esthel-captive") {
                 setTimeout(() => {
                   Avern.Store.endOfDemoVisible.set(true)
                   Avern.Store.endOfDemoShown.set(true)

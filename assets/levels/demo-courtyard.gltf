@@ -1548,7 +1548,8 @@
 				}
 			},
 			"extras":{
-				"TLM_ObjectProperties":{}
+				"TLM_ObjectProperties":{},
+				"label":"swamp-start"
 			},
 			"mesh":54,
 			"name":"Cube.027",

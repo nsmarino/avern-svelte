@@ -20,6 +20,7 @@
             <p>Press {#if $config.leftHanded}<span>F</span>{:else}<span>J</span>{/if} to fire your rifle and generate energy.</p>
             <p>Energy is needed for more powerful attacks like the Bayonet Slash {#if $config.leftHanded}<span>D</span>{:else}<span>K</span>{/if}.</p>
             <p>Energy is also generated when you receive damage or eat fruit {#if $config.leftHanded}<span>R</span>{:else}<span>U</span>{/if}</p>
+            <p>Energy slowly decreases over time, so it's best to keep moving if you want to stay on top of things.</p>
             <p>This tutorial can be viewed from the Pause Menu {#if $config.leftHanded}<span>M</span>{:else}<span>C</span>{/if} at any time.</p>
           </div>
         <div>
