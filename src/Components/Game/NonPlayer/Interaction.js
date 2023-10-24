@@ -124,7 +124,7 @@ class Interaction extends GameplayComponent {
                 Avern.Sound.itemHandler.currentTime=0
                 Avern.Sound.itemHandler.play()
                 const weaponContent = Avern.Content.weapons.find(i => i.label === this.content[this.contentIndex].weapon)
-                console.log(Avern.Store)
+                this.emitSignal("get_weapon", {weapon: weaponContent})
                 Avern.Store.weapons.update((weapons)=>{
                     weapons.push(weaponContent)
                     return weapons

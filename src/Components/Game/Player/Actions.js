@@ -19,6 +19,8 @@ class Actions extends GameplayComponent {
         this.casting = false
         this.castingProgress = 0
 
+        this.actionInProgress = false
+
         this.targeting = false
         this.targetDistance = null
         this.targetCanBeAttacked = false
@@ -72,19 +74,13 @@ class Actions extends GameplayComponent {
                 this.emitSignal("show_notice", {notice: "Out of range", color: "red", delay: 2000})
                 return;
             } else {
-                this.doAction(action)
+                if (!this.actionInProgress) this.doAction(action)
             }
         }
-        // } else if (this.casting && this.activeCast.id !== action.id) {
-        //     if (inputs.forward || inputs.back || (inputs.left && this.targeting) || (inputs.right && this.targeting)) return;
-        //     this.interruptCast()
-        //     this.startCast(action)
-        // } else {
-        //     if (inputs.forward || inputs.back || (inputs.left && this.targeting) || (inputs.right && this.targeting)) return;
-        //     this.startCast(action)
-        // }
     }
     doAction(action) {
+        this.actionInProgress = true
+
         Avern.Store.weapons.update(weapons=> {
             weapons.forEach(weapon => {
                 weapon.actions.forEach(weaponAction=>{
@@ -102,7 +98,6 @@ class Actions extends GameplayComponent {
     handleActionResult(animation){
         gsap.to(this.actionIndicator, { opacity: 0, duration: 0.1 })
         const action = get(Avern.Store.actions).find(act => act.animation===animation)
-        console.log(action)
         let flashPosition
         switch (action.id) {
             case "shoot_from_distance":
@@ -301,11 +296,15 @@ class Actions extends GameplayComponent {
           case "action_crucial_frame":
             this.handleActionResult(data.id)
             break;
+          case "finish_attack_anim":
+            this.actionInProgress = false
+            break;
           case "monster_attack":
             if (this.activeCast) this.reduceCast()
             break;
           case "player_death":
             if (this.activeCast) this.interruptCast()
+            this.actionInProgress = false
             Avern.Store.weapons.update(weapons=> {
                 weapons.forEach(weapon => {
                     weapon.actions.forEach(weaponAction=>{

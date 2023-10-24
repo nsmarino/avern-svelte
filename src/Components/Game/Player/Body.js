@@ -298,7 +298,8 @@ class Body extends GameplayComponent {
                 }
                 if (inputs.forward || inputs.back || (inputs.left && this.targeting) || (inputs.right && this.targeting) ) Avern.Sound.fxHandler.play()
                 this.movementLocked = false
-                this.crucialFrameSent = false;        
+                this.crucialFrameSent = false;
+                this.emitSignal("finish_attack_anim")      
                 break;
         }
         /* eslint-enable no-fallthrough */
