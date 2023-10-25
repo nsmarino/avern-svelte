@@ -484,7 +484,7 @@ class Loader {
                 primeLength: 0.6,
                 isInstant: true,
                 cost: 40,
-                baseDamage: 60,
+                baseDamage: 70,
                 modifier:0.15,
                 range: 5,
                 primed: false,

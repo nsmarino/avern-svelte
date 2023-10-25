@@ -63,8 +63,8 @@ class Enemy extends GameplayComponent {
 
     switch(this.enemyType) {
       case "bow":
-        this.initialHealth = 65
-        this.health = 65
+        this.initialHealth = 90
+        this.health = 90
             break;
       case "sword":
         this.initialHealth = 100

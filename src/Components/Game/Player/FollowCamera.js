@@ -54,9 +54,9 @@ class FollowCamera extends GameplayComponent {
         if (!this.targeting) {
 
             if (inputs.cameraUp && this.playerCameraTarget.rotation.x < 0.9) {
-                this.playerCameraTarget.rotateX(0.02)
+                this.playerCameraTarget.rotateX(0.01)
             } else if (inputs.cameraDown && this.playerCameraTarget.rotation.x > -0.4) {
-                this.playerCameraTarget.rotateX(-0.02)
+                this.playerCameraTarget.rotateX(-0.01)
             }
 
             if ((this.playerCameraTarget.getWorldPosition(this.comparisonVector).distanceTo(this.cameraTarget.getWorldPosition(this.comparisonVector2)) > 0.2 )) {

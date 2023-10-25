@@ -13,6 +13,8 @@
   import openMenu from "../../assets/ui/openMenu.svg"
   import spin from "../../assets/ui/strafe-toggle.svg"
   import look from "../../assets/ui/cursor-camera.svg"
+  import cameraUp from "../../assets/ui/camera-up.svg"
+  import cameraDown from "../../assets/ui/camera-down.svg"
 
   // STORE VALUES:
     // @ts-ignore
@@ -68,7 +70,7 @@
               <p>Regain health. Refills to 5 whenever you return to the Courtyard.</p>
             </div>
           </div>
-          <div id="fruit" class="fruit input-key" style="width: 32px; height: 32px;" class:oom={$player.fruit===0}>
+          <div id="fruit" class="fruit input-key" class:oom={$player.fruit===0}>
             <div class="key-inner">
               <span>{$config.leftHanded ? "R" : "U"}</span>
               <img class="svg" src={fruit} alt="">
@@ -153,7 +155,7 @@
         <div id="forward" class="forward input-key">
           <div class="key-inner">
 
-          <span>{$config.leftHanded ? "I" : "E"}</span>
+          <span>{$config.leftHanded ? "I" : "W"}</span>
           <img class="svg" src={forwardArrow} alt="">
         </div>
         <div class="action-active-indicator"></div>
@@ -164,7 +166,7 @@
         <div id="turn" class="strafe input-key">
           <div class="key-inner">
 
-          <span>{$config.leftHanded ? "O" : "W"}</span>
+          <span>{$config.leftHanded ? "O" : "E"}</span>
           <img class="svg" src={spin} alt="">
         </div>
         <div class="action-active-indicator"></div>
@@ -173,10 +175,10 @@
           <p>Spin around to face the opposite direction.</p>
         </div>
         </div>
-        <div id="cameraUp" class="camera-down input-key" style="width: 32px; height: 32px;">   
+        <div id="cameraUp" class="camera-down input-key">   
           <div class="key-inner">     
-            <span>{$config.leftHanded ? "P" : "q"}</span>
-            <img class="svg" src={look} alt="">
+            <span>{$config.leftHanded ? "P" : "R"}</span>
+            <img class="svg" src={cameraUp} alt="">
           </div>
           <div class="action-active-indicator"></div>
           <div class="action-tooltip">
@@ -190,7 +192,7 @@
         <div id="interact" class="interact input-key">    
           <div class="key-inner">
       
-          <span>{$config.leftHanded ? "H" : "G"}</span>
+          <span>{$config.leftHanded ? "H" : "F"}</span>
           <img class="svg" src={interact} alt="">
         </div>
         <div class="action-active-indicator"></div>
@@ -202,7 +204,7 @@
 
         <div id="left" class="left input-key">
           <div class="key-inner">           
-            <span>{$config.leftHanded ? "J" : "S"}</span>
+            <span>{$config.leftHanded ? "J" : "A"}</span>
             <img class="svg" src={left} alt="">
           </div>
           <div class="action-active-indicator"></div>
@@ -215,7 +217,7 @@
         <div id="back" class="back input-key">
           <div class="key-inner">
 
-          <span>{$config.leftHanded ? "K" : "D"}</span>
+          <span>{$config.leftHanded ? "K" : "S"}</span>
           <img class="svg" src={back} alt="">
         </div>
         <div class="action-active-indicator"></div>
@@ -227,7 +229,7 @@
         <div id="right" class="right input-key">
           <div class="key-inner">
 
-          <span>{$config.leftHanded ? "L" : "F"}</span>
+          <span>{$config.leftHanded ? "L" : "D"}</span>
           <img class="svg" src={right} alt="">
         </div>
         <div class="action-active-indicator"></div>
@@ -237,8 +239,8 @@
         </div>
         <div id="cameraDown" class="camera-down input-key" style="">   
           <div class="key-inner">     
-            <span>{$config.leftHanded ? ";" : "a"}</span>
-            <img class="svg" src={look} alt="">
+            <span>{$config.leftHanded ? ";" : "G"}</span>
+            <img class="svg" src={cameraDown} alt="">
           </div>
           <div class="action-active-indicator"></div>
           <div class="action-tooltip">
@@ -252,7 +254,7 @@
         <div id="pauseMenu" class="open-menu input-key">
           <div class="key-inner">
 
-          <span>{$config.leftHanded ? "m" : "c"}</span>
+          <span>{$config.leftHanded ? "M" : "C"}</span>
           <img class="svg" src={openMenu} alt="">
         </div>
         <div class="action-active-indicator"></div>

@@ -215,7 +215,7 @@ class Inputs {
 
         this.rightHandedConfig = {
             forward: {
-                code: "KeyE",
+                code: "KeyW",
                 pressed: false,
 
                 onlyOnce: false,
@@ -223,15 +223,6 @@ class Inputs {
                 trackUp: true,
             },
             back: {
-                code:"KeyD",
-                pressed: false,
-
-                onlyOnce: false,
-                trackWasPressed: true,
-                trackUp: true,
-
-            },
-            left: {
                 code:"KeyS",
                 pressed: false,
 
@@ -240,8 +231,17 @@ class Inputs {
                 trackUp: true,
 
             },
+            left: {
+                code:"KeyA",
+                pressed: false,
+
+                onlyOnce: false,
+                trackWasPressed: true,
+                trackUp: true,
+
+            },
             right: {
-                code:"KeyF",
+                code:"KeyD",
                 pressed: false,
 
                 onlyOnce: false,
@@ -251,7 +251,7 @@ class Inputs {
             },
         
             interact: {
-                code:"KeyG",
+                code:"KeyF",
                 pressed: false,
 
                 onlyOnce: true,
@@ -370,7 +370,7 @@ class Inputs {
             },
         
             turn: {
-                code: "KeyW",
+                code: "KeyE",
                 pressed: false,
 
                 onlyOnce: false,
@@ -379,7 +379,7 @@ class Inputs {
             },
 
             cameraUp: {
-                code: "KeyQ",
+                code: "KeyR",
                 pressed: false,
                 onlyOnce: false,
                 trackWasPressed: true,
@@ -387,17 +387,9 @@ class Inputs {
             },
 
             cameraDown: {
-                code: "KeyA",
+                code: "KeyG",
                 pressed: false,
                 onlyOnce: false,
-                trackWasPressed: true,
-                trackUp: true,
-            },
-
-            cameraReset: {
-                code: "KeyW",
-                pressed: false,
-                onlyOnce: true,
                 trackWasPressed: true,
                 trackUp: true,
             },

@@ -160,12 +160,11 @@
     display: flex;
     align-items: center;
     
-    .input-key:nth-child(2) {
-      margin-left: 40px;
-    }
     
     .rightHanded & {
       flex-direction: row-reverse;
+      margin-left: 0 !important;
+      margin-right: 90px;
     }
   }
   .offhand .bottom-row {
@@ -173,8 +172,6 @@
   }
 
   .bottom-row .input-key {
-    width: 32px;
-    height: 32px;
     margin: 8px 0 0 0;
   }
 
@@ -225,9 +222,8 @@
   margin-bottom: 8px;
   margin-left: 118px;
   .rightHanded & {
-    flex-direction: row-reverse;
-    margin-right: 134px;
-    margin-left: 0px;
+    // flex-direction: row-reverse;
+    margin-left: 50px;
   }
 }
  .equipped .top-row {
@@ -260,7 +256,7 @@
   .rightHanded & {
     flex-direction: row-reverse;
     #cameraDown {
-      order: 4;
+      order: -1;
     }
     #left {
       order: 3;
@@ -301,8 +297,7 @@
   // border: 1px solid transparent;
 }
 .oom {
-  opacity: 0.5;
-  filter: blur(3px);
+  filter: brightness(40%);
   // border: 1px solid transparent;
 }
 .equipment-action.locked {
@@ -391,7 +386,7 @@
 // NOTICES
 #notices-container {
   position: fixed;
-  top: 80px;
+  top: 140px;
   left: 40%;
   right: 40%;
   display: flex;
@@ -399,9 +394,12 @@
   flex-direction: column;
   p {
     text-align: center;
-    margin:0 0 5px;
     font-family: var(--serif);
-    filter: drop-shadow(0 0.1rem 0.2rem black)    
+    filter: drop-shadow(0 0.1rem 0.2rem black);
+    background: var(--avern-input-gradient);
+    border-radius: 6px;
+    padding: 4px 6px;
+    margin-bottom: 0px;
   }
 }
 
@@ -417,21 +415,29 @@
   top: 0;
   left: 0;
   backface-visibility: hidden;
-  border: 1px solid var(--avern-off-black);
   border-radius: 4px;
-  color: var(--avern-off-black);
-  background: var(--avern-light-grey);
+  background: var(--avern-off-black);
   font-family: var(--sans);
   font-size: 14px;
-  width: 16px;
-  height: 16px;
+  width: 20px;
+  height: 20px;
   justify-content: center;
   align-items: center;
   transition: background 0.1s ease;
+  padding: 2px;
+  border: 1px solid var(--avern-grey);
+  svg path {
+    stroke: var(--avern-light-grey);
+  }
 
   &.targeted {
-    color: var(--avern-off-black);
-    background: var(--avern-green);
+    border: 1px solid var(--avern-brown);
+    svg path {
+      stroke: var(--avern-red);
+    }
+  
+    // color: var(--avern-off-black);
+    // background: var(--avern-green);
     }
 }
 .numbers-container span {

@@ -13,6 +13,7 @@ class Notices extends GameplayComponent {
       switch(signalName) {
         case "show_notice":
           const el = document.createElement("p")
+          el.classList.add("notice")
           el.innerText = data.notice
           el.style.color = data.color
           this.container.appendChild(el)
