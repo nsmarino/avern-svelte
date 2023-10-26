@@ -14,6 +14,11 @@
               <div style="position:absolute; left: 4px; font-size: 8px;">{Math.floor($player.energy)}</div>
 
             </div>
+          <div class="mana-bar">
+            <div class="mana">
+              <div class="inner-mana" style="width: 100%"></div></div>
+              <div style="position:absolute; left: 4px; font-size: 8px;">null</div>
+            </div>
         </div>
         <!-- Top Right -->
         <div class="xp">

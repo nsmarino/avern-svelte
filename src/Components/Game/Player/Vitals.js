@@ -12,11 +12,11 @@ class Vitals extends GameplayComponent {
     }
 
     update(delta) {
-      if (get(Avern.Store.player).energy > 1) {
+      if (get(Avern.Store.player).energy < 100) {
         Avern.Store.player.update(player => {
           const updatedPlayer = {
             ...player,
-            energy: player.energy-0.02
+            energy: player.energy+0.1
           }
           return updatedPlayer
         })
@@ -97,7 +97,7 @@ class Vitals extends GameplayComponent {
             const updatedPlayer = {
               ...player,
               hp: player.hp - data.damage,
-              energy: player.energy + 7.5 >= 100 ? 100 : player.energy + 7.5
+              // energy: player.energy + 7.5 >= 100 ? 100 : player.energy + 7.5
 
             }
             return updatedPlayer

@@ -8,7 +8,7 @@
   flex-direction: column;
   gap: 10px;
 }
-.health-bar, .energy-bar {
+.health-bar, .energy-bar, .mana-bar {
   border: 1px solid var(--avern-off-black);
   padding: 2px;
   background: linear-gradient(var(--avern-grey), var(--avern-off-black));
@@ -20,7 +20,7 @@
   background: linear-gradient(var(--avern-brown), var(--avern-off-black));
   border: 1px solid var(--avern-off-black);
 }
-.player-state .bars .energy {
+.player-state .bars .energy, .player-state .bars .mana  {
   height: 8px;
   width: 200px;
   background: linear-gradient(var(--avern-brown), var(--avern-off-black));
@@ -33,6 +33,11 @@
 }
 .player-state .bars .energy .inner-energy { 
   background-color: var(--avern-gold);
+  height: 100%;
+  transition: width 0.2s;
+}
+.player-state .bars .mana .inner-mana { 
+  background-color: var(--avern-blue);
   height: 100%;
   transition: width 0.2s;
 }

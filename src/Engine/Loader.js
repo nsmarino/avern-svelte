@@ -464,16 +464,16 @@ class Loader {
                 image: muzzleBlast,
                 description: "You eyes narrow and time seems to slow. You kneel and take careful aim.",
                 primeLength: 0,
-                baseDamage: 35,
-                cost: 0,
+                baseDamage: 25,
+                cost: 30,
                 isInstant: true,
                 range: 40,
                 primed: false,
                 assignment: null,
                 primeAnimation: "load",
                 animation: "shoot",
-                // primaryModifier: "Load: 1.75",
-                // secondaryModifier: "Energy Cost: 22",
+                primaryModifier: "Energy Cost: 20",
+                secondaryModifier: "Mana Cost: 0",
               },
               {
                 id: "bayonet_slash",
@@ -484,24 +484,23 @@ class Loader {
                 primeLength: 0.6,
                 isInstant: true,
                 cost: 40,
-                baseDamage: 70,
-                modifier:0.15,
+                baseDamage: 10,
                 range: 5,
                 primed: false,
                 assignment: null,
                 primeAnimation: "load",
                 animation: "slash",
-                primaryModifier: "Load: 0",
-                secondaryModifier: "Energy Cost: 40",
+                primaryModifier: "Energy Cost: 0",
+                secondaryModifier: "Mana Cost: 40",
               },
               {
-                id: "rapid_fire",
-                label: "Drill Shot",
+                id: "shotgun_blast",
+                label: "Blast at close range",
                 caption: "Loading rifle",
-                description: "Fire a high caliber projectile that drills through enemies. Costs no energy if multiple enemies are hit at once.",
+                description: "An explosion of deadly flechette darts, highly effective at close range.",
                 primeLength: 1,
-                baseDamage: 20,
-                cost: 10,
+                baseDamage: 50,
+                cost: 50,
                 image: aimedShot,
                 range: 30,
                 primed: false,
@@ -632,11 +631,11 @@ class Loader {
         scene: "url",
     
         player: { 
-            flasks: 0,
+            flasks: 1,
             fruit: 0,
             hp: 100,
             maxHp: 100,
-            energy: 0,
+            energy: 50,
             maxEnergy: 100,
             level: 10,
             xp: 0,
@@ -919,12 +918,12 @@ class Loader {
             })
           break;
         case "cliffs-start": 
-          if (!get(Avern.Store.combatTutorialShown)) {
-            setTimeout(() => {
-              Avern.Store.combatTutorialVisible.set(true)
-              Avern.Store.combatTutorialShown.set(true)
-            }, 3000)
-          }
+          // if (!get(Avern.Store.combatTutorialShown)) {
+          //   setTimeout(() => {
+          //     Avern.Store.combatTutorialVisible.set(true)
+          //     Avern.Store.combatTutorialShown.set(true)
+          //   }, 3000)
+          // }
         case "cliffs-end": 
           Avern.Sound.playSceneMusic("cliffs", 0.1)
           Avern.Content.baseFile=demoCliffs

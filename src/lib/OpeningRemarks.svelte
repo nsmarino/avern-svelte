@@ -30,11 +30,11 @@
     <div>
       <p><span>FORTRESS SHEPHERD EUNUCH</span> is primarily played with both hands on the keyboard. Hover the cursor over the <span>Keyboard Map</span> below to learn more.</p>
         
-      <p>Keyboard controls are available for both left-handed and right-handed players. This can be changed at any time from the Pause Menu.</p>
+      <p>There are two keyboard configurations available: a traditional right-handed setup which uses WASD keys for movement, and a setup which uses IJKL for movement, which left-handed players might find more comfortable. You can switch between them at any time from the Pause Menu.</p>
         
       <div>
-        <button class="config-button" class:active={$config.leftHanded} on:click={() => updateKeyboardConfig(true)}>Use Left Handed Config</button>
-        <button class="config-button" class:active={!$config.leftHanded} on:click={() => updateKeyboardConfig(false)}>Use Right Handed Config</button>
+        <button class="config-button" class:active={$config.leftHanded} on:click={() => updateKeyboardConfig(true)}>Use IJKL Config</button>
+        <button class="config-button" class:active={!$config.leftHanded} on:click={() => updateKeyboardConfig(false)}>Use WASD Config</button>
       </div>
       
       <p>It is now the early morning.</p>

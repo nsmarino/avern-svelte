@@ -478,16 +478,16 @@ class Enemy extends GameplayComponent {
           Avern.Sound.thudHandler.currentTime = 0.1
           Avern.Sound.thudHandler.play()   
 
-          if (data.generate === true) {
-            Avern.Store.player.update(player => {
-              const updatedPlayer = {
-                ...player,
-                energy: player.energy + 20 >= 100 ? 100 : player.energy + 20
+          // if (data.generate === true) {
+          //   Avern.Store.player.update(player => {
+          //     const updatedPlayer = {
+          //       ...player,
+          //       energy: player.energy + 20 >= 100 ? 100 : player.energy + 20
         
-              }
-              return updatedPlayer
-            })            
-          }
+          //     }
+          //     return updatedPlayer
+          //   })            
+          // }
 
           if (this.behavior === "wander" || this.behavior === "patrol") {
             this.path = null

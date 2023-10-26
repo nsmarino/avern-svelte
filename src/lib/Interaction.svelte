@@ -27,7 +27,7 @@
                 {$interaction.node.text}
               </div>
               <div class="next-node-input-key">
-                {$config.leftHanded ? "H" : "G"}
+                {$config.leftHanded ? "H" : "F"}
               </div>           
             </div>
           </div>
