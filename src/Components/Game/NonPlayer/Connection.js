@@ -83,7 +83,7 @@ class Connection extends GameplayComponent {
               this.addObserver(component)
             }
         }
-        this.addObserver(Avern.Player.getComponent(Body))
+        this.addObserver(Avern.Player?.getComponent(Body))
     }
 }
 

@@ -166,10 +166,10 @@ class ItemOnMap extends GameplayComponent {
     }
     
     attachObservers(parent) {
-        this.addObserver(Avern.Player.getComponent(Inventory))
-        this.addObserver(Avern.Player.getComponent(Targeting))
-        this.addObserver(Avern.Interface.getComponent(InteractionOverlay))
-        this.addObserver(Avern.Interface.getComponent(Notices))
+        this.addObserver(Avern.Player?.getComponent(Inventory))
+        this.addObserver(Avern.Player?.getComponent(Targeting))
+        this.addObserver(Avern.Interface?.getComponent(InteractionOverlay))
+        this.addObserver(Avern.Interface?.getComponent(Notices))
         for (const component of parent.components) {
             if (!(component instanceof ItemOnMap)) {
               this.addObserver(component)

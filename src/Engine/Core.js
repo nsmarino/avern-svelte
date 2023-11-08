@@ -12,10 +12,8 @@ class Core {
         this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
         this.renderer.toneMappingExposure = 0.3;
 
-        // CAVE TONEMAPPING:
-        // this.renderer.toneMappingExposure = 0.15;
         this.renderer.shadowMap.enabled = true;
-        this.renderer.shadowMap.type = THREE.PCFSoftShadowMap; // default THREE.PCFShadowMap
+        this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
         window.addEventListener( 'resize', function () {
             this.renderer.setSize( window.innerWidth, window.innerHeight );

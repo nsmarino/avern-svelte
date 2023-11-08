@@ -331,8 +331,8 @@ class Actions extends GameplayComponent {
         }
     }
     attachObservers(parent) {
-        this.addObserver(Avern.Interface.getComponent(ActionBar))
-        this.addObserver(Avern.Interface.getComponent(Notices))
+        this.addObserver(Avern.Interface?.getComponent(ActionBar))
+        this.addObserver(Avern.Interface?.getComponent(Notices))
         this.addObserver(parent.getComponent(Body))
         this.addObserver(parent.getComponent(Vitals))
         this.addObserver(parent.getComponent(Landmine))

@@ -54,7 +54,7 @@ class Interaction extends GameplayComponent {
     }
     
     attachObservers(parent) {
-        this.addObserver(Avern.Interface.getComponent(InteractionOverlay))
+        this.addObserver(Avern.Interface?.getComponent(InteractionOverlay))
     }
 }
 

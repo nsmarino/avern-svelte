@@ -5,7 +5,6 @@
   import KeyboardMap from "./lib/KeyboardMap.svelte";
   import Prompt from "./lib/Prompt.svelte";
   import OpeningRemarks from "./lib/OpeningRemarks.svelte";
-  import CombatTutorial from "./lib/CombatTutorial.svelte";
   import EndOfDemo from "./lib/EndOfDemo.svelte";
     import PlayerHud from "./lib/PlayerHUD.svelte";
 
@@ -13,7 +12,6 @@
   const pauseMenu = Avern.Store.pauseMenu
     // @ts-ignore
   const openingRemarksVisible = Avern.Store.openingRemarksVisible
-  const combatTutorialVisible = Avern.Store.combatTutorialVisible
   const endOfDemoVisible = Avern.Store.endOfDemoVisible
 
 </script>
@@ -32,9 +30,7 @@
   {#if $openingRemarksVisible}
     <OpeningRemarks />  
   {/if}
-  {#if $combatTutorialVisible}
-    <CombatTutorial />  
-  {/if}
+
   {#if $endOfDemoVisible}
     <EndOfDemo />  
   {/if}

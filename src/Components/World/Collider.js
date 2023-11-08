@@ -57,7 +57,7 @@ class Collider extends GameplayComponent {
     }
     
     attachObservers(parent) {
-        if (Avern.Player) this.addObserver(Avern.Player.getComponent(Body))
+        this.addObserver(Avern.Player?.getComponent(Body))
     }
 }
 

@@ -145,9 +145,9 @@ class WeaponOnMap extends GameplayComponent {
     }
     
     attachObservers(parent) {
-        this.addObserver(Avern.Player.getComponent(Inventory))
-        this.addObserver(Avern.Interface.getComponent(InteractionOverlay))
-        this.addObserver(Avern.Interface.getComponent(Notices))
+        this.addObserver(Avern.Player?.getComponent(Inventory))
+        this.addObserver(Avern.Interface?.getComponent(InteractionOverlay))
+        this.addObserver(Avern.Interface?.getComponent(Notices))
     }
 }
 

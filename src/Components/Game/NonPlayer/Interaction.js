@@ -93,9 +93,9 @@ class Interaction extends GameplayComponent {
               const collision = checkCapsuleCollision({ segment: Avern.Player.getComponent(Body).tempSegment, radius: Avern.Player.getComponent(Body).radius}, this.colliderCapsule)
               if (collision.isColliding) {
                 this.emitSignal("capsule_collide", {collision, capsule: this.colliderCapsule})
+                this.emitSignal("has_collider", {collider: this.colliderCapsule, offsetY: 2})
               }
             }
-            this.emitSignal("has_collider", {collider: this.colliderCapsule, offsetY: 2})
 
           }
     }
@@ -168,8 +168,8 @@ class Interaction extends GameplayComponent {
               this.addObserver(component)
             }
           }
-        this.addObserver(Avern.Player.getComponent(Body))
-        this.addObserver(Avern.Player.getComponent(Targeting))
+        this.addObserver(Avern.Player?.getComponent(Body))
+        this.addObserver(Avern.Player?.getComponent(Targeting))
     
     }
 }

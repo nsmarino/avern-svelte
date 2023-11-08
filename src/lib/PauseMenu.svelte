@@ -13,7 +13,6 @@
   const GameplayComponent = Avern.GameObjects.getGameObjectByName("interface").getComponent(GameMenu)
 
   const openingRemarksShown = Avern.Store.openingRemarksShown
-  const combatTutorialShown = Avern.Store.combatTutorialShown
   const endOfDemoShown = Avern.Store.endOfDemoShown
   function saveGame() {
     const copyOfStore = {}
@@ -79,17 +78,7 @@
         <p>The game remains under active development. Updates and development logs are available on <a href="https://avern-systems.itch.io/fse" target="_blank">itch.io</a> and <a href="https://www.instagram.com/yard_gfx/" target="_blank">instagram</a>.</p>
         <p>Thank you for playing!</p>
       {/if}
-      {#if $combatTutorialShown}
-        <h3>Combat</h3>
-        <div class="demo-container">
-          <p>Target an enemy with {#if $config.leftHanded }<span>G</span>{:else}<span>H</span>{/if}.</p>
-          <p>Press {#if $config.leftHanded}<span>F</span>{:else}<span>J</span>{/if} to fire your rifle and generate energy.</p>
-          <p>Energy is needed for more powerful attacks like the Bayonet Slash {#if $config.leftHanded}<span>D</span>{:else}<span>K</span>{/if}.</p>
-          <p>Energy is also generated when you receive damage or eat fruit {#if $config.leftHanded}<span>R</span>{:else}<span>U</span>{/if}</p>
-          <p>Energy slowly decreases over time, so it's best to keep moving if you want to stay on top of things.</p>
-          <p>This tutorial can be viewed from the Pause Menu {#if $config.leftHanded}<span>M</span>{:else}<span>C</span>{/if} at any time.</p>
-    </div>
-      {/if}
+
         {#if $openingRemarksShown}
         <div>
           <h3>Opening Remarks</h3>

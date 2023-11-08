@@ -625,7 +625,7 @@ class Body extends GameplayComponent {
 
     attachObservers(parent) {
         this.addObserver(parent.getComponent(Actions))
-        this.addObserver(Avern.Interface.getComponent(InteractionOverlay))
+        this.addObserver(Avern.Interface?.getComponent(InteractionOverlay))
         this.addObserver(parent.getComponent(Vitals))
         this.addObserver(parent.getComponent(Inventory))
         for (const enemy of Avern.State.Enemies) {

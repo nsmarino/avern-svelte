@@ -31,11 +31,11 @@ class Lights extends GameplayComponent {
     }
 
     update(deltaTime) {
-        this.directionalLight.position.copy(Avern.Player.transform.position);
-        this.directionalLight.position.x += 2
-        this.directionalLight.position.y += 2
-        this.directionalLight.position.z += 2
-        this.targetObject.position.copy(Avern.Player.transform.position)
+        // this.directionalLight.position.copy(Avern.Player.transform.position);
+        // this.directionalLight.position.x += 2
+        // this.directionalLight.position.y += 2
+        // this.directionalLight.position.z += 2
+        // this.targetObject.position.copy(Avern.Player.transform.position)
 
     }
 

@@ -19,22 +19,22 @@ const Config = {
         physicsSteps: 8,
     },
     player: {
-        include: true,
+        include: false,
         jumpHeight: 14,
         components: [
-            Actions,
-            Interaction,
-            FollowCamera,
-            Body,
-            Targeting,
-            Vitals,
-            Inventory,
-            Landmine,
-            ParticleFX
+            // Actions,
+            // Interaction,
+            // FollowCamera,
+            // Body,
+            // Targeting,
+            // Vitals,
+            // Inventory,
+            // Landmine,
+            // ParticleFX
         ]
     },
     interface: {
-        include: true,
+        include: false,
         components: [
             ActionBar,
             GameMenu,

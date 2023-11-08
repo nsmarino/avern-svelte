@@ -30,12 +30,9 @@
     const interaction = Avern.Store.interaction
 
   </script>
-  <div class="player-input" class:rightHanded={!$config.leftHanded} in:fade={{ duration: 250, delay: 300 }}>
-
+  <!-- <div class="player-input" class:rightHanded={!$config.leftHanded} in:fade={{ duration: 250, delay: 300 }}>
       <div class="equipped">
-
         <div class="action-inventory">
-
           <div class="flask-count">
             <div class="flask-count-inner">
               <svg viewBox="0 0 16 22" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -44,7 +41,6 @@
               <span>{ $player.flasks }</span>
             </div>
           </div>
-
           <div class="flask-count">
             <div class="flask-count-inner">
               <svg viewBox="0 0 28 21" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -57,7 +53,6 @@
             </div>
           </div>
         </div>
-
         <div class="top-row">
           <div id="flask" class="flask input-key"  class:oom={$player.flasks===0}>
             <div class="key-inner">
@@ -148,7 +143,6 @@
           </div>
         </div>
       </div>      
-
     <div class="offhand">
       <div class="top-row">
 
@@ -267,9 +261,5 @@
 
       </div>
     </div>
-
-  </div>
-  <style>
-
-  </style>
+  </div> -->
   

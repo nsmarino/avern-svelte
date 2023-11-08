@@ -61,6 +61,7 @@ class Targetable extends GameplayComponent {
     onSignal(signalName, data={}) {
         switch(signalName) {
             case "has_collider":
+                if (!Avern.Player) return
                 const { x, y, distanceToCamera, visible } = getScreenCoordinatesAndDistance(this.gameObject,data.collider, data.offsetY);
                 const losDistance = Avern.Player.transform.position.distanceTo(this.gameObject.transform.position)
                 // const losDistance = Avern.Player.getComponent(Body).visionCapsule ? distancePointToLine(this.gameObject.transform.position, Avern.Player.getComponent(Body).visionCapsule.segment, Avern.Player.transform) : null
@@ -130,10 +131,10 @@ class Targetable extends GameplayComponent {
                 this.addObserver(component)
             }
         }
-        this.addObserver(Avern.Player.getComponent(Targeting))
-        this.addObserver(Avern.Player.getComponent(Body))
-        this.addObserver(Avern.Player.getComponent(FollowCamera))    
-        this.addObserver(Avern.Player.getComponent(Actions))
+        this.addObserver(Avern.Player?.getComponent(Targeting))
+        this.addObserver(Avern.Player?.getComponent(Body))
+        this.addObserver(Avern.Player?.getComponent(FollowCamera))    
+        this.addObserver(Avern.Player?.getComponent(Actions))
     }
 }
 

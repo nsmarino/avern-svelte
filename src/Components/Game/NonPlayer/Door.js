@@ -82,8 +82,7 @@ class Door extends GameplayComponent {
     }
     
     attachObservers(parent) {
-        this.addObserver(Avern.Player.getComponent(Body))
-        this.addObserver(Avern.Interface.getComponent(Notices))
+        this.addObserver(Avern.Interface?.getComponent(Notices))
         for (const component of parent.components) {
             if (!(component instanceof Door)) {
               this.addObserver(component)

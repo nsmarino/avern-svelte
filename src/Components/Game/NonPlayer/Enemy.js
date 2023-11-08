@@ -564,11 +564,11 @@ class Enemy extends GameplayComponent {
         this.addObserver(component)
       }
     }
-    this.addObserver(Avern.Player.getComponent(Targeting))
-    this.addObserver(Avern.Player.getComponent(Body))
-    this.addObserver(Avern.Player.getComponent(FollowCamera))
-    this.addObserver(Avern.Player.getComponent(Vitals))
-    this.addObserver(Avern.Player.getComponent(Actions))
+    this.addObserver(Avern.Player?.getComponent(Targeting))
+    this.addObserver(Avern.Player?.getComponent(Body))
+    this.addObserver(Avern.Player?.getComponent(FollowCamera))
+    this.addObserver(Avern.Player?.getComponent(Vitals))
+    this.addObserver(Avern.Player?.getComponent(Actions))
   }
 }
 

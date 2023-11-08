@@ -117,7 +117,7 @@ class Projectile extends GameplayComponent {
     }
     
     attachObservers(parent) {
-        this.addObserver(Avern.Player.getComponent(Vitals))
+        this.addObserver(Avern.Player?.getComponent(Vitals))
     }
 }
 

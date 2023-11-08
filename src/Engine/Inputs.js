@@ -445,16 +445,6 @@ class Inputs {
             turn: false,
             turnWasPressed:false,
             turnWasLifted:false,
-
-            // cameraUp: false,
-            // cameraUpWasPressed:false,
-            // cameraUpWasLifted:false,
-            // cameraDown: false,
-            // cameraDownWasPressed:false,
-            // cameraDownWasLifted:false,
-            // cameraReset: false,
-            // cameraResetWasPressed:false,
-            // cameraResetWasLifted:false,
         }
         
         window.addEventListener( 'keydown', function(e) {
@@ -529,10 +519,6 @@ class Inputs {
     }
 
     handleDown(code) {
-        // if (document.querySelector(`#${code}`)) {
-        //     document.querySelector(`#${code}`).classList.add("active")
-        // }
-
         for (const property in this.config) {
             if (this.config[property].code === code) {
                 if (document.querySelector(`#${property}`)) {
@@ -549,9 +535,6 @@ class Inputs {
     }
 
     handleUp(code) {
-        // if (document.querySelector(`#${code}`)) {
-        //     document.querySelector(`#${code}`).classList.remove("active")
-        // }
         for (const property in this.config) {
             if (this.config[property].code === code) {
                 if (document.querySelector(`#${property}`)) {
