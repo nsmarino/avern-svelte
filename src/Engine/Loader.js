@@ -16,7 +16,6 @@ import Targetable from "../Components/Game/NonPlayer/Targetable";
 import Projectile from "../Components/Game/NonPlayer/Projectile";
 import Interaction from "../Components/Game/NonPlayer/Interaction";
 import ItemOnMap from "../Components/Game/NonPlayer/ItemOnMap";
-import WeaponOnMap from "../Components/Game/NonPlayer/WeaponOnMap";
 import Door from "../Components/Game/NonPlayer/Door";
 import Connection from "../Components/Game/NonPlayer/Connection";
 import Collider from "../Components/World/Collider";

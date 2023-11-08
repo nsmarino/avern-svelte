@@ -1,5 +1,5 @@
 {
-  "name": "wts-svelte",
+  "name": "avern-starter",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -15,13 +15,13 @@
   },
   "dependencies": {
     "@sanity/client": "^6.4.9",
+    "cannon-es": "^0.20.0",
     "eslint": "^8.47.0",
     "gsap": "^3.12.2",
     "pathe": "^1.1.1",
     "sass": "^1.66.1",
     "three": "^0.155.0",
     "three-mesh-bvh": "^0.6.3",
-    "three-pathfinding": "^1.2.0",
     "typescript": "^5.1.6",
     "yuka": "^0.7.8"
   }
