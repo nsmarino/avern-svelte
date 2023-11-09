@@ -940,6 +940,11 @@ postcss@^8.4.27:
     picocolors "^1.0.0"
     source-map-js "^1.0.2"
 
+postprocessing@^6.33.3:
+  version "6.33.3"
+  resolved "https://registry.yarnpkg.com/postprocessing/-/postprocessing-6.33.3.tgz#d80103f6e68581263557aa2e5d9e26af3e0d7cfd"
+  integrity sha512-zQAVvcMf7bfeggQNQeVErD/UFd1XHBi2X6+yxwIv9PjhGCLAYKue3UuzVyu95O7ZUvkDwF0TyTzKdxoaVwYi7w==
+
 prelude-ls@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/prelude-ls/-/prelude-ls-1.2.1.tgz#debc6489d7a6e6b0e7611888cec880337d316396"
@@ -1018,6 +1023,11 @@ shebang-regex@^3.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/source-map-js/-/source-map-js-1.0.2.tgz#adbc361d9c62df380125e7f161f71c826f1e490c"
   integrity sha512-R0XvVJ9WusLiqTCEiGCmICCMplcCkIwwR11mOSD9CR5u+IXYdiseeEuXCVAjS54zqwkLcPNnmU4OeJ6tUrWhDw==
+
+spatial-controls@^6.1.1:
+  version "6.1.1"
+  resolved "https://registry.yarnpkg.com/spatial-controls/-/spatial-controls-6.1.1.tgz#50be33df475ce6d794944e3d08241ef0db18ff6e"
+  integrity sha512-ajuftYnjyLdQ6G4bTh9lme57nzxQpODeZyG8bWNhet5fGpPCUKAosT/wSMCwKXn3LSwYq1b3AxzpHK/EjiTWvA==
 
 strip-ansi@^6.0.1:
   version "6.0.1"

@@ -259,32 +259,32 @@ function calculateDamageByDistance(baseDamage, distance, maxDistance, exponent=2
 }
 
 function findClosestPointOnMeshToPoint(mesh, point) {
-// Create two raycast directions: +Y and -Y
-const raycastDirections = [new THREE.Vector3(0, 1, 0), new THREE.Vector3(0, -1, 0)];
+    // Create two raycast directions: +Y and -Y
+    const raycastDirections = [new THREE.Vector3(0, 1, 0), new THREE.Vector3(0, -1, 0)];
 
-// Initialize variables to store the closest distance and point
-let closestDistance = Number.POSITIVE_INFINITY;
-let closestPoint = new THREE.Vector3();
+    // Initialize variables to store the closest distance and point
+    let closestDistance = Number.POSITIVE_INFINITY;
+    let closestPoint = new THREE.Vector3();
 
-// Loop through the raycast directions
-for (const direction of raycastDirections) {
-    const raycaster = new THREE.Raycaster(point, direction);
-    const intersects = raycaster.intersectObject(mesh);
-    if (intersects.length > 0) {
-    // The ray intersects the mesh, get the closest intersection point
-    const intersectionPoint = intersects[0].point;
+    // Loop through the raycast directions
+    for (const direction of raycastDirections) {
+        const raycaster = new THREE.Raycaster(point, direction);
+        const intersects = raycaster.intersectObject(mesh);
+        if (intersects.length > 0) {
+        // The ray intersects the mesh, get the closest intersection point
+        const intersectionPoint = intersects[0].point;
 
-    // Calculate the distance between the intersection point and the original point
-    const distance = point.distanceTo(intersectionPoint);
-    // Update closest point and distance if this intersection is closer
-    if (distance < closestDistance) {
-        closestDistance = distance;
-        closestPoint = intersectionPoint.clone();
+        // Calculate the distance between the intersection point and the original point
+        const distance = point.distanceTo(intersectionPoint);
+        // Update closest point and distance if this intersection is closer
+        if (distance < closestDistance) {
+            closestDistance = distance;
+            closestPoint = intersectionPoint.clone();
+        }
+        }
     }
-    }
-}
-if (closestDistance == Number.POSITIVE_INFINITY) return null
-return closestPoint;
+    if (closestDistance == Number.POSITIVE_INFINITY) return null
+    return closestPoint;
 }
 
 function updateRotationToFacePoint(object, targetPoint, lerpFactor) {
