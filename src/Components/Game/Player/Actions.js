@@ -4,7 +4,6 @@ import Body from "./Body"
 import Vitals from "./Vitals"
 import ActionBar from "../../Interface/ActionBar"
 import Notices from "../../Interface/Notices"
-import Landmine from './Landmine';
 import ParticleFX from './ParticleFX';
 import * as THREE from 'three';
 import gsap from "gsap"
@@ -335,7 +334,6 @@ class Actions extends GameplayComponent {
         this.addObserver(Avern.Interface?.getComponent(Notices))
         this.addObserver(parent.getComponent(Body))
         this.addObserver(parent.getComponent(Vitals))
-        this.addObserver(parent.getComponent(Landmine))
         this.addObserver(parent.getComponent(ParticleFX))
         for (const enemy of Avern.State.Enemies) {
             this.addObserver(enemy.getComponent(Enemy))

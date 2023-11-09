@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-import { OrbitControls } from "../../../helpers/OrbitControls"
 import GameplayComponent from '../../_Component';
 
 class FollowCamera extends GameplayComponent {
@@ -37,9 +36,6 @@ class FollowCamera extends GameplayComponent {
         this.playerCameraTarget.add(this.playerCameraPlaceholder)
         this.playerCameraPlaceholder.position.set(0,1.5,-18)
         this.gameObject.transform.add(this.playerCameraTarget)
-
-        // console.log(OrbitControls)
-        // this.controls = new OrbitControls( this.camera, document.querySelector("canvas") );
 
         window.addEventListener( 'resize', function () {
             this.camera.aspect = window.innerWidth / window.innerHeight;

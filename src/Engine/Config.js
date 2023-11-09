@@ -10,7 +10,6 @@ import ActionBar from "../Components/Interface/ActionBar"
 import GameMenu from "../Components/Interface/GameMenu"
 import InteractionOverlay from "../Components/Interface/InteractionOverlay"
  import Notices from "../Components/Interface/Notices"
-import Landmine from "../Components/Game/Player/Landmine"
 import ParticleFX from "../Components/Game/Player/ParticleFX"
 
 const Config = {
