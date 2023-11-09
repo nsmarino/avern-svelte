@@ -2,7 +2,6 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import {writable, derived, get} from "svelte/store"
-import sanityClient from "../sanityClient"
 import * as YUKA from "yuka"
 import { acceleratedRaycast } from 'three-mesh-bvh';
 THREE.Mesh.prototype.raycast = acceleratedRaycast;
@@ -33,10 +32,6 @@ class Loader {
     }
 
     async loadContent(useSavedGame) {
-      const query = `*[_type == "settings"]{
-        "mesh": mesh.asset->url,
-      }`
-      const responseFromSanity = await sanityClient.fetch(query)
       Avern.Content = Content
 
       // state of affairs on init
