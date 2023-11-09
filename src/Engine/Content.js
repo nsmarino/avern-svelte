@@ -1,7 +1,4 @@
-import demoCourtyard from "../../assets/levels/demo-courtyard.gltf"
-import demoCliffs from "../../assets/levels/demo-cliffs.gltf"
-import demoSwamp from "../../assets/levels/demo-swamp.gltf"
-import yukaPaths from "../../assets/levels/my-navmesh.gltf"
+import baseFile from "../../assets/levels/default.gltf"
 
 import yoshuaHaystack from "../../assets/npcs/yoshua_haystack.gltf"
 import gatekeeperDismayed from "../../assets/npcs/fse--gatekeeper.gltf"
@@ -20,7 +17,7 @@ import muzzleBlast from "../../assets/ui/muzzle-blast.svg"
 import propelSelf from "../../assets/ui/propel-self.svg"
 
 const Content = {
-    baseFile: demoCourtyard,
+    baseFile,
     items:[
       {
         label: "rear-entrance",

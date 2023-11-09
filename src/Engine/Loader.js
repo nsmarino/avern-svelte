@@ -5,13 +5,13 @@ import {writable, derived, get} from "svelte/store"
 import * as YUKA from "yuka"
 import { acceleratedRaycast } from 'three-mesh-bvh';
 THREE.Mesh.prototype.raycast = acceleratedRaycast;
-import gsap from "gsap"
+// import gsap from "gsap"
 
 import Content from "./Content"
 
 // COMPONENTS
 import Enemy from "../Components/Game/NonPlayer/Enemy";
-import Targetable from "../Components/Game/NonPlayer/Targetable";
+// import Targetable from "../Components/Game/NonPlayer/Targetable";
 import Projectile from "../Components/Game/NonPlayer/Projectile";
 import Interaction from "../Components/Game/NonPlayer/Interaction";
 import ItemOnMap from "../Components/Game/NonPlayer/ItemOnMap";
